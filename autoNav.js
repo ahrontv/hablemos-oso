@@ -32,12 +32,43 @@ let pgSets = {
         Cv: { name: 'CV', href: '/cv_2024_tech_grad.html' },
         Passion_1: {
             name: 'Languages', href: '/langs.html',
-            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: '/Hebrew.html' } ]
+            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: '/languages/heb/heb_ex_1.html' } ]
         },
         Passion_2: { name: 'My Cat', href: '/cat.html' },
         Passion_3: { name: 'Digital Stickers', href: '/digital stickers.html' }
+    },
+    hebPages: {
+        Home: { name: 'Home', href: 'index.html' },
+        FIB1: {
+            name: 'Fill in the Blank 1-10', href: '/languages/heb/heb_ex_1.html',
+            dropList: [{ name: 'Exercise 1', href: '/languages/heb/heb_ex_1.html' },
+            { name: 'Exercise 2', href: '/languages/heb/heb_ex_2.html' },
+            { name: 'Exercise 3', href: '/languages/heb/heb_ex_3.html' },
+            { name: 'Exercise 4', href: '/languages/heb/heb_ex_4.html' },
+            { name: 'Exercise 5', href: '/languages/heb/heb_ex_5.html' },
+            { name: 'Exercise 6', href: '/languages/heb/heb_ex_6.html' },
+            { name: 'Exercise 7', href: '/languages/heb/heb_ex_7.html' },
+            { name: 'Exercise 8', href: '/languages/heb/heb_ex_8.html' },
+            { name: 'Exercise 9', href: '/languages/heb/heb_ex_9.html' },
+            { name: 'Exercise 10', href: '/languages/heb/heb_ex_10.html' }
+            ]
+        },
+        FIB2: {
+            name: 'Fill in the Blank 11-20', href: '/languages/heb/heb_ex_11.html',
+            dropList: [{ name: 'Exercise 11', href: '/languages/heb/heb_ex_11.html' },
+            { name: 'Exercise 12', href: '/languages/heb/heb_ex_12.html' },
+            { name: 'Exercise 13', href: '/languages/heb/heb_ex_13.html' },
+            { name: 'Exercise 14', href: '/languages/heb/heb_ex_14.html' },
+            { name: 'Exercise 15', href: '/languages/heb/heb_ex_15.html' },
+            { name: 'Exercise 16', href: '/languages/heb/heb_ex_16.html' },
+            { name: 'Exercise 17', href: '/languages/heb/heb_ex_17.html' },
+            { name: 'Exercise 18', href: '/languages/heb/heb_ex_18.html' },
+            { name: 'Exercise 19', href: '/languages/heb/heb_ex_19.html' },
+            { name: 'Exercise 20', href: '/languages/heb/heb_ex_20.html' }
+            ]
+        }
     }
-    };
+};
 
 function markCurrPg(pg, currPg,listItem) {
     if (pg.includes(currPg)) listItem.classList.add('currPg');
@@ -213,7 +244,11 @@ function addNav(pgs) {
         // Is there a header already? If not make one and add to it
         const header = document.querySelector('header') || document.createElement('header');
         if (header.parentNode === null) document.body.prepend(header);
-        if (!pgs) pgs = pgSets.mainPages
+        if (!pgs) {
+            pgs = pgSets.mainPages
+        } else {
+            pgs = pgSets[pgs];
+        }
         const nav = createNav(pgs);
         header.prepend(nav);
         includeNavStlying();

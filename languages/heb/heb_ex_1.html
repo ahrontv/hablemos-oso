@@ -1,0 +1,74 @@
+﻿<!-- index.html -->
+<!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
+<!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Site</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <script src="heb_fib_data.js"></script>
+</head>
+<body>
+    <header>
+        <h1>My GitHub Site</h1>
+        <!--Make Nav-->
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="content">
+        <div id="app">Loading...</div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My GitHub Site</p>
+    </footer>
+
+
+    <script>
+        console.log(pageData);
+        async function loadTemplate() {
+            try {
+                const response = await fetch('heb_fib_template.html');
+                console.log(response);
+                const templateHtml = await response.text();
+                const template = Handlebars.compile(templateHtml);
+
+                let pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
+                pageName = 'heb_ex_1';
+                const pageContent = pageData[pageName];
+
+                document.getElementById('app').innerHTML = template(pageContent);
+                document.title = `My GitHub Site - ${pageContent.title}`;
+            } catch (error) {
+                console.error('Error loading template:', error);
+                document.getElementById('app').innerHTML = '<p>Error loading content. Please try again later.</p>';
+            }
+        }
+
+        function loadGame() {
+            let gameScr = document.createElement("script");
+            gameScr.src = 'heb_fib.js'
+            document.getElementById("app").appendChild(gameScr);
+        }
+
+        loadTemplate().then(() => loadGame())
+            .then(() => {
+                console.log('Template and game script loaded successfully');
+                // You can add any initialization code here that depends on both the template and game script
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+
+
+</body>
+</html>
