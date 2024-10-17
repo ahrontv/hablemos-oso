@@ -63,8 +63,10 @@ function initializeGame() {
     console.log(`currentAnswers: ${currentAnswers}`);
     // Populate word bank. Create and store buttons
     let words = [...correctAnswers];
-    while (words == correctAnswers) {
+    let preventInfLoop = 0;
+    while (JSON.stringify(words) == JSON.stringify(correctAnswers)) {
         shuffleArray(words);
+        if (preventInfLoop++>1001) return
     }
     const wordBank = document.getElementById('wordBank');
     words.forEach(word => {
