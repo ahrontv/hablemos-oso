@@ -241,6 +241,7 @@ function includeNavStlying() {
 
 function addNav(pgs) {
     try {
+        console.log(`addNav pgs1 ${pgs}`);
         // Is there a header already? If not make one and add to it
         const header = document.querySelector('header') || document.createElement('header');
         if (header.parentNode === null) document.body.prepend(header);
@@ -249,6 +250,7 @@ function addNav(pgs) {
         } else {
             pgs = pgSets[pgs];
         }
+        console.log(`addNav pgs2 ${pgs}`);
         const nav = createNav(pgs);
         header.prepend(nav);
         includeNavStlying();
