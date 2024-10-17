@@ -14,8 +14,8 @@ header {
     background-color: #4a4a4a;
     padding: 1rem 0;
 }
-
-nav {
+/*
+    nav {
     width: 100%;
 }
 
@@ -35,6 +35,9 @@ nav {
                 color: white;
                 text-decoration: none;
             }
+
+*/
+
 
 main {
     padding: 2rem;
