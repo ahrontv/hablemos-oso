@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hebrew Oso: Fill in the Blank</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
-    <script src="heb_fib_data.js"></script>
+    <script src="/hablemos_oso/languages/heb/heb_fib_data.js"></script>
 </head>
 <body>
     <header>
@@ -30,7 +30,7 @@
         console.log(pageData);
         async function loadTemplate() {
             try {
-                const response = await fetch('heb_fib_template.html');
+                const response = await fetch('/hablemos_oso/languages/heb/heb_fib_template.html');
                 console.log(response);
                 const templateHtml = await response.text();
                 const template = Handlebars.compile(templateHtml);
@@ -49,7 +49,7 @@
 
         function loadGame() {
             let gameScr = document.createElement("script");
-            gameScr.src = 'heb_fib.js'
+            gameScr.src = '/hablemos_oso/languages/heb/heb_fib.js'
             document.getElementById("app").appendChild(gameScr);
         }
 
