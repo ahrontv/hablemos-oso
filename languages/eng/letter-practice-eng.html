@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Letter Drawing Practice</title>
+    <style>
+        /* Container styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        /* Canvas container with relative positioning for layering */
+        #canvas-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Canvas layers stacked using z-index */
+        canvas {
+            position: absolute;
+            border: 1px solid #ccc;
+            touch-action: none; /* Prevents default touch actions on mobile */
+        }
+        #completedCanvas { z-index: 1; } /* Bottom layer: completed strokes */
+        #guideCanvas { z-index: 2; }     /* Middle layer: guide strokes */
+        #drawCanvas { z-index: 3; }      /* Top layer: current drawing */
+
+        /* Controls container */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        /* UI element styles */
+        button, select {
+            margin: 10px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+            button:hover {
+                background-color: #f0f0f0;
+            }
+        .instruction {
+            margin: 10px;
+            font-size: 18px;
+            color: #444;
+        }
+        #accuracy {
+            margin: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+        #letterSelect {
+            margin: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        /* Top controls */
+        .top-controls {
+            width: 300px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letter Drawing Practice</h1>
+    <div class="top-controls">
+        <select id="letterSelect">
+            <option value="A">Letter A</option>
+            <option value="B">Letter B</option>
+        </select>
+    </div>
+    <div class="instruction">Follow the highlighted stroke</div>
+    <div id="canvas-container">
+        <canvas id="completedCanvas" width="300" height="300"></canvas>
+        <canvas id="guideCanvas" width="300" height="300"></canvas>
+        <canvas id="drawCanvas" width="300" height="300"></canvas>
+    </div>
+    <div class="controls">
+        <button id="resetBtn">Reset</button>
+        <button id="autoDrawBtn">Auto Draw</button>
+    </div>
+    <div id="accuracy"></div>
+
+    <script>
+        /**
+         * Letter Drawing Practice App
+         *
+         * This application helps users practice drawing letters by following stroke guides.
+         * It uses multiple canvas layers for drawing, guides, and completed strokes.
+         * Features include stroke validation, accuracy measurement, and support for both
+         * straight and curved strokes.
+
+         TODO - update to handle error when fully drawn
+         */
+
+        // Canvas setup
+        const completedCanvas = document.getElementById('completedCanvas');
+        const guideCanvas = document.getElementById('guideCanvas');
+        const drawCanvas = document.getElementById('drawCanvas');
+        const completedCtx = completedCanvas.getContext('2d', { willReadFrequently: true });
+        const guideCtx = guideCanvas.getContext('2d');
+        const drawCtx = drawCanvas.getContext('2d');
+        const accuracyDisplay = document.getElementById('accuracy');
+
+        /**
+         * Letter definitions with stroke data
+         * Each letter consists of multiple strokes
+         * Stroke types: 'line' or 'curve'
+         * Points: Array of coordinates defining the stroke
+         */
+        let letters = {   
+            'A': {
+               strokes: [
+                    {
+                        type: 'line',
+                       points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 1 / 6 }]
+                    },
+                    {
+                        type: 'line',
+                        points: [{ x: 1 / 2, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }]
+                    },
+                    {
+                        type: 'line',
+                        points: [{ x: 5 / 12, y: 1 / 2 }, { x: 7 / 12, y: 1 / 2 }]
+                    }
+                ]
+            },
+            'B': {
+                strokes: [
+                    {
+                        type: 'line',
+                        points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }]
+                    },
+                    {
+                        type: 'curve',
+                        points: [{ x: 1/3, y: 1/6 }, { x: 2/3, y: 1/6 }, { x: 2/3, y: 5/12 }, { x: 1/3, y: 5/12 }]
+                    },
+                    {
+                        type: 'curve',
+                        points: [{ x: 1/3, y: 5/12 }, { x: 2/3, y: 5/12 }, { x: 2/3, y: 5/6 }, { x: 1/3, y: 5/6 }]
+                    }
+                ]
+            },
+            'C': {
+                strokes: [
+                    {
+                        type: 'curve',
+                        points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 6, y: 1 / 3 }, { x: 1 / 6, y: 2 / 3 }, { x: 2 / 3, y: 5 / 6 }]
+                    }
+                ]
+            },
+            'D': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'E': {
+                strokes: [
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }] }
+                ]
+            },
+            'F': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }] }
+                ]
+            },
+            'G': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 5 / 12 }, { x: 1 / 3, y: 5 / 12 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 2 / 3 }] }
+                ]
+            },
+            'H': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1/3, y: 1/6 }, { x: 1/3, y: 5/6 }] },
+                    { type: 'line', points: [{ x: 2/3, y: 1/6 }, { x: 2/3, y: 5/6 }] },
+                    { type: 'line', points: [{ x: 1/3, y: 1/2 }, { x: 2/3, y: 1/2 }] }
+                ]
+            },
+            'I': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1/2, y: 1/6 }, { x: 1/2, y: 5/6 }] },
+                ]
+            },
+            'J': {
+                strokes: [
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 1 / 2, y: 2 / 3 }, { x: 2 / 3, y: 2 / 3 }] }
+                ]
+            },
+            'K': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'L': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'M': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'N': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                ]
+            },
+            'O': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'P': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }] }
+                ]
+            },
+            'Q': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 5 / 6, y: 4 / 6 }] }
+                ]
+            },
+            'R': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'S': { // need to fix
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'T': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                ]
+            },
+            'U': { // need to fix. though looks good for hebrew eyin
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                ]
+            },
+            'V': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                ]
+            },
+            'W': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 4, y: 1 / 6 }, { x: 2 / 4, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 4, y: 5 / 6 }, { x: 3 / 4, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 3 / 4, y: 1 / 6 }, { x: 1, y: 5 / 6 }] }
+                ]
+            },
+            'X': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'Y': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] }
+                ]
+            },
+            'Z': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'a': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                ]
+            },
+            'b': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'c': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'd': {
+                strokes: [
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'e': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'f': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }] }
+                ]
+            },
+            'g': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 7 / 6 }] }
+                ]
+            },
+            'h': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] }
+                ]
+            },
+            'i': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 12 }, { x: 1 / 2, y: 2 / 12 }] }
+                ]
+            },
+            'j': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 7 / 6 }, { x: 1 / 2, y: 7 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 12 }, { x: 1 / 2, y: 2 / 12 }] }
+                ]
+            },
+            'k': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 4 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 3 / 4 }] }
+                ]
+            },
+            'l': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] }
+                ]
+            },
+            'm': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 1 / 4, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 2 / 4, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 2 / 4, y: 1 / 2 }, { x: 2 / 4, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 4, y: 1 / 2 }, { x: 3 / 4, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 3 / 4, y: 1 / 2 }, { x: 3 / 4, y: 5 / 6 }] }
+                ]
+            },
+            'n': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'o': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'p': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 7 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'q': {
+                strokes: [
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 7 / 6 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'r': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] }
+                ]
+            },
+            's': {
+                strokes: [
+                    { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 2 }] }
+                ]
+            },
+            't': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 3 }, { x: 2 / 3, y: 1 / 3 }] }
+                ]
+            },
+            'u': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'curve', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] }
+                ]
+            },
+            'v': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] }
+                ]
+            },
+            'w': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 2 / 4, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 4, y: 5 / 6 }, { x: 3 / 4, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 3 / 4, y: 1 / 2 }, { x: 1, y: 5 / 6 }] }
+                ]
+            },
+            'x': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] }
+                ]
+            },
+            'y': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 7 / 6 }] }
+                ]
+            },
+            'z': {
+                strokes: [
+                    { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                    { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                    { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                ]
+            },
+        };
+        
+        function normalizeLetters(letters, canvasWidth, canvasHeight) {
+            const normalizedLetters = {};
+
+            for (let letter in letters) {
+                normalizedLetters[letter] = {
+                    strokes: letters[letter].strokes.map(stroke => ({
+                        ...stroke,
+                        points: stroke.points.map(point => ({
+                            x: point.x / canvasWidth,
+                            y: point.y / canvasHeight
+                        }))
+                    }))
+                };
+            }
+
+            return normalizedLetters;
+        }
+
+        const canvasWidth = 300;
+        const canvasHeight = 300;
+
+        const normalizedLetters = normalizeLetters(letters, canvasWidth, canvasHeight);
+        // console.log('Normalized Letters:', normalizedLetters);
+
+        function denormalizeLetters(normalizedLetters, canvasWidth, canvasHeight) {
+            const denormalizedLetters = {};
+
+            for (let letter in normalizedLetters) {
+                denormalizedLetters[letter] = {
+                    strokes: normalizedLetters[letter].strokes.map(stroke => ({
+                        ...stroke,
+                        points: stroke.points.map(point => ({
+                            x: point.x * canvasWidth,
+                            y: point.y * canvasHeight
+                        }))
+                    }))
+                };
+            }
+
+            return denormalizedLetters;
+        }
+
+        const denormalizedLetters = denormalizeLetters(letters, canvasWidth, canvasHeight);
+        // console.log('Denormalized Letters:', denormalizedLetters);
+        letters = denormalizedLetters;
+        /**
+         * Provide all options
+         */        
+        function showOptions(letters) {
+            // get and clear options
+            const letSelect = document.getElementById('letterSelect');
+            letSelect.innerHTML = '';
+            // add options in
+            const obj = letters;
+            for(let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    letSelect.innerHTML += `<option value = ${key}>Letter ${key}</option>`;
+                    // console.log(`${key}: ${obj[key]}`);
+                }
+            } 
+        }
+
+        showOptions(letters);
+        // App state
+        let currentLetter = document.getElementById('letterSelect').value; //'A';
+        let currentStroke = 0;
+        let isDrawing = false;
+        let lastPoint = null;
+        let drawingPath = [];
+        let isAutoDrawing = false;
+        let snapshots = [];
+
+        function saveState(ctx) {
+            snapshots.push(ctx.getImageData(0, 0, completedCanvas.width, completedCanvas.height));
+        }
+
+        function restoreState(ctx) {
+            // limit to ten prev. states
+            if (snapshots.length > 0) {
+                const snapshot = snapshots.pop();
+                ctx.putImageData(snapshot, 0, 0);
+            }
+        }
+
+
+        // Function to interpolate between two points
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        /**
+         * Calculates a point on a stroke at given progress (0-1)
+         * Handles both line and curve strokes
+         */
+        function getPointOnStroke(stroke, progress) {
+            if (stroke.type === 'line') {
+                const start = stroke.points[0];
+                const end = stroke.points[1];
+                return {
+                    x: start.x + (end.x - start.x) * progress,
+                    y: start.y + (end.y - start.y) * progress
+                };
+            } else if (stroke.type === 'curve') {
+                const [p0, p1, p2, p3] = stroke.points;
+                const t = progress;
+                // Cubic Bezier formula - could be expanded for curve with one control point as well
+                const mt = 1 - t;
+                return {
+                    x: mt * mt * mt * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t * t * t * p3.x,
+                    y: mt * mt * mt * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t * t * t * p3.y
+                };
+            }
+               }
+
+        /**
+         * Calculates the control points and end point for a Bézier curve which is in progress.
+         *
+         * @param {number} t - Progress of curve from 0 to 1.
+         * @param {number} x1 - x-coord of start pt.
+         * @param {number} y1 - y-coord of start pt.
+         * @param {number} cx1 - x-coord of first control pt.
+         * @param {number} cy1 - y-coord of first control pt.
+         * @param {number} cx2 - x-coord of second control pt.
+         * @param {number} cy2 - y-coord of second control pt.
+         * @param {number} x2 - x-coord of end pt.
+         * @param {number} y2 - y-coord of end pt.
+         * @returns {Object} The updated control pts and end pt.
+         * @returns {number} returns.newCx1 - x-coord of updated control pt 1.
+         * @returns {number} returns.newCy1 - y-coord of updated control pt 1.
+         * @returns {number} returns.newCx2 - x-coord of updated second control pt.
+         * @returns {number} returns.newCy2 - y-coord of updated second control pt.
+         * @returns {number} returns.newX2 - x-coord of updated end pt.
+         * @returns {number} returns.newY2 - y-coord of updated end pt.
+         */
+        function partialBezier(t, x1, y1, cx1, cy1, cx2, cy2, x2, y2) {
+            // Calculate intermediate points
+            const x12 = lerp(x1, cx1, t), y12 = lerp(y1, cy1, t);
+            const x23 = lerp(cx1, cx2, t), y23 = lerp(cy1, cy2, t);
+            const x34 = lerp(cx2, x2, t), y34 = lerp(cy2, y2, t);
+
+            const x123 = lerp(x12, x23, t), y123 = lerp(y12, y23, t);
+            const x234 = lerp(x23, x34, t), y234 = lerp(y23, y34, t);
+
+            const x1234 = lerp(x123, x234, t), y1234 = lerp(y123, y234, t);
+            // Return the updated control points
+            return {
+                newCx1: x12, newCy1: y12, newCx2: x123, newCy2: y123, newX2: x1234, newY2: y1234
+            };
+        }
+
+        // Draw the partial Bézier curve
+        //ctx.beginPath();
+        //ctx.moveTo(x1, y1);
+        //ctx.bezierCurveTo(x12, y12, x123, y123, x1234, y1234);
+        //ctx.strokeStyle = 'blue';
+        //ctx.stroke();
+
+
+        /**
+         * Calculates average error between user's drawn path and ideal stroke
+         * Returns a percentage score (0-100)
+         */
+        function calculateAccuracy(userPath, stroke) {
+            if (userPath.length < 2) return 0;
+
+            const numSamples = 50;
+            let totalError = 0;
+
+            // Sample points along both paths
+            for (let i = 0; i <= numSamples; i++) {
+                const t = i / numSamples;
+                const idealPoint = getPointOnStroke(stroke, t);
+                const userPoint = interpolatePathPoint(userPath, t);
+                const error = Math.hypot(userPoint.x - idealPoint.x, userPoint.y - idealPoint.y);
+                totalError += error;
+            }
+
+            const avgError = totalError / (numSamples + 1);
+            const maxAllowedError = 30; // pixels
+            return Math.max(0, Math.min(100, 100 * (1 - avgError / maxAllowedError)));
+        }
+
+        /**
+         * Interpolates a point along a user-drawn path at given progress (0-1)
+         */
+        function interpolatePathPoint(path, progress) {
+            if (path.length < 2) return path[0];
+
+            // Calculate total path length
+            let totalLength = 0;
+            const segments = [];
+            for (let i = 1; i < path.length; i++) {
+                const length = Math.hypot(
+                    path[i].x - path[i - 1].x,
+                    path[i].y - path[i - 1].y
+                );
+   
+                segments.push(length);
+                totalLength += length;
+            }
+
+            const targetLength = totalLength * progress;
+            let currentLength = 0;
+
+            // Find segment containing target point
+            for (let i = 0; i < segments.length; i++) {
+                if (currentLength + segments[i] >= targetLength) {
+                    const segmentProgress = (targetLength - currentLength) / segments[i];
+                    return {
+                        x: path[i].x + (path[i + 1].x - path[i].x) * segmentProgress,
+                        y: path[i].y + (path[i + 1].y - path[i].y) * segmentProgress
+                    };
+                }
+                currentLength += segments[i];
+            }
+
+            return path[path.length - 1];
+        }
+
+        /**
+         * Draws a stroke on the specified context
+         */
+        function drawStroke(ctx, stroke, progress = 1) {
+            ctx.beginPath();
+            let start = stroke.points[0];
+            ctx.moveTo(start.x, start.y);
+            if (stroke.type === 'line') {
+                const end = stroke.points[1];
+                const point = getPointOnStroke(stroke, progress);
+                ctx.lineTo(point.x, point.y);
+            } else if (stroke.type === 'curve') {
+                const [start, cp1, cp2, end] = stroke.points;
+                if (progress === 1) {
+                    ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                } else {
+                    const cps = partialBezier(progress, start.x, start.y, cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                    ctx.bezierCurveTo(cps.newCx1, cps.newCy1, cps.newCx2, cps.newCy2, cps.newX2, cps.newY2);
+                }
+            }
+
+            ctx.stroke();
+        }
+
+        /**
+         * Draws an arrow between two points
+         * @param {CanvasRenderingContext2D} ctx - The canvas context
+         * @param {Object} start - Start point {x, y}
+         * @param {Object} end - End point {x, y}
+         */
+        function drawArrow(ctx, start, end, isCurve = 'line') {
+            const headLength = 20; // pixel
+            const headWidth = 15; // pixel
+            const halfHead = headLength / 2;
+            const arrAng = Math.atan(headWidth / (2 * headLength));
+            const hyp = (headWidth / 2) / Math.sin(arrAng);
+            
+            // Calculate the angle of the line
+            const angle = Math.atan2(end.y - start.y, end.x - start.x);
+
+            // Calculate the midpoint of the line
+            const midX = (start.x + end.x) / 2;
+            const midY = (start.y + end.y) / 2;
+
+            // Draw arrow line 
+            if (isCurve === 'line') {
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                ctx.lineTo(end.x, end.y);
+                ctx.strokeStyle = '#FFA500';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            } else if (isCurve === 'curve') {
+                // nothing here
+            }
+
+            // Draw arrow head at midpoint
+            headPt0 = {
+                x: midX + halfHead * Math.cos(angle),
+                y: midY + halfHead * Math.sin(angle)
+            }
+            headPt1 = {
+                x: headPt0.x - hyp * Math.cos(angle - arrAng),
+                y: headPt0.y - hyp * Math.sin(angle - arrAng)
+            }
+            headPt2 = {
+                x: headPt0.x - hyp * Math.cos(angle + arrAng),
+                y: headPt0.y - hyp * Math.sin(angle + arrAng)
+            }
+            ctx.beginPath();
+            ctx.moveTo(headPt0.x, headPt0.y);
+            ctx.lineTo(headPt1.x, headPt1.y);
+            ctx.lineTo(headPt2.x, headPt2.y);
+            console.log(`hyp dist ${Math.hypot(headPt0.x - headPt1.x, headPt0.y - headPt1.y)}`)
+            console.log(`arr width dist ${Math.hypot(headPt2.x - headPt1.x, headPt2.y - headPt1.y)}`)
+            ctx.closePath();
+            ctx.fillStyle = '#FFA500';
+            ctx.fill();
+        }
+
+        /**
+         * Gets points along a curve for arrow placement
+         * @param {Object} stroke - Stroke data
+         * @param {number} numPoints - Number of points to sample
+         * @returns {Array} Array of points along the curve
+         */
+        function getCurvePoints(stroke, numPoints = 10) {
+            const points = [];
+            for (let i = 0; i < numPoints; i++) {
+                const t = i / (numPoints - 1);
+                points.push(getPointOnStroke(stroke, t));
+            }
+            return points;
+        }
+
+
+        /**
+         * Draws direction indicators for the current stroke
+         */
+        function drawStrokeDirections() {
+            if (currentStroke >= letters[currentLetter].strokes.length) return;
+
+            const stroke = letters[currentLetter].strokes[currentStroke];
+            const ctx = guideCtx;
+
+            if (stroke.type === 'line') {
+                // For lines, draw a single arrow
+                const start = stroke.points[0];
+                const end = stroke.points[1];
+                drawArrow(ctx, start, end);
+            } else if (stroke.type === 'curve') {
+                // For curves, draw one arrow line with multiple heads along the path
+                // draw the line
+                ctx.beginPath();                
+                const [start, cp1, cp2, end] = stroke.points;
+                ctx.moveTo(start.x, start.y);
+                ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                ctx.strokeStyle = '#FFA500'; // orange
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                let loci = [.24, .25, .49, .50, .74, .75];
+                const points = loci.map((l) => getPointOnStroke(stroke, l));
+                // const points = getCurvePoints(stroke, 100); // change number based on length?
+                for (let i = 0; i < points.length; i+=2) {
+                    drawArrow(ctx, points[i], points[i + 1], stroke.type);
+                }
+            }
+        }
+
+        /**
+         * Updates the guide display (including stroke directions)
+         * stroke directions one arrow or a few? 
+         */
+        function updateGuide() {
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+
+            // Draw remaining strokes in gray
+            guideCtx.strokeStyle = '#dddddd';
+            guideCtx.lineWidth = 20;
+            guideCtx.lineCap = 'round';
+
+            const letterStrokes = letters[currentLetter].strokes;
+            for (let i = currentStroke; i < letterStrokes.length; i++) {
+                drawStroke(guideCtx, letterStrokes[i]);
+            }
+
+            // Highlight current stroke
+            if (currentStroke < letterStrokes.length) {
+                guideCtx.strokeStyle = '#ffeb3b';
+                drawStroke(guideCtx, letterStrokes[currentStroke]);
+
+                // Draw direction arrows for current stroke
+                drawStrokeDirections();
+            }
+        }
+
+        // Event handlers
+        /**
+        handle the begining of a drawing attempt either with mouse or finger
+         */
+        function handleStart(e) {
+            isDrawing = true;
+            const point = getEventPoint(e);
+            drawingPath = [point];
+            accuracyDisplay.textContent = '';
+        }
+
+        function handleMove(e) {
+            if (!isDrawing) return;
+
+            const point = getEventPoint(e);
+            drawingPath.push(point);
+
+            // Draw the new line segment
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            drawCtx.beginPath();
+            drawCtx.strokeStyle = '#2196f3';
+            drawCtx.lineWidth = 20;
+            drawCtx.lineCap = 'round';
+
+            drawCtx.moveTo(drawingPath[0].x, drawingPath[0].y);
+            for (let i = 1; i < drawingPath.length; i++) {
+                drawCtx.lineTo(drawingPath[i].x, drawingPath[i].y);
+            }
+            drawCtx.stroke();
+        }
+
+        function handleEnd() {
+            if (!isDrawing || isAutoDrawing) return;
+            isDrawing = false;
+
+            const currentStrokeData = letters[currentLetter].strokes[currentStroke];
+            const accuracy = calculateAccuracy(drawingPath, currentStrokeData);
+
+            accuracyDisplay.textContent = `Accuracy: ${Math.round(accuracy)}%`;
+
+            if (accuracy >= 50) {
+                // Add to completed strokes
+                completedCtx.strokeStyle = '#2196f3';
+                completedCtx.lineWidth = 20;
+                completedCtx.lineCap = 'round';
+                drawStroke(completedCtx, currentStrokeData);
+
+                currentStroke++;
+                updateGuide();
+                if (currentStroke >= letters[currentLetter].strokes.length) {
+                    document.querySelector('.instruction').textContent = 'Great job! Letter completed!';
+                    document.querySelector('.instruction').style.color = '#4CAF50';
+                } else {
+                    
+                }
+            }
+
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        }
+
+        /**
+         * Helper function to get coordinates from mouse or touch event
+         */
+        function getEventPoint(e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const point = e.touches ? e.touches[0] : e;
+            return {
+                x: point.clientX - rect.left,
+                y: point.clientY - rect.top
+            };
+        }
+
+        /**
+ * Animates a single stroke
+ */
+        async function animateStroke(strokeIndex, duration = 1000) {
+            return new Promise(resolve => {
+                if (isAutoDrawing) restoreState(completedCtx);
+                if (isAutoDrawing) saveState(completedCtx);
+                const stroke = letters[currentLetter].strokes[strokeIndex];
+                let startTime = null;
+
+                function animate(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+
+                    // Clear only the guide canvas
+                    guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+
+                    // Draw the stroke in progress
+                    completedCtx.strokeStyle = '#2196f3';
+                    completedCtx.lineWidth = 20;
+                    completedCtx.lineCap = 'round';
+                    drawStroke(completedCtx, stroke, progress);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        resolve();
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            });
+        }
+
+        /**
+         * Automatically draws all strokes in sequence
+         */
+        async function autoDraw() {
+            if (isAutoDrawing) return;
+            isAutoDrawing = true;
+
+            // Disable controls during animation
+            document.getElementById('autoDrawBtn').disabled = true;
+            document.getElementById('resetBtn').disabled = true;
+            document.getElementById('letterSelect').disabled = true;
+
+            // Reset canvas
+            reset();
+
+            // Animate each stroke
+            const letterStrokes = letters[currentLetter].strokes;
+            for (let i = 0; i < letterStrokes.length; i++) {
+                if (isAutoDrawing) saveState(completedCtx);
+                await animateStroke(i);
+                currentStroke = i + 1;
+            }
+
+            // Re-enable controls
+            document.getElementById('autoDrawBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = false;
+            document.getElementById('letterSelect').disabled = false;
+            isAutoDrawing = false;
+        }
+
+        /**
+         * Resets the practice session
+         */
+        function reset() {
+            currentStroke = 0;
+            completedCtx.clearRect(0, 0, completedCanvas.width, completedCanvas.height);
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            document.querySelector('.instruction').textContent = 'Follow the highlighted stroke';
+            document.querySelector('.instruction').style.color = '#444';
+            accuracyDisplay.textContent = '';
+            updateGuide();
+        }
+
+
+
+        
+
+        // Event Listeners
+        drawCanvas.addEventListener('mousedown', handleStart);
+        drawCanvas.addEventListener('mousemove', handleMove);
+        drawCanvas.addEventListener('mouseup', handleEnd);
+        drawCanvas.addEventListener('mouseout', handleEnd);
+
+        drawCanvas.addEventListener('touchstart', e => {
+            e.preventDefault();
+            handleStart(e);
+        });
+        drawCanvas.addEventListener('touchmove', e => {
+            e.preventDefault();
+            handleMove(e);
+        });
+        drawCanvas.addEventListener('touchend', handleEnd);
+
+        document.getElementById('letterSelect').addEventListener('change', e => {
+            currentLetter = e.target.value;
+            reset();
+        });
+        document.getElementById('resetBtn').addEventListener('click', reset);
+        document.getElementById('autoDrawBtn').addEventListener('click', autoDraw);
+
+        // Initialize
+        updateGuide();
+    </script>
+</body>
+</html>
