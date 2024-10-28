@@ -75,7 +75,7 @@
             document.getElementById("app").appendChild(gameScr);
         }
 
-        retrieveURLparams().then((fibEx) => loadTemplate(fibEx)).then(() => loadGame())
+        retrieveURLparams().then((fibEx) => loadTemplate(`heb_ex_${fibEx}`)).then(() => loadGame())
                 .then(() => {
                     console.log('Template and game script loaded successfully');
                     // init code that depends on both the template and game script
