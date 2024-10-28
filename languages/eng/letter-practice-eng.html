@@ -133,7 +133,8 @@
         const accuracyDisplay = document.getElementById('accuracy');
 
         // Draw styles
-        const arwStyle = { color: '#FFA500', thickness: 3 / 100, headLength: 20/300, headWidth:15/300 }; // guide arrow color - orange. normalized
+        const ruleStyle = { color: '#FFA500', thickness: 3 / 100, headLength: 20/300, headWidth:15/300 }; // guide arrow color - orange. normalized
+        const arwStyle = { color: '#FFA500', lWidth: 3 / 100, headLength: 20/300, headWidth:15/300 }; // guide arrow color - orange. normalized
         const guideStyle = { color: '#dddddd', lWidth: 20 / 300, lCap: 'round' }; // guide stroke color gray. normalized
         const hlStyle = { color: '#ffeb3b', lWidth: 20 / 300, lCap: 'round' }; // // highlight guide stroke color - yellow. normalized
         // ({ color: ctx.strokeStyle, lWidth: ctx.lineWidth, lCap: ctx.lineCap } = guideStyle); // ctx = guideCtx need to de normalize
@@ -510,6 +511,11 @@
 
         const canvasWidth = 300;
         const canvasHeight = 300;
+        const canvasDim = 300; // square
+
+        function drawLineRule() {
+            
+        }
 
         function normalizeLetters(letters, canvasWidth, canvasHeight) {
             function normStroke(stroke, canvasWidth, canvasHeight) {
@@ -853,7 +859,7 @@
         function drawArrow(ctx, start, end, stroke, type = 'line') {
             // Set styling
             let hl, hw;
-            ({ color: ctx.strokeStyle, color: ctx.fillStyle, thickness: ctx.lineWidth, headLength: hl, headWidth: hw } = arwStyle);
+            ({ color: ctx.strokeStyle, color: ctx.fillStyle, lWidth: ctx.lineWidth, headLength: hl, headWidth: hw } = arwStyle);
             hl *= canvasWidth; // denorm to pixel
             hw *= canvasWidth; // denorm to pixel
 
@@ -935,36 +941,32 @@
          * stroke directions one arrow w/ three heads 
          */
         function updateGuide() {
-            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            let ctx = guideCtx;            
+            ctx.clearRect(0, 0, ctx.width, ctx.height);
 
-            // Draw remaining strokes in gray
-            guideCtx.strokeStyle = '#dddddd';
-            guideCtx.lineWidth = 20;
-            guideCtx.lineCap = 'round';
+            // Style remaining strokes (gray)
+            ({ color: ctx.strokeStyle, lWidth: ctx.lineWidth, lCap: ctx.lineCa } = guideStyle);
 
             const letterStrokes = letters[currentLetter].strokes;
             for (let i = currentStroke; i < letterStrokes.length; i++) {
                 let stroke = letterStrokes[i];
-                //console.log(i);
-                //console.log(stroke);
                 if (stroke.type === 'compound') {
-                    stroke.subStrokes.forEach((sub) => drawStroke(guideCtx, sub));
+                    stroke.subStrokes.forEach((sub) => drawStroke(ctx, sub));
                 } else {
-                    drawStroke(guideCtx, stroke);
+                    drawStroke(ctx, stroke);
                 }
-                
             }
 
             // Highlight current stroke
             if (currentStroke < letterStrokes.length) {
+                // Stlye highlight strokes
+                ({ color: ctx.strokeStyle, lWidth: ctx.lineWidth, lCap: ctx.lineCap } = hlStyle);
                 let stroke = letterStrokes[currentStroke];
-                guideCtx.strokeStyle = hlClr;
                 if (stroke.type === 'compound') {
-                    stroke.subStrokes.forEach((sub) => drawStroke(guideCtx, sub));
+                    stroke.subStrokes.forEach((sub) => drawStroke(ctx, sub));
                 } else {
-                    drawStroke(guideCtx, stroke);
+                    drawStroke(ctx, stroke);
                 }
-
                 // Draw direction arrows for current stroke
                 drawStrokeDirections(stroke);
             }
