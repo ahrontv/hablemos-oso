@@ -52,6 +52,7 @@
         }
         async function loadTemplate(pageName) {
             try {
+                console.log(`templtee pageName: ${pageName}`);
                 const response = await fetch('/hablemos_oso/languages/heb/heb_fib_template.html');
                 console.log(response);
                 const templateHtml = await response.text();
@@ -60,7 +61,7 @@
                 // let pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
                 // pageName = 'heb_ex_1';
                 const pageContent = pageData[pageName];
-
+                console.log(`pageContent: ${pageContent}`);
                 document.getElementById('app').innerHTML = template(pageContent);
                 document.title = `${pageContent.title}`;
             } catch (error) {
