@@ -9,6 +9,11 @@
     <title>Hebrew Oso: Fill in the Blank</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     <script src="/hablemos_oso/languages/heb/heb_fib_data.js"></script>
+    <style>
+        nav {
+            direction: ltr;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -28,14 +33,31 @@
 
     <script>
         console.log(pageData);
-        async function loadTemplate() {
+        let fibEx = 1;
+        async function retrieveURLparams() {
+            // Example: Redirecting with URL parameters
+            //const paramName = 'example';
+            //const paramValue = 'value';
+            //window.location.href = `yourpage.html?${paramName}=${paramValue}`;
+            // Example: Reading URL parameters
+            try {
+                const params = new URLSearchParams(window.location.search);
+                fibEx = params.get('fibEx') && fibEx;
+            } catch (error) {
+                console.log('fail to get fib ex')
+            }
+      
+            console.log('Example Parameter Value:', fibEx);
+            return fibEx
+        }
+        async function loadTemplate(pageName) {
             try {
                 const response = await fetch('/hablemos_oso/languages/heb/heb_fib_template.html');
                 console.log(response);
                 const templateHtml = await response.text();
                 const template = Handlebars.compile(templateHtml);
 
-                let pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
+                // let pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
                 // pageName = 'heb_ex_1';
                 const pageContent = pageData[pageName];
 
@@ -53,14 +75,15 @@
             document.getElementById("app").appendChild(gameScr);
         }
 
-        loadTemplate().then(() => loadGame())
-            .then(() => {
-                console.log('Template and game script loaded successfully');
-                // init code that depends on both the template and game script
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        retrieveURLparams().then((fibEx) => loadTemplate(fibEx)).then(() => loadGame())
+                .then(() => {
+                    console.log('Template and game script loaded successfully');
+                    // init code that depends on both the template and game script
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+                
     </script>
 
 

@@ -26,13 +26,20 @@
 </nav>
 */
 
+let fibEx = 1;
+function buildFIBLink(n) {
+    return `/hablemos_oso/languages/heb/heb_exs.html?fibEx=${n}`
+}
+function pgDropItem(n) {
+    return { name: `Exercise ${n}`, href: buildFIBLink (n)}
+}
 let pgSets = {
     mainPages: {
         Home: { name: 'Home', href: 'index.html' },
         Cv: { name: 'CV', href: '/cv_2024_tech_grad.html' },
         Passion_1: {
             name: 'Languages', href: '/langs.html',
-            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: '/hablemos_oso/languages/heb/heb_ex_1.html' } ]
+            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: buildFIBLink(0) }]
         },
         Passion_2: { name: 'My Cat', href: '/cat.html' },
         Passion_3: { name: 'Digital Stickers', href: '/digital stickers.html' }
@@ -40,32 +47,14 @@ let pgSets = {
     hebPages: {
         Home: { name: 'Home', href: 'index.html' },
         FIB1: {
-            name: 'Fill in the Blank 1-10', href: '/hablemos_oso/languages/heb/heb_ex_1.html',
-            dropList: [{ name: 'Exercise 1', href: '/hablemos_oso/languages/heb/heb_ex_1.html' },
-                { name: 'Exercise 2', href: '/hablemos_oso/languages/heb/heb_ex_2.html' },
-                { name: 'Exercise 3', href: '/hablemos_oso/languages/heb/heb_ex_3.html' },
-                { name: 'Exercise 4', href: '/hablemos_oso/languages/heb/heb_ex_4.html' },
-                { name: 'Exercise 5', href: '/hablemos_oso/languages/heb/heb_ex_5.html' },
-                { name: 'Exercise 6', href: '/hablemos_oso/languages/heb/heb_ex_6.html' },
-                { name: 'Exercise 7', href: '/hablemos_oso/languages/heb/heb_ex_7.html' },
-                { name: 'Exercise 8', href: '/hablemos_oso/languages/heb/heb_ex_8.html' },
-                { name: 'Exercise 9', href: '/hablemos_oso/languages/heb/heb_ex_9.html' },
-                { name: 'Exercise 10', href: '/hablemos_oso/languages/heb/heb_ex_10.html' }
-            ]
+            name: 'Fill in the Blank 1-10', href: buildFIBLink(0),
+            dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
+            pgDropItem(6), pgDropItem(7), pgDropItem(8), pgDropItem(9), pgDropItem(10)]
         },
         FIB2: {
-            name: 'Fill in the Blank 11-20', href: '/hablemos_oso/languages/heb/heb_ex_11.html',
-            dropList: [{ name: 'Exercise 11', href: '/hablemos_oso/languages/heb/heb_ex_11.html' },
-                { name: 'Exercise 12', href: '/hablemos_oso/languages/heb/heb_ex_12.html' },
-                { name: 'Exercise 13', href: '/hablemos_oso/languages/heb/heb_ex_13.html' },
-                { name: 'Exercise 14', href: '/hablemos_oso/languages/heb/heb_ex_14.html' },
-                { name: 'Exercise 15', href: '/hablemos_oso/languages/heb/heb_ex_15.html' },
-                { name: 'Exercise 16', href: '/hablemos_oso/languages/heb/heb_ex_16.html' },
-                { name: 'Exercise 17', href: '/hablemos_oso/languages/heb/heb_ex_17.html' },
-                { name: 'Exercise 18', href: '/hablemos_oso/languages/heb/heb_ex_18.html' },
-                { name: 'Exercise 19', href: '/hablemos_oso/languages/heb/heb_ex_19.html' },
-                { name: 'Exercise 20', href: '/hablemos_oso/languages/heb/heb_ex_20.html' }
-            ]
+            name: 'Fill in the Blank 11-20', href: buildFIBLink(11),
+            dropList: [pgDropItem(11), pgDropItem(12), pgDropItem(13), pgDropItem(14), pgDropItem(15),
+            pgDropItem(16), pgDropItem(17), pgDropItem(18), pgDropItem(19), pgDropItem(20)]
         }
     }
 };
