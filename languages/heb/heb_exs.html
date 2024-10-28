@@ -42,7 +42,7 @@
             // Example: Reading URL parameters
             try {
                 const params = new URLSearchParams(window.location.search);
-                fib_ex = params.get('fibEx') && fib_ex;
+                fib_ex = params.get('fibEx') || fib_ex;
             } catch (error) {
                 console.log('fail to get fib ex')
             }
