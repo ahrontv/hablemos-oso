@@ -39,7 +39,7 @@ let pgSets = {
         Cv: { name: 'CV', href: '/cv_2024_tech_grad.html' },
         Passion_1: {
             name: 'Languages', href: '/langs.html',
-            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: buildFIBLink(0) }]
+            dropList: [{ name: 'Spanish', href: '/Spanish.html' }, { name: 'Hebrew', href: buildFIBLink(1) }]
         },
         Passion_2: { name: 'My Cat', href: '/cat.html' },
         Passion_3: { name: 'Digital Stickers', href: '/digital stickers.html' }
@@ -47,7 +47,7 @@ let pgSets = {
     hebPages: {
         Home: { name: 'Home', href: 'index.html' },
         FIB1: {
-            name: 'Fill in the Blank 1-10', href: buildFIBLink(0),
+            name: 'Fill in the Blank 1-10', href: buildFIBLink(1),
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
             pgDropItem(6), pgDropItem(7), pgDropItem(8), pgDropItem(9), pgDropItem(10)]
         },
