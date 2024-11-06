@@ -1,5 +1,6 @@
 ﻿// data.js
 // double newline charcters are used to make a new paragraph tag
+console.log('wherever');
 const pageData = {
     home: {
         title: "Welcome to My GitHub Site",
