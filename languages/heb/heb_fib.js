@@ -1,12 +1,12 @@
-﻿let text = document.getElementById("text").textContent;
-console.log(`here for the q: ${text}`)
+﻿let rawText = document.getElementById("text").textContent;
+console.log(`here for the q: ${rawText}`)
 let phrases = [];
 let correctAnswers = [];
 let currentAnswers = [];
 let wordButtons = [];
 let answerHistory = [];
 let confetti;
-
+/* TODO modify to enable user to toggle hint visibilty*/
 
 /**
 Extracts phrases enclosed in curly braces from the given text.
@@ -14,7 +14,7 @@ Extracts phrases enclosed in curly braces from the given text.
 @returns {text: string, phrases: string[][]} An object containing the modified text and extracted phrases.
 */
 function extractPhrases(text) {
-    const regex = /\{(.*?)\}/g; // Regular expression to match phrases inside curly braces
+    const regex = /\{(.*?)\}/gs; // Regular expression to match phrases inside curly braces
     const matches = text.match(regex); // Find all matches
 
     if (!matches) {
@@ -52,7 +52,7 @@ function shuffleArray(array) {
 Initializes the game by setting up the word bank and necessary variables.
 */
 function initializeGame() {
-    ({ text, phrases } = extractPhrases(text));
+    ({ text, phrases } = extractPhrases(rawText));
     console.log(`text: ${text}`);
     console.log(`phrases: ${phrases}`);
     let tp0 = Array.isArray(phrases[0]);
@@ -71,6 +71,7 @@ function initializeGame() {
     const wordBank = document.getElementById('wordBank');
     words.forEach(word => {
         const button = document.createElement('button');
+        button.classList.add('missingPhrase');
         button.textContent = word; // potentially a slightly different version of the word like the inf
         button.onclick = () => selectWord(word, button);
         wordBank.appendChild(button);
@@ -113,7 +114,15 @@ function updateText() {
         : `<span class="blank" onclick="clearAnswer(${i})">${noanswerFill}</span>`;
         displayText = displayText.replace(placeholder, replacement);
     }
-    document.getElementById('text').innerHTML = displayText;
+    function wrapInPTags(text) {
+        // Split the input text by newline characters 
+        const lines = text.split('\n\n'); // Wrap each line in <p> tags 
+        const wrappedLines = lines.map(line => `<p>${line}</p>`);
+        // Join the wrapped lines back into a single string
+        return wrappedLines.join('');
+    }
+    // TODO insert function call to 
+    document.getElementById('text').innerHTML = wrapInPTags(displayText);
 }
 
 /**
@@ -148,13 +157,14 @@ function undo() {
 Checks the user's answers and displays the result.
 Trigger celebratory animation when all correct.
 */
-function checkAnswers() {
+function checkAnswers(correct=0) {
     const result = document.getElementById('result');
     result.classList.add('checking');
     result.textContent = 'בודק תשובות...';
     const checkButt = document.getElementById("checkButton");
 
-    let correct = 0;
+    correct = correct || 0;
+    correct = correct && correctAnswers.length;
     const blanks = document.getElementsByClassName('blank');
     setTimeout(() => {
         result.classList.remove('checking');
@@ -173,17 +183,22 @@ function checkAnswers() {
 
         // Trigger confetti animation if all answers are correct
         if (correct === correctAnswers.length) {
-        // const rect = resultElement.getBoundingClientRect();//return here
-        result.textContent = 'כל הכבוד! כל התשובות נכונות.'; // update
-        const checkButton = document.getElementById("checkButton");
-        const canvas = document.getElementById('confettiCanvas');
-        const canvasRect = canvas.getBoundingClientRect();
-        const buttonRect = checkButton.getBoundingClientRect();
+            // const rect = resultElement.getBoundingClientRect();//return here
+            result.textContent = 'כל הכבוד! כל התשובות נכונות.'; // update
+            const checkButton = document.getElementById("checkButton");
+            const canvas = document.getElementById('confettiCanvas');
+            const canvasRect = canvas.getBoundingClientRect();
+            const buttonRect = checkButton.getBoundingClientRect();
 
-        // Calculate the position of the button relative to the canvas
-        const x = buttonRect.left + buttonRect.width / 2 - canvasRect.left;
-        const y = buttonRect.top - canvasRect.top;
-        confetti.burst(x, y);
+            // Calculate the position of the button relative to the canvas
+            //const x = buttonRect.left + buttonRect.width / 2 - canvasRect.left;
+            const x = checkButton.offsetLeft;
+            //const y = buttonRect.top - canvasRect.top;
+            const y = checkButton.offsetTop;
+            console.log(`x: ${x}`);
+            console.log(`y: ${y}`);
+            // confetti.burst(x, y);
+            confetti.burst(x, y);
         }
     }, 750);
 }
@@ -192,18 +207,45 @@ class Confetti {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.particles = [];
-        this.colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+        this.colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4',
+            '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+        this.start = 0;
+        this.lastT = 0;
+        this.timeoutId = null;
+    }
+
+    burst(x, y) {
+        resizeCanvas();
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+        //this.createParticles(x, y, 100);
+        this.start = 0;
+        this.lastT = 0;
+
+        this.createParticles(x, y, 80);
+        const intervalId = setInterval(() =>this.createParticles(x, y, 20), 100);
+        setTimeout(() => { clearInterval(intervalId) }, 1050);
+        //this.animate();
+        requestAnimationFrame(this.animate.bind(this));
+
+        // Stop the animation after 5 seconds
+        this.timeoutId = setTimeout(() => {
+            console.log(this.particles);
+            this.particles = [];
+            this.start = 0;
+            this.lastT = 0;
+        }, 5100);
     }
 
     createParticles(x, y, amount) {
-        this.particles = [];
         for (let i = 0; i < amount; i++) {
             this.particles.push({
                 x: x,
                 y: y,
-                xVel: Math.random() * 10 - 5,
-                yVel: Math.random() * -15 - 5,
-                size: Math.random() * 5 + 5,
+                xVel: (Math.random() * - this.canvas.width / 5 - this.canvas.width / 16),
+                yVel: (Math.random() * - 300 - 400), // Random upward velocity
+                size: Math.random() * 10 + 5,
                 color: this.colors[Math.floor(Math.random() * this.colors.length)]
             });
         }
@@ -219,33 +261,30 @@ class Confetti {
         });
     }
 
-    updateParticles() {
+    updateParticles(dt) {
         this.particles.forEach((p) => {
-            p.x += p.xVel;
-            p.y += p.yVel;
-            p.yVel += 0.1;
-            p.size -= 0.05;
+            p.x += p.xVel * dt;
+            p.y += p.yVel * dt;
+            p.yVel += 400 * dt; // Gravity
+            p.size -= 3 * dt; // Shrink particles over time
         });
         this.particles = this.particles.filter(p => p.size > 0);
     }
 
-    animate() {
+    animate(timestamp) {
+        if (!this.start) this.start = timestamp;
+        if (!this.lastT) this.lastT = timestamp;
+        const dt = (timestamp - this.lastT) / 1000;//ms
+        this.lastT = timestamp;
+        this.lastT = timestamp;
         this.drawParticles();
-        this.updateParticles();
+        this.updateParticles(dt);
         if (this.particles.length > 0) {
             requestAnimationFrame(this.animate.bind(this));
         }
     }
 
-    burst(x, y) {
-        clearTimeout(this.timeoutId);
-        this.createParticles(x, y, 100);
-        this.animate();
-        // Stop the animation after 1.5 seconds
-        this.timeoutId = setTimeout(() => {
-            this.particles = [];
-        }, 1500);
-    }
+
 }
 
 function initializeConfetti() {
@@ -257,13 +296,14 @@ function initializeConfetti() {
 
 function resizeCanvas() {
     const canvas = document.getElementById('confettiCanvas');
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    const contEle = document.getElementById('fibContainer');
+    canvas.width = contEle.offsetWidth;
+    canvas.height = contEle.offsetHeight;
 }
 
 
 initializeConfetti();
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+//resizeCanvas();
+//window.addEventListener('resize', resizeCanvas);
 
 initializeGame();

@@ -28,6 +28,7 @@
 
 let fibEx = 1;
 function buildFIBLink(n) {
+    if (local) return `/languages/heb/heb_exs.html?fibEx=${n}`
     return `/hablemos_oso/languages/heb/heb_exs.html?fibEx=${n}`
 }
 function pgDropItem(n) {
@@ -35,7 +36,7 @@ function pgDropItem(n) {
 }
 let pgSets = {
     mainPages: {
-        Home: { name: 'Home', href: 'index.html' },
+        Home: { name: 'Home', href: '/index.html' },
         Cv: { name: 'CV', href: '/cv_2024_tech_grad.html' },
         Passion_1: {
             name: 'Languages', href: '/langs.html',
@@ -45,14 +46,14 @@ let pgSets = {
         Passion_3: { name: 'Digital Stickers', href: '/digital stickers.html' }
     },
     hebPages: {
-        Home: { name: 'Home', href: 'index.html' },
+        Home: { name: 'Home', href: '/index.html' },
         FIB1: {
-            name: 'Fill in the Blank 1-10', href: buildFIBLink(1),
+            name: 'Fill in the Blank 1-10', href: '#', // stop the drop down top from being a clickable link
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
             pgDropItem(6), pgDropItem(7), pgDropItem(8), pgDropItem(9), pgDropItem(10)]
         },
         FIB2: {
-            name: 'Fill in the Blank 11-20', href: buildFIBLink(11),
+            name: 'Fill in the Blank 11-20', href: '#',
             dropList: [pgDropItem(11), pgDropItem(12), pgDropItem(13), pgDropItem(14), pgDropItem(15),
             pgDropItem(16), pgDropItem(17), pgDropItem(18), pgDropItem(19), pgDropItem(20)]
         }
@@ -72,6 +73,7 @@ function createNav(setPages) {
         let newLi = document.createElement('li');
         let newA = document.createElement('a'); // main
         newA.textContent = value.name;
+        if (newA.href === '#') newA.onclick = (e) => e.preventDefault();
         newA.href = value.href;
         if (value.dropList) {
             let caretIcon = document.createElement('i');
@@ -165,7 +167,7 @@ function includeNavStlying() {
             }
 
             /* Add a background color on dropdown button hover */
-            nav ul li a:hover, nav ul li.drop-down:hover {
+            nav ul li:hover, nav ul li.drop-down:hover {
                 background-color: red;
             }
 

@@ -1,6 +1,13 @@
 ﻿<!-- index.html -->
 <!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
-<!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
+<!-- TODO make reading buttton with niqqud
+    TODO allow hints to be switched off
+    TODO include a button to auto answer for testing
+    TODO make the word bank sticky so it follows as you scroll down
+    TODO make the confetti come from a better place
+    TODO have a way to answer out of order.
+    TODO Hide the answers used so word bank takes up less space
+    -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,17 +16,179 @@
     <title>Hebrew Oso: Fill in the Blank</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     <script src="/hablemos_oso/languages/heb/heb_fib_data.js"></script>
+    <script src="/languages/heb/heb_fib_data.js"></script>
+    <script>
+        function checkIfLocal() {
+            var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            if (isLocal) {
+                console.log("The page is being hosted locally."); // Adjust your loading strategy for local development 
+                //var script = document.createElement("script");
+                //script.type = "text/javascript";
+                //script.src = url;
+                // If a callback function is provided, set it to run once the script loads
+                //if (callback) { script.onload = callback; } document.head.appendChild(script);
+            } else {
+                console.log("The page is not being hosted locally."); // Adjust your loading strategy for production
+            }
+            return isLocal;
+        }
+        var local = checkIfLocal();
+    </script>
     <style>
+        /* Template will overide this*/
         nav {
             direction: ltr;
         }
+
+        h1 {
+            direction: ltr;
+            text-align: center;
+            /*border: 3px solid green;*/
+            margin: auto;
+            color: #333;
+        }
+
+        #fibNum {
+            margin: 20px 0px;
+        }
+
+        footer > p {
+            direction: ltr;
+            text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+            direction: rtl;
+        }
+
+        #fibContainer {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            /*overflow: hidden;*/
+        }
+        
+        #instructions{
+            font-size: 1.5em;
+        }
+
+        .word-bank {
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed orange;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,.8);
+            transition: all 2s ease; /* Smooth transition for all properties */
+        }
+
+            .word-bank button.missingPhrase {
+                /*margin: 5px;*/
+                padding: 5px 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .word-bank button.missingPhrase:hover {
+                    background-color: #45a049;
+                }
+
+                .word-bank button.missingPhrase:disabled {
+                    background-color: #cccccc;
+                    cursor: pointer;
+                    opacity: 0;
+                    height: 0; /* Set height to 0 to remove from layout */
+                    width: 0;
+                    margin: 0; /* Ensure no extra space is taken */
+                    padding: 0; /* Ensure no extra space is taken */
+                    border: 0;
+                    overflow: hidden; /* Prevent content overflow */
+                    position: absolute; /* Remove from document flow */
+                    /*display: none;transform: scale(0);*/
+                }
+
+        .blank {
+            border-bottom: 1px solid #333;
+            padding: 0 0px;
+            margin: 0 0px;
+            cursor: pointer;
+            color: gray;
+            text-align: start;
+        }
+
+        .filled {
+            background-color: #e6f3ff; /*light blue*/
+            color: black;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            background-color: #ffcccc; /*light red*/
+        }
+
+        .correct {
+            background-color: #90EE90; /*light green*/
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        #undoButton {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            #undoButton:hover {
+                background-color: #ec971f;
+            }
+
+            #undoButton:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+        #confettiCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /*border: 2px solid red;*/
+        }
+
     </style>
 </head>
 <body>
     <header>
-        <h1>Fill in the Blank Exercise</h1>
+        <h1 id="fibNum">Fill in the Blank Exercise</h1>
         <!--Make nav-->
         <script id="navScr" src="/hablemos_oso/autoNav.js" onload="addNav('hebPages')"></script>
+        <script id="navScr" src="/autoNav.js" onload="addNav('hebPages')"></script>
     </header>
 
     <main id="content">
@@ -52,8 +221,9 @@
         }
         async function loadTemplate(pageName) {
             try {
-                console.log(`templtee pageName: ${pageName}`);
-                const response = await fetch('/hablemos_oso/languages/heb/heb_fib_template.html');
+                console.log(`template pageName: ${pageName}`);
+                let pgLoc = local ? '/languages/heb/heb_fib_template.html' : '/hablemos_oso/languages/heb/heb_fib_template.html'
+                const response = await fetch(pgLoc);
                 console.log(response);
                 const templateHtml = await response.text();
                 const template = Handlebars.compile(templateHtml);
@@ -61,7 +231,8 @@
                 // let pageName = window.location.pathname.split('/').pop().replace('.html', '') || 'home';
                 // pageName = 'heb_ex_1';
                 const pageContent = pageData[pageName];
-                console.log(`pageContent: ${pageContent}`);
+                console.log(`pageContent:`);
+                console.log(pageContent);
                 document.getElementById('app').innerHTML = template(pageContent);
                 document.title = `${pageContent.title}`;
             } catch (error) {
@@ -72,13 +243,14 @@
 
         function loadGame() {
             let gameScr = document.createElement("script");
-            gameScr.src = '/hablemos_oso/languages/heb/heb_fib.js'
+            gameScr.src = local ? '/languages/heb/heb_fib.js' :'/hablemos_oso/languages/heb/heb_fib.js'
             document.getElementById("app").appendChild(gameScr);
         }
 
         retrieveURLparams().then((fibEx) => loadTemplate(`heb_ex_${fibEx}`)).then(() => loadGame())
                 .then(() => {
                     console.log('Template and game script loaded successfully');
+                    document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
                     // init code that depends on both the template and game script
                 })
                 .catch(error => {
