@@ -1,12 +1,12 @@
 ﻿<!-- index.html -->
 <!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
-<!-- TODO make reading buttton with niqqud
+<!-- to auto answer for testing checkAnswers(1)
+    TODO with niqqud
+    TODO enable voice reading with error message if voice unavailable
     TODO allow hints to be switched off
-    TODO include a button to auto answer for testing
-    TODO make the word bank sticky so it follows as you scroll down
-    TODO make the confetti come from a better place
     TODO have a way to answer out of order.
-    TODO Hide the answers used so word bank takes up less space
+    TODO Make words fill the space better. center or space around
+    TODO languages site should have a home page that is quite different from home page of personal
     -->
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@
     <title>Hebrew Oso: Fill in the Blank</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     <script id="navScr" src="/hablemos_oso/languages/heb/heb_fib_data.js" onerror="console.error('Script failed to load.')"></script>
-    <!--<script id="navScr" src="/languages/heb/heb_fib_data.js" onerror="console.error('Script failed to load.')"></script>-->
+    <script id="navScr" src="/languages/heb/heb_fib_data.js" onerror="console.error('Script failed to load.')"></script>
     <script id="localLoader">
         function checkIfLocal() {
             var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
@@ -179,10 +179,12 @@
             pointer-events: none;
             /*border: 2px solid red;*/
         }
+
         #app.loading {
             direction: ltr;
             text-align: center;
         }
+
         #app.loaded {
             direction: rtl;
             text-align: right;
@@ -194,11 +196,11 @@
         <h1 id="fibNum">Fill in the Blank Exercise</h1>
         <!--Make nav-->
         <script id="navScr" src="/hablemos_oso/autoNav.js" onload="addNav('hebPages')"></script>
-        <!--<script id="navScr" src="/autoNav.js" onload="addNav('hebPages')"></script>-->
+        <<script id="navScr" src="/autoNav.js" onload="addNav('hebPages')"></script>>
     </header>
 
     <main id="content">
-        <div id="app" class ="loading">Loading...</div>
+        <div id="app" class="loading">Loading...</div>
     </main>
 
     <footer>
@@ -221,7 +223,7 @@
             } catch (error) {
                 console.log('fail to get fib ex')
             }
-      
+
             console.log('Example Parameter Value:', fib_ex);
             return fib_ex
         }
@@ -249,21 +251,21 @@
 
         function loadGame() {
             let gameScr = document.createElement("script");
-            gameScr.src = local ? '/languages/heb/heb_fib.js' :'/hablemos_oso/languages/heb/heb_fib.js'
+            gameScr.src = local ? '/languages/heb/heb_fib.js' : '/hablemos_oso/languages/heb/heb_fib.js'
             document.getElementById("app").appendChild(gameScr);
         }
 
         retrieveURLparams().then((fibEx) => loadTemplate(`heb_ex_${fibEx}`)).then(() => loadGame())
-                .then(() => {
-                    console.log('Template and game script loaded successfully');
-                    document.getElementById('app').classList = ['loaded'];
-                    document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
-                    // init code that depends on both the template and game script
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                
+            .then(() => {
+                console.log('Template and game script loaded successfully');
+                document.getElementById('app').classList = ['loaded'];
+                document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
+                // init code that depends on both the template and game script
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+
     </script>
 
 

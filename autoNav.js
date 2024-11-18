@@ -46,7 +46,7 @@ let pgSets = {
         Passion_3: { name: 'Digital Stickers', href: '/digital stickers.html' }
     },
     hebPages: {
-        Home: { name: 'Home', href: '/index.html' },
+        Home: { name: 'Home', href: '/hablemos_oso/index.html' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', // stop the drop down top from being a clickable link
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
@@ -60,6 +60,7 @@ let pgSets = {
     }
 };
 
+if (local) pgSets.hebPages.Home.href = '/index.html';
 function markCurrPg(pg, currPg,listItem) {
     if (pg.includes(currPg)) listItem.classList.add('currPg');
     // apply to first child only?
