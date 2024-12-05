@@ -255,19 +255,33 @@
             }
         }
 
+        /*
         function loadGame() {
             let gameScr = document.createElement("script");
             gameScr.id = "gameScr";
             gameScr.src = local ? '/languages/heb/heb_fib.js' : '/hablemos_oso/languages/heb/heb_fib.js'
             document.getElementById("app").appendChild(gameScr);
         }
-
+        
         retrieveURLparams().then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex)).then(() => loadGame())
             .then(() => {
                 console.log('Template and game script loaded successfully');
                 document.getElementById('app').classList = ['loaded'];
                 document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
                 // init code that depends on both the template and game script
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+        */
+
+        retrieveURLparams().then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex))
+            .then(() => {
+                console.log('Template and game script loaded successfully');
+                document.getElementById('app').classList = ['loaded'];
+                document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
+                // init code that depends on both the template and game script
+                // game script in the template
             })
             .catch(error => {
                 console.error('Error:', error);
