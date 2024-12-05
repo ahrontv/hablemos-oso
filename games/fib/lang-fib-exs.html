@@ -234,8 +234,8 @@
         var local = true;
         async function loadTemplate(lang, fibEx) {
             try {
-                let pgLoc = local ? `/languages/${lang}/${lang}_fib_template.html` : `/hablemos_oso/languages/${lang}/${lang}_fib_template.html`;
-                pgLoc = '/languages/heb/fib-template.html';
+                //let pgLoc = local ? `/languages/${lang}/${lang}_fib_template.html` : `/hablemos_oso/languages/${lang}/fib_template.html`;
+                let pgLoc = 'fib-template.html';
                 const response = await fetch(pgLoc);
                 console.log(response);
                 const templateHtml = await response.text();

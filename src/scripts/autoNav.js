@@ -50,8 +50,8 @@ function buildFIBLink(n, l) {
     if (n > 200 && n < 300) l = "pt";
     if (n > 200 && n < 300) l = "span";
         n = n % 100;
-    if (local) return `/languages/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
-    return `/hablemos_oso/languages/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
+    if (local) return `/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
+    return `/hablemos-oso/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
 }
 function pgDropItem(n) {
     return { name: `Exercise ${n%100}`, href: buildFIBLink (n)}
