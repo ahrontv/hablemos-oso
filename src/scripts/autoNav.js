@@ -58,14 +58,14 @@ function pgDropItem(n) {
 }
 let pgSets = {
     mainPages: {
-        Home: { name: 'Home', href: '/index.html' },
-        English: { name: 'English', href: '/languages/eng/eng-main.html' },
-        Hebrew: { name: 'Hebrew', href: '/languages/heb/heb-main.html' },
-        Portuguese: { name: 'Portuguese', href: '/languages/pt/pt-main.html' },
-        Spanish: { name: 'Spanish', href: '/languages/span/span-main.html' },
+        Home: { name: 'Home', href: 'index.html' },
+        English: { name: 'English', href: 'languages/eng/eng-main.html' },
+        Hebrew: { name: 'Hebrew', href: 'languages/heb/heb-main.html' },
+        Portuguese: { name: 'Portuguese', href: 'languages/pt/pt-main.html' },
+        Spanish: { name: 'Spanish', href: 'languages/span/span-main.html' },
     },
     engPages: {
-        Home: { name: 'Home', href: '/index.html' },
+        Home: { name: 'Home', href: '/hablemos-oso/' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
@@ -78,7 +78,7 @@ let pgSets = {
         }
     },
     hebPages: {
-        Home: { name: 'Home', href: '/index.html' },
+        Home: { name: 'Home', href: '/hablemos-oso/' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(101), pgDropItem(102), pgDropItem(103), pgDropItem(104), pgDropItem(105),
@@ -91,7 +91,7 @@ let pgSets = {
         }
     },
     ptPages: {
-        Home: { name: 'Home', href: '/index.html' },
+        Home: { name: 'Home', href: '/hablemos-oso/' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#',
             dropList: [pgDropItem(201), pgDropItem(202), pgDropItem(203), pgDropItem(204), pgDropItem(205),
@@ -104,7 +104,7 @@ let pgSets = {
         }
     },
     spanPages: {
-        Home: { name: 'Home', href: '/index.html' },
+        Home: { name: 'Home', href: '/hablemos-oso/' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#',
             dropList: [pgDropItem(301), pgDropItem(302), pgDropItem(303), pgDropItem(304), pgDropItem(305),
@@ -118,7 +118,7 @@ let pgSets = {
     },
 };
 
-if (local) pgSets.hebPages.Home.href = '/index.html';
+if (local) pgSets.hebPages.Home.href = 'index.html';
 function markCurrPg(pg, currPg,listItem) {
     if (pg.includes(currPg)) listItem.classList.add('currPg');
     // apply to first child only?
