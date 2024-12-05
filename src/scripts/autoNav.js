@@ -59,13 +59,13 @@ function pgDropItem(n) {
 let pgSets = {
     mainPages: {
         Home: { name: 'Home', href: 'index.html' },
-        English: { name: 'English', href: 'languages/eng/eng-main.html' },
-        Hebrew: { name: 'Hebrew', href: 'languages/heb/heb-main.html' },
-        Portuguese: { name: 'Portuguese', href: 'languages/pt/pt-main.html' },
-        Spanish: { name: 'Spanish', href: 'languages/span/span-main.html' },
+        English: { name: 'English', href: 'languages/eng/' },
+        Hebrew: { name: 'Hebrew', href: 'languages/heb/' },
+        Portuguese: { name: 'Portuguese', href: 'languages/pt/' },
+        Spanish: { name: 'Spanish', href: 'languages/span/' },
     },
     engPages: {
-        Home: { name: 'Home', href: '/hablemos-oso/' },
+        Home: { name: 'Home', href: '../../' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
