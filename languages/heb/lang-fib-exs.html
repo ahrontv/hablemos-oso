@@ -1,0 +1,280 @@
+﻿<!-- index.html -->
+<!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
+<!-- to auto answer for testing checkAnswers(1)
+    TODO with niqqud
+    TODO enable voice reading with error message if voice unavailable
+    TODO allow hints to be switched off. save this to local storage
+    TODO have a way to answer out of order.
+    TODO Make words fill the space better. center or space around
+    TODO languages site should have a home page that is quite different from home page of personal
+    -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lang Oso: Fill in the Blank</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="/src/assets/imgs/oso_anteojo_favicon.png"> <!--make yoni at some point-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <style>
+        /* Template will overide this*/
+        nav {
+            direction: ltr;
+        }
+
+        h1 {
+            direction: ltr;
+            text-align: center;
+            /*border: 3px solid green;*/
+            margin: auto;
+            color: #333;
+        }
+
+        #fibNum {
+            margin: 20px 0px;
+        }
+
+        footer > p {
+            direction: ltr;
+            text-align: center;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+            direction: rtl;
+        }
+
+        #fibContainer {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            /*overflow: hidden;*/
+        }
+
+        #instructions {
+            font-size: 1.5em;
+        }
+
+        .word-bank {
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed orange;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,.8);
+            transition: all 2s ease; /* Smooth transition for all properties */
+        }
+
+            .word-bank button.missingPhrase {
+                /*margin: 5px;*/
+                padding: 5px 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+                .word-bank button.missingPhrase:hover {
+                    background-color: #45a049;
+                }
+
+                .word-bank button.missingPhrase:disabled {
+                    background-color: #cccccc;
+                    cursor: pointer;
+                    opacity: 0;
+                    height: 0; /* Set height to 0 to remove from layout */
+                    width: 0;
+                    margin: 0; /* Ensure no extra space is taken */
+                    padding: 0; /* Ensure no extra space is taken */
+                    border: 0;
+                    overflow: hidden; /* Prevent content overflow */
+                    position: absolute; /* Remove from document flow */
+                    /*display: none;transform: scale(0);*/
+                }
+
+        .blank {
+            border-bottom: 1px solid #333;
+            padding: 0 0px;
+            margin: 0 0px;
+            cursor: pointer;
+            color: gray;
+            text-align: start;
+        }
+
+        .filled {
+            background-color: #e6f3ff; /*light blue*/
+            color: black;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            background-color: #ffcccc; /*light red*/
+        }
+
+        .correct {
+            background-color: #90EE90; /*light green*/
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        #undoButton {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            #undoButton:hover {
+                background-color: #ec971f;
+            }
+
+            #undoButton:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+        #confettiCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /*border: 2px solid red;*/
+        }
+
+        #app.loading {
+            direction: ltr;
+            text-align: center;
+        }
+
+        #app.loaded {
+            direction: rtl;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="fibNum">Fill in the Blank Exercise</h1>
+        <!--Make nav--><!--<script id="navScr" src="/src/scripts/autoNav.js" onload="addNav('hebPages')"></script>-->
+        <!--<script id="navScr" src="/languages/heb/heb_fib_data.js" onerror="console.error('Script failed to load.')"></script>-->
+        <script>
+            var fib_ex = 1;
+            var lang = 'eng';
+            async function retrieveURLparams() {
+                // Example: Reading URL parameters
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    fib_ex = params.get('fibEx') || fib_ex; //console.log('Example Parameter Value:', fib_ex);
+                    lang = params.get('lang') || lang;
+                } catch (error) {
+                    console.log(`fail to retreive lang / fibEx from current url: ${window.location.search}`);
+                }
+                return { lang, fib_ex };
+            }
+
+            async function makeNavBar(lang){
+                const navScr = Object.assign(document.createElement('script'), {
+                    id: "navScr", src: "/src/scripts/autoNav.js", onload: () => addNav(`${lang}Pages`)
+                });
+                document.querySelector('header').appendChild(navScr);
+            }
+
+            async function loadExData(lang) {
+                const dataScr = Object.assign(document.createElement('script'), {
+                    id : "dataScr",
+                    src : `/languages/${lang}/${lang}-fib-data.js`,
+                    onerror : "console.error('Script failed to load.')",
+                    onload : () => console.log(pageData), // Display pageData when available after async load
+                });
+                document.querySelector('header').appendChild(dataScr);
+            }
+
+            retrieveURLparams().then(
+                makeNavBar(lang)).then(
+                    loadExData(lang));
+
+        </script>
+
+    </header>
+
+    <main id="content">
+        <div id="app" class="loading">Loading...</div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Hablemos Oso. All rights reserved.</p>
+    </footer>
+
+   
+    <script>           
+        
+        var local = true;
+        async function loadTemplate(lang, fibEx) {
+            try {
+                let pgLoc = local ? `/languages/${lang}/${lang}_fib_template.html` : `/hablemos_oso/languages/${lang}/${lang}_fib_template.html`;
+                pgLoc = '/languages/heb/fib-template.html';
+                const response = await fetch(pgLoc);
+                console.log(response);
+                const templateHtml = await response.text();
+                const template = Handlebars.compile(templateHtml);
+                
+                let pageName = `${lang}_ex_${fibEx}`;  // pageName = 'heb_ex_1';
+                console.log(`template pageName: ${pageName}`);
+                const pageContent = pageData[pageName]; // title and content
+                const directions = pageData['directions']; // pgTitle and instructions undoButton checkButton
+                document.getElementById('app').innerHTML = template({ ...pageContent, ...directions });
+
+                console.log(pageContent);
+                    document.title = `Oso ${lang.toUpperCase()} FIB #${fibEx}`; //`${pageContent.title}`;
+            } catch (error) {
+                console.error('Error loading template:', error);
+                document.getElementById('app').innerHTML = '<p>Error loading content. Please try again later.</p>';
+            }
+        }
+
+        function loadGame() {
+            let gameScr = document.createElement("script");
+            gameScr.id = "gameScr";
+            gameScr.src = local ? '/languages/heb/heb_fib.js' : '/hablemos_oso/languages/heb/heb_fib.js'
+            document.getElementById("app").appendChild(gameScr);
+        }
+
+        retrieveURLparams().then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex)).then(() => loadGame())
+            .then(() => {
+                console.log('Template and game script loaded successfully');
+                document.getElementById('app').classList = ['loaded'];
+                document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
+                // init code that depends on both the template and game script
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+
+    </script>
+
+
+</body>
+</html>

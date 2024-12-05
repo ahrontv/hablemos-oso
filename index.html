@@ -5,29 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hablemos Oso</title>
     <link rel="icon" type="image/png" sizes="64x64" href="oso_anteojo_favicon.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/src/styles/styles.css">
     <script>
-        function checkIfLocal() {
-            var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-            if (isLocal) {
-                console.log("The page is being hosted locally."); // Adjust your loading strategy for local development
-                //var script = document.createElement("script");
-                //script.type = "text/javascript";
-                //script.src = url;
-                // If a callback function is provided, set it to run once the script loads
-                //if (callback) { script.onload = callback; } document.head.appendChild(script);
-            } else {
-                console.log("The page is not being hosted locally."); // Adjust your loading strategy for production
-            }
-            return isLocal;
-        }
-        var local = checkIfLocal();
+        //function checkIfLocal() {
+        //    var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        //    if (isLocal) {
+        //        console.log("The page is being hosted locally."); // Adjust your loading strategy for local development
+        //    } else {
+        //        console.log("The page is not being hosted locally."); // Adjust your loading strategy for production
+        //    }
+        //    return isLocal;
+        //}
+        //var local = checkIfLocal();
     </script>
 </head>
 <body>
     <header>
         <!--Make nav-->
-        <script id="navScr" src="autoNav.js" onload="addNav('hebPages')"></script>
+        <script id="navScr" src="/src/scripts/autoNav.js" onload="addNav('mainPages')"></script>
     </header>
 
     <main>
@@ -64,4 +59,5 @@
     <!-- <script src="script.js"></script>
         -->
 </body>
+<!--to host local| D: | cd D:\Users\atver\Documents PC\githubDdrive\languageSite | python3 -m http.server 8001 | in browser| localhost:8001-->
 </html>
