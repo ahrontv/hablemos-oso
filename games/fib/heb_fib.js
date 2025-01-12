@@ -1,4 +1,16 @@
-﻿let rawText = document.getElementById("text").textContent;
+﻿// switched to a template to easily swap out the instructions. 
+// template is on the same page as the html 
+/*
+function loadGame() {
+    let gameScr = document.createElement("script");
+    gameScr.id = "gameScr";
+    gameScr.src = local ? '/languages/heb/heb_fib.js' : '/hablemos_oso/languages/heb/heb_fib.js'
+    document.getElementById("app").appendChild(gameScr);
+}
+*/
+
+
+let rawText = document.getElementById("text").textContent;
 console.log(`here for the q: ${rawText}`)
 let phrases = [];
 let correctAnswers = [];

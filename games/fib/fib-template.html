@@ -21,10 +21,11 @@
         <div id="result"></div>
         <canvas id="confettiCanvas" style="position: absolute; pointer-events: none;"></canvas>
     </div>
-
+    
     <script id="fibGame">
+        const cCanvas = document.getElementById('confettiCanvas');
         let rawText = document.getElementById("text").textContent;
-        console.log(`here for the q: ${rawText}`)
+        
         let phrases = [];
         let correctAnswers = [];
         let currentAnswers = [];
@@ -308,26 +309,22 @@
                     requestAnimationFrame(this.animate.bind(this));
                 }
             }
-
-
         }
 
-        function initializeConfetti() {
-            const canvas = document.getElementById('confettiCanvas');
+        function initializeConfetti(canvas) {
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
-            confetti = new Confetti(canvas);
+            return new Confetti(canvas);
         }
 
         function resizeCanvas() {
-            const canvas = document.getElementById('confettiCanvas');
             const contEle = document.getElementById('fibContainer');
-            canvas.width = contEle.offsetWidth;
-            canvas.height = contEle.offsetHeight;
+            cCanvas.width = contEle.offsetWidth;
+            cCanvas.height = contEle.offsetHeight;
         }
 
 
-        initializeConfetti();
+        confetti = initializeConfetti(cCanvas);
         //resizeCanvas();
         //window.addEventListener('resize', resizeCanvas);
 

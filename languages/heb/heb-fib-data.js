@@ -24,6 +24,7 @@ const pageData = {
         answersCorrect:"כל הכבוד! כל התשובות נכונות.",
         answersRetry: "יש ${correct} תשובות נכונות מתוך ${correctAnswers.length}. נסו שוב!",
         answersChecking: 'בודק תשובות...',
+        niqqud: "להראות ניקוד?"
     },
 
     heb_ex_1: {

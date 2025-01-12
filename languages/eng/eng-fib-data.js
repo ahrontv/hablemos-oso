@@ -1,6 +1,7 @@
 ﻿// data.js
 // double newline charcters are used to make a new paragraph tag
 // console.log('data Scr running');
+// The missing phrases were not being made into buttons 9.12.24
 const pageData = {
     directions: {
         pgTitle:"תרגיל השלמת מילים בעברית",
@@ -12,134 +13,124 @@ const pageData = {
         answersChecking: 'בודק תשובות...',
     },
 
-    pt_ex_1: {
-        title: "איך מבצעים ארכיאולוגיה",
+    eng_ex_1: {
+        title: "Viking Horde",
 
         content: `
-            חפירה ארכיאולוגית היא תהליך {מורכב:מסובך} שדורש תכנון קפדני וביצוע מדויק.
-            ראשית, {ארכיאולוגים:חוקרי עתיקות} מבצעים סקר של האתר כדי לזהות אזורים
-            מבטיחים לחפירה. לאחר מכן, הם מחלקים את השטח ל{ריבועים:יחידות חפירה}
-            באמצעות חבלים וסרטי סימון. החפירה עצמה מתבצעת בשכבות {דקות:לא עבות},
-            כאשר כל שכבה מתועדת בקפידה. הארכיאולוגים משתמשים ב{כלים:אמצעים} עדינים
-            כמו מברשות ומעדרים קטנים כדי להסיר את האדמה בזהירות. כל {ממצא:חפץ שנמצא}
-            מסומן, מצולם ונרשם במדויק. לאחר הוצאת הממצאים מהאדמה, הם עוברים תהליך
-            {ניקוי:הסרת לכלוך} ו{שימור:טיפול למניעת התדרדרות}. חלק מהממצאים נשלחים
-            למעבדות לבדיקות {מתקדמות:מורכבות}, כמו בדיקות פחמן 14 לתיארוך. במהלך
-            החפירה, {מומחים:בעלי מקצוע} מתחומים שונים עשויים להצטרף לצוות, כמו
-            {אנתרופולוגים:חוקרי תרבויות אנושיות} או {בוטנאים:מומחי צמחים}. בסוף
-            כל {עונת:תקופת} חפירה, הארכיאולוגים מכינים דו"ח מפורט המתאר את כל
-            הממצאים והמסקנות מהחפירה.
+            The {truth:hhh} about the viking treasure mounds in Scotland. The truth about the viking treasure mounds in Scotland. The truth about the viking treasure mounds in Scotland. The truth about the viking treasure mounds in Scotland.
+
+            It's all a conspiracy.
             `
     },
-    pt_ex_2: {
+    eng_ex_2: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_3: {
+    eng_ex_3: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_4: {
+    eng_ex_4: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_5: {
+    eng_ex_5: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_6: {
+    eng_ex_6: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_7: {
+    eng_ex_7: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_8: {
+    eng_ex_8: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_9: {
+    eng_ex_9: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_10: {
+    eng_ex_10: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_11: {
+    eng_ex_11: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_12: {
+    eng_ex_12: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_13: {
+    eng_ex_13: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_14: {
+    eng_ex_14: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_15: {
+    eng_ex_15: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_16: {
+    eng_ex_16: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_17: {
+    eng_ex_17: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_18: {
+    eng_ex_18: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_19: {
+    eng_ex_19: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_20: {
+    eng_ex_20: {
         title: "",
 
         content: ``

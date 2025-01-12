@@ -78,7 +78,7 @@ let pgSets = {
         }
     },
     hebPages: {
-        Home: { name: 'Home', href: '/hablemos-oso/' },
+        Home: { name: 'Home', href: '../../heb/' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(101), pgDropItem(102), pgDropItem(103), pgDropItem(104), pgDropItem(105),
@@ -117,8 +117,13 @@ let pgSets = {
         }
     },
 };
+pgSets.engGame = { ...pgSets.engPages, Home: { name: 'English', href: '../../languages/eng/' } };
+pgSets.hebGame = { ...pgSets.hebPages, Home: { name: 'Hebrew', href: '../../languages/heb/' } };
+//pgSets.ptGame.Home.href = '../../languages/pt/';
+//pgSets.spanGame.Home.href = '../../languages/span/';
 
-if (local) pgSets.hebPages.Home.href = 'index.html';
+
+// if (local) pgSets.hebPages.Home.href = 'index.html';
 function markCurrPg(pg, currPg,listItem) {
     if (pg.includes(currPg)) listItem.classList.add('currPg');
     // apply to first child only?

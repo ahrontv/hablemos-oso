@@ -1,0 +1,405 @@
+﻿<!DOCTYPE html>
+<!--<html lang="he" dir="rtl">-->
+<html>
+<!--<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pgTitle">{ {pgTitle}}</title>
+</head>-->
+<body>
+    <div id="fibContainer">
+        <h1>{{title}}</h1>
+        <p id="instructions">{{instructions}}</p>
+
+        <div id="wordBank" class="word-bank"><!-- Words will be dynamically added here --></div>
+
+        <div id="text">{{content}}<!-- Exercise content will be dynamically added here --></div>
+
+        <button id="undoButton" disabled>{{undoButton}}</button>
+        <button id="checkButton" onclick="checkAnswers()">{{checkButton}}</button>
+        <button id="hintsButton" onclick="toggleHints()">hints</button>
+        {{#if (eq lang 'heb')}}
+            <button id="niqqudButton" onclick="toggleNiqqud()">niq</button>
+        {{/if}}
+
+        <div id="result"></div>
+        <canvas id="confettiCanvas" style="position: absolute; pointer-events: none;"></canvas>
+    </div>
+
+    <script id="fibGame">
+        class Confetti {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4',
+                    '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+                this.start = 0;
+                this.lastT = 0;
+                this.timeoutId = null;
+
+                //init
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+
+            burst(x, y) {
+                this.resizeCanvas();
+                if (this.timeoutId) {
+                    clearTimeout(this.timeoutId);
+                }
+                //this.createParticles(x, y, 100);
+                this.start = 0;
+                this.lastT = 0;
+
+                this.createParticles(x, y, 80);
+                const intervalId = setInterval(() => this.createParticles(x, y, 20), 100);
+                setTimeout(() => { clearInterval(intervalId) }, 1050);
+                //this.animate();
+                requestAnimationFrame(this.animate.bind(this));
+
+                // Stop the animation after 5 seconds
+                this.timeoutId = setTimeout(() => {
+                    console.log(this.particles);
+                    this.particles = [];
+                    this.start = 0;
+                    this.lastT = 0;
+                }, 5100);
+            }
+
+            createParticles(x, y, amount) {
+                let dirSign = -1;
+                // handlebars conditional
+                {{#if (eq lang 'heb')}} 
+                dirSign *= 1;
+                {{/if}}
+                for (let i = 0; i < amount; i++) {
+                    
+                    this.particles.push({
+                        x: x,
+                        y: y,
+                        xVel: (Math.random() * - this.canvas.width / 5 - this.canvas.width / 16) *dirSign,
+                        yVel: (Math.random() * - 300 - 400), // Rand vel up
+                        size: Math.random() * 10 + 5,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)]
+                    });
+                }
+            }
+
+            drawParticles() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach((p) => {
+                    this.ctx.beginPath();
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
+            }
+
+            updateParticles(dt) {
+                this.particles.forEach((p) => {
+                    p.x += p.xVel * dt;
+                    p.y += p.yVel * dt;
+                    p.yVel += 400 * dt; // Grav
+                    p.size -= 3 * dt; // Shrink over time
+                });
+                this.particles = this.particles.filter(p => p.size > 0);
+            }
+
+            animate(timestamp) {
+                if (!this.start) this.start = timestamp;
+                if (!this.lastT) this.lastT = timestamp;
+                const dt = (timestamp - this.lastT) / 1000;//ms
+                this.lastT = timestamp;
+                this.lastT = timestamp;
+                this.drawParticles();
+                this.updateParticles(dt);
+                if (this.particles.length > 0) {
+                    requestAnimationFrame(this.animate.bind(this));
+                }
+            }
+            resizeCanvas() {
+                const contEle = document.getElementById('fibContainer');
+                this.canvas.width = contEle.offsetWidth;
+                this.canvas.height = contEle.offsetHeight;
+            }
+        }
+
+        class FibGame {
+            constructor(container) {
+                this.state = {
+                    phrases: [],
+                    correctAnswers: [],
+                    currentAnswers: [],
+                    wordButtons: [],
+                    answerHistory: [],
+                    fibText: '', // the text with {i} for blanks
+                    hints: true, // show hints
+                    isNiqqudVisible: true
+                };
+
+                this.elements = {
+                    container: container,
+                    wordBank: container.querySelector('#wordBank'),
+                    text: container.querySelector('#text'),
+                    undoButton: container.querySelector('#undoButton'),
+                    checkButton: container.querySelector('#checkButton'),
+                    hintsButton: container.querySelector('#hintsButton'),
+                    niqqudButton: container.querySelector('#niqqudButton'),
+                    result: container.querySelector('#result'),
+                    confettiCanvas: container.querySelector('#confettiCanvas'),
+                    blanks: container.querySelector('.fibBlank')
+                };
+
+                this.confetti = new Confetti(this.elements.confettiCanvas);
+
+                // Bind methods to maintain correct 'this' context
+                this.selectWord = this.selectWord.bind(this);
+                this.undo = this.undo.bind(this);
+                this.checkAnswers = this.checkAnswers.bind(this);
+                this.toggleHints = this.toggleHints.bind(this);
+                this.toggleNiqqud = this.toggleNiqqud.bind(this);
+
+                this.initialize();
+            }
+
+            initialize() {
+                const { text, phrases } = this.extractPhrases(`{{content}}`);
+                // console.log(phrases);console.log(text);
+                this.elements.undoButton.onclick = this.undo;
+                this.elements.checkButton.onclick = this.checkAnswers;
+                this.elements.hintsButton.onclick = this.toggleHints;
+                if (this.elements.niqqudButton) this.elements.niqqudButton.onclick = this.toggleNiqqud;
+                this.state.fibText = text;
+                this.state.phrases = phrases;
+
+                this.state.correctAnswers = phrases.map(phrase => phrase[0]);
+                this.state.currentAnswers = new Array(this.state.correctAnswers.length).fill('');
+
+                this.setupWordBank(this.state.correctAnswers);
+                this.updateText();
+            }
+            /**
+            Initializes the game by setting up the word bank and necessary variables.
+            */
+            setupWordBank(correctAnswers) {
+                // Populate word bank. Create and store buttons
+                let words = [...correctAnswers];
+                let preventInfLoop = 0;
+                while (JSON.stringify(words) == JSON.stringify(correctAnswers)) {
+                    this.shuffleArray(words);
+                    if (preventInfLoop++ > 1001) break;
+                }
+                console.log(words);
+                console.log(correctAnswers);
+                const wordBank = this.elements.wordBank;
+                words.forEach(word => {
+                    const button = document.createElement('button');
+                    button.classList.add('missingPhrase');
+                    button.textContent = word; // potentially a slightly different version of the word like the inf
+                    button.onclick = () => this.selectWord(word, button);
+                    wordBank.appendChild(button);
+                    this.state.wordButtons.push(button);
+                });
+            }
+
+            /**
+            Extracts phrases enclosed in curly braces from the given text.
+            @param {string} text - The input text containing phrases in curly braces.
+            @returns {text: string, phrases: string[][]} An object containing the modified text and extracted phrases.
+            */
+            extractPhrases(text) {
+                const regex = /\{(.*?)\}/gs; // Regular expression to match phrases inside curly braces
+                const matches = text.match(regex); // Find all matches
+
+                if (!matches) {
+                    console.log('no matches');
+                    return { text: text, phrases: [] };// No phrases found
+                }
+
+                // Extract the content inside the curly braces and split by colons
+                const resultArrays = matches.map(match => {
+                    const content = match.slice(1, -1); // Remove the braces
+                    return content.split(':').map(entry => entry.trim()); // Split by colon and trim whitespace
+                });
+
+                // Replace each match with {i}, where i is the index base 0
+                let phrase_i = 0;
+                text = text.replace(regex, () => `{${phrase_i++}}`);
+                return { text: text, phrases: resultArrays };
+            }
+
+            /**
+            Shuffles the elements of an array in place.
+                @param {Array} array - The array to be shuffled.
+            */
+            shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            /**
+            Handles the selection of a word from the word bank.
+            @param {string} word - The selected word.
+            @param {HTMLButtonElement} button - The button element that was clicked.
+            */
+            selectWord(word, button) {
+                const index = this.state.currentAnswers.indexOf('');
+                if (index !== -1) {
+                    this.state.currentAnswers[index] = word;
+                    button.disabled = true;
+                    this.state.answerHistory.push({ index, word, button });
+                    this.updateText();
+                    this.elements.undoButton.disabled = false;
+                    // clear the graded choice formatting for this item
+                    const blank = this.elements.blanks[index];
+                    console.log(this.elements.blanks);
+                    console.log(blank);
+
+                    blank.classList.remove('incorrect');
+                    blank.classList.remove('correct');
+                }
+            }
+
+            /**
+            Updates the displayed text with the current answers.
+            */
+            updateText() {
+                const phrases = this.state.phrases;
+                const currentAnswers = this.state.currentAnswers;
+                console.log(this.state.fibText);
+                let displayText = this.state.fibText;
+                const ni = this.state.correctAnswers.length;
+                for (let i = 0; i < ni; i++) {
+                    const placeholder = `{${i}}`;
+                    const noanswerFill = (this.state.hints && phrases[i][1]) ? phrases[i][1] : `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // blank or hint
+                    const replacement = currentAnswers[i]
+                        ? `<span class="fibBlank filled" onclick="()=>{this.clearAnswer(${i})}">${currentAnswers[i]}</span>`
+                        : `<span class="fibBlank" onclick="()=>{this.clearAnswer(${i})}">${noanswerFill}</span>`;
+                    displayText = displayText.replace(placeholder, replacement);
+                }
+                console.log(displayText);
+                const newHTML = displayText.split('\n\n').map(line => `<p>${line}</p>`).join('');
+                this.elements.text.innerHTML = newHTML;
+                this.elements.blanks = this.elements.container.querySelectorAll('.fibBlank');
+                this.elements.blanks.forEach((blank,indy) => {
+                    blank.onclick = () => { this.clearAnswer(indy) }
+                });
+                // TODO insert function call to
+                
+                
+            }
+
+            /**
+            Clears the answer at the specified index.
+            @param {number} index - The index of the answer to clear.
+            */
+            clearAnswer(index) {
+                console.log(`clear ${index}`);
+                let curAns = this.state.currentAnswers;
+                let history = this.state.answerHistory;
+                if (curAns[index]) {
+                    const wbs = this.state.wordButtons;
+                    const wordButton = wbs.find(button => button.textContent === curAns[index]);
+                    if (wordButton) wordButton.disabled = false;
+                    curAns[index] = '';
+                    this.updateText();
+                    history = history.filter(item => item.index !== index);
+                    this.elements.undoButton.disabled = (history === 0);
+                }
+            }
+
+            /**
+            Undoes the last answer selection.
+            */
+            undo() {
+                if (this.state.answerHistory.length > 0) {
+                    const lastAnswer = this.answerHistory.pop();
+                    this.state.currentAnswers[lastAnswer.index] = '';
+                    lastAnswer.button.disabled = false;
+                    this.updateText();
+                    this.elements.undoButton.disabled = (this.state.answerHistory.length === 0);
+                }
+            }
+
+            // ... rest of your methods would be converted to class methods ...
+
+            /**
+            Checks the user's answers and displays the result.
+            Trigger celebratory animation when all correct.
+            */
+            checkAnswers(event, correct = 0) {
+                const correctAnswers = this.state.correctAnswers;
+                const currentAnswers = this.state.currentAnswers;
+                const checkButton = this.elements.checkButton;
+                const result = this.elements.result;
+                result.classList.add('checking');
+                result.textContent = "{{answersChecking}}";
+
+                correct = correct || 0;
+                console.log(correct);
+                // correct = correct && correctAnswers.length;
+                const blanks = this.elements.blanks;
+                setTimeout(() => {
+                    result.classList.remove('checking');
+                    for (let i = 0; i < correctAnswers.length; i++) {
+                        const span = blanks[i];
+                        if (currentAnswers[i] === correctAnswers[i]) {
+                            correct++;
+                            span.classList.remove('incorrect');
+                            span.classList.add('correct');
+                        } else {
+                            span.classList.add('incorrect');
+                            span.classList.remove('correct');
+                        }
+                        console.log(correct);
+                    }
+
+                    // Trigger confetti animation if all answers are correct
+                    if (correct === correctAnswers.length) {
+                        // const rect = resultElement.getBoundingClientRect();//return here
+                        result.textContent = "{{answersCorrect}}"; // update                        
+                        const canvasRect = this.elements.confettiCanvas.getBoundingClientRect();
+                        const buttonRect = checkButton.getBoundingClientRect();
+
+                        // Calculate the position of the button relative to the canvas
+                        //const x = buttonRect.left + buttonRect.width / 2 - canvasRect.left;
+                        const x = checkButton.offsetLeft;
+                        //const y = buttonRect.top - canvasRect.top;
+                        const y = checkButton.offsetTop;
+                        console.log(`x: ${x}`);
+                        console.log(`y: ${y}`);
+                        this.confetti.burst(x, y);
+                    } else {
+                        result.textContent = `{{answersRetry}}`; // uses correct and correctAnswers.length
+                    }
+                }, 750);
+            }
+
+            toggleNiqqud() {
+                const textContainer = document.getElementById('text');
+                const niqqudButton = document.getElementById('niqqudButton');
+                isNiqqudVisible = !isNiqqudVisible;
+
+                if (isNiqqudVisible) {
+                    textContainer.classList.remove('hide-niqqud');
+                    textContainer.classList.add('show-niqqud');
+                    niqqudButton.textContent = '{{hideNiqqudText}}';
+                } else {
+                    textContainer.classList.remove('show-niqqud');
+                    textContainer.classList.add('hide-niqqud');
+                    niqqudButton.textContent = '{{showNiqqudText}}';
+                }
+            }
+
+            toggleHints() {}
+        }
+
+        // Usage
+        const game = new FibGame(document.getElementById('fibContainer'));
+
+    </script>
+</body>
+</html>

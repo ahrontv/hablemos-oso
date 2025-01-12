@@ -30,6 +30,10 @@
             color: #333;
         }
 
+        p {
+            text-indent: 2em; /* Indentation using em units */
+        }
+
         #fibNum {
             margin: 20px 0px;
         }
@@ -105,7 +109,7 @@
                     /*display: none;transform: scale(0);*/
                 }
 
-        .blank {
+        .blank, .fibBlank {
             border-bottom: 1px solid #333;
             padding: 0 0px;
             margin: 0 0px;
@@ -178,8 +182,6 @@
 <body>
     <header>
         <h1 id="fibNum">Fill in the Blank Exercise</h1>
-        <!--Make nav--><!--<script id="navScr" src="/src/scripts/autoNav.js" onload="addNav('hebPages')"></script>-->
-        <!--<script id="navScr" src="/languages/heb/heb_fib_data.js" onerror="console.error('Script failed to load.')"></script>-->
         <script>
             var fib_ex = 1;
             var lang = 'eng';
@@ -197,24 +199,22 @@
 
             async function makeNavBar(lang){
                 const navScr = Object.assign(document.createElement('script'), {
-                    id: "navScr", src: "/src/scripts/autoNav.js", onload: () => addNav(`${lang}Pages`)
+                    id: "navScr", src: "/src/scripts/autoNav.js", onload: () => addNav(`${lang}Game`)
                 });
                 document.querySelector('header').appendChild(navScr);
             }
 
-            async function loadExData(lang) {
-                const dataScr = Object.assign(document.createElement('script'), {
-                    id : "dataScr",
-                    src : `/languages/${lang}/${lang}-fib-data.js`,
-                    onerror : "console.error('Script failed to load.')",
-                    onload : () => console.log(pageData), // Display pageData when available after async load
-                });
-                document.querySelector('header').appendChild(dataScr);
-            }
-
-            retrieveURLparams().then(
-                makeNavBar(lang)).then(
-                    loadExData(lang));
+            retrieveURLparams().then(({ lang }) => {
+                makeNavBar(lang);
+                if (lang !== 'heb') {
+                    // Create a new style element 
+                    const style = document.createElement('style');
+                    // Define the CSS rules 
+                    style.textContent = ` #app.loaded { direction: ltr; text-align: left; } `;
+                    // Append the style element to the document head 
+                    document.head.appendChild(style);
+                }
+            });
 
         </script>
 
@@ -232,50 +232,84 @@
     <script>           
         
         var local = true;
+
+        async function loadExData(lang) {
+            const dataScr = Object.assign(document.createElement('script'), {
+                id: "dataScr",
+                src: `../../languages/${lang}/${lang}-fib-data.js`,
+                onerror: "console.error('Script failed to load.')",
+                onload: () => console.log(pageData), // Display pageData when available after async load
+            });
+            document.querySelector('header').appendChild(dataScr);
+        }
+
         async function loadTemplate(lang, fibEx) {
             try {
                 //let pgLoc = local ? `/languages/${lang}/${lang}_fib_template.html` : `/hablemos_oso/languages/${lang}/fib_template.html`;
                 let pgLoc = 'fib-template.html';
+                pgLoc = 'fib-template-class.html';
                 const response = await fetch(pgLoc);
-                console.log(response);
                 const templateHtml = await response.text();
+                Handlebars.registerHelper('eq', function (arg1, arg2) {
+                    return arg1 == arg2;
+                });
                 const template = Handlebars.compile(templateHtml);
                 
                 let pageName = `${lang}_ex_${fibEx}`;  // pageName = 'heb_ex_1';
-                console.log(`template pageName: ${pageName}`);
                 const pageContent = pageData[pageName]; // title and content
                 const directions = pageData['directions']; // pgTitle and instructions undoButton checkButton
-                document.getElementById('app').innerHTML = template({ ...pageContent, ...directions });
+
+
+                const html = template({ ...pageContent, ...directions, lang });
+                // Clear the app container 
+                document.getElementById('app').innerHTML = '';
+                // Create a temporary container to parse the HTML string 
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                // Append each child to the DocumentFragment
+                const frag = document.createDocumentFragment();
+                // Move each node to fragment
+                while (tempDiv.firstChild) {
+                    const node = tempDiv.firstChild;
+                    if (node.tagName === 'SCRIPT') {
+                        try {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = node.textContent;
+                            // document.getElementById('app').appendChild(newScript);
+
+                            frag.appendChild(newScript); // moves the node
+                            // Remove the node from tempDiv 
+                            tempDiv.removeChild(node);
+                        } catch (err) {
+                            console.log(newScript);
+                            throw err
+                        }
+
+                    } else {
+                        // document.getElementById('app').appendChild(node);
+                        frag.appendChild(node);
+                    }
+
+                } // Append the DocumentFragment to the app container
+                // console.log(html);
+
+                // HERE why not appending?
+                document.getElementById('app').appendChild(frag);
+                
 
                 console.log(pageContent);
-                    document.title = `Oso ${lang.toUpperCase()} FIB #${fibEx}`; //`${pageContent.title}`;
+                document.title = `Oso ${lang.toUpperCase()} FIB #${fibEx}`; //`${pageContent.title}`;
+
             } catch (error) {
                 console.error('Error loading template:', error);
-                document.getElementById('app').innerHTML = '<p>Error loading content. Please try again later.</p>';
+                document.getElementById('app').textContent = 'Error loading content. Please try again later.';
             }
         }
 
-        /*
-        function loadGame() {
-            let gameScr = document.createElement("script");
-            gameScr.id = "gameScr";
-            gameScr.src = local ? '/languages/heb/heb_fib.js' : '/hablemos_oso/languages/heb/heb_fib.js'
-            document.getElementById("app").appendChild(gameScr);
-        }
-        
-        retrieveURLparams().then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex)).then(() => loadGame())
-            .then(() => {
-                console.log('Template and game script loaded successfully');
-                document.getElementById('app').classList = ['loaded'];
-                document.getElementById('fibNum').textContent = `Fill in the Blank Exercise # ${fib_ex}`
-                // init code that depends on both the template and game script
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-        */
 
-        retrieveURLparams().then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex))
+              
+        retrieveURLparams().then(loadExData(lang))
+            .then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex))
             .then(() => {
                 console.log('Template and game script loaded successfully');
                 document.getElementById('app').classList = ['loaded'];
