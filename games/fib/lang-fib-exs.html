@@ -199,7 +199,7 @@
 
             async function makeNavBar(lang){
                 const navScr = Object.assign(document.createElement('script'), {
-                    id: "navScr", src: "/src/scripts/autoNav.js", onload: () => addNav(`${lang}Game`)
+                    id: "navScr", src: "/hablemos-oso/src/scripts/autoNav.js", onload: () => addNav(`${lang}Game`)
                 });
                 document.querySelector('header').appendChild(navScr);
             }

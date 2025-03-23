@@ -6,6 +6,7 @@
     <title>Hablemos Oso</title>
     <link rel="icon" type="image/png" sizes="64x64" href="oso_anteojo_favicon.png">
     <link rel="stylesheet" href="src/styles/lang-main.css">
+    <link rel="stylesheet" href="src/styles/index_styles.css">
     <script>
         //function checkIfLocal() {
         //    var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
@@ -35,7 +36,7 @@
             </pre>
         </section>
 
-        <section id="projects">
+        <!--<section id="projects">
             <h2>Projects</h2>
             <div class="carousel">
                 <div class="carousel-container">
@@ -49,6 +50,86 @@
                 <button class="carousel-button prev">&lt;</button>
                 <button class="carousel-button next">&gt;</button>
             </div>
+        </section>-->
+
+        <section id="projects">
+            <h2>Languages</h2>
+            <script id="moduleScr" type="module">
+                import { Carousel } from './src/scripts/carousel.js';
+                import { carouselStyles } from './src/scripts/carousel.js';
+
+                // Inject styles
+                const styleSheet = document.createElement('style');
+                styleSheet.id = "carouselStyles";
+                styleSheet.textContent = carouselStyles;
+                styleSheet.textContent += `
+                                                 :root {
+                                                     --carousel-primary: #00A86B; /* Jade green */
+                                                     --carousel-secondary: var(--primary-color);
+                                                     --carousel-background: var(--secondary-color); /* #f0f0f0 */
+                                                     --tile-shadow: rgba(0, 0, 0, 0.3);
+                                                 }
+                                                 #projects{
+                                                     margin-bottom: 100px;
+                                                 }
+                                                 .carousel-container{
+                                                     height: 300px;
+                                                     min-height: 200px;
+                                                     /*overflow: hidden; */
+                                                     /*border: 2px solid blue;*/
+                                                     border-radius: 10px;
+                                                 }
+                                                 .tile {
+                                                     position: absolute;
+                                                     width: 150px; /* 150px;*/
+                                                     height: 150px;/*  200px;*/
+                                                     }
+
+                                                 @media (max-width: 768px) {
+                                                     .carousel-container {
+                                                         width: 90%;
+                                                         height: 250px;
+                                                     }
+                                                     .tile {
+                                                         width: 80px;
+                                                         height: 80px;
+                                                     }
+                                                 }
+                                                 `;
+                document.head.insertBefore(styleSheet, document.head.firstChild);
+
+                const element = {};
+                const options = {
+                    autoplay: true,
+                    autoplaySpeed: 3000,
+                    friction: 0.45,
+                    minVelocity: 10,
+                    autoplay: true,
+                    rise: true,
+                    activeScale: 1.1,
+                    arrowSpinSpeed: 70,
+                    maxVelocity: 2000,
+                    tileWidth: '200px',
+                    tileHeight: '200px',
+                    tileWidthMobile: '100px',
+                    tileHeightMobile: '100px',
+                };
+                const rPath = './src/assets/imgs/';
+                const tiles = [
+                    { img: rPath + "laugh_yoni.png", href: "#81", options: { aspectRatio: 1 } },
+                    { img: rPath + "hebrew-learning-tile.svg", href: "#82", options: { aspectRatio: 1 } },
+                    { img: rPath + "english-learning-tile.svg", href: "#82", options: { aspectRatio: 1 } },
+                    { img: rPath + "spanish-learning-tile-movie.svg", href: "#82", options: { aspectRatio: 1 } },
+                    { img: rPath + "portuguese-learning-tile.svg", href: "#82", options: { aspectRatio: 1 } }
+                    // bilingual stickers
+                    // language tiles - designed icons
+                    
+                ];
+                let crsl = new Carousel(element, options, tiles);
+                // console.log(document.currentScript);
+                crsl.scriptContext = document.getElementById("moduleScr");
+
+            </script>
         </section>
     </main>
 

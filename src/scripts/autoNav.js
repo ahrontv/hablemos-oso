@@ -65,7 +65,7 @@ let pgSets = {
         Spanish: { name: 'Spanish', href: 'languages/span/' },
     },
     engPages: {
-        Home: { name: 'Home', href: '../../' },
+        Home: { name: 'Main', href: '../../' }, // rel to root on github /hablemos-oso/languages/eng/
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
@@ -78,7 +78,7 @@ let pgSets = {
         }
     },
     hebPages: {
-        Home: { name: 'Home', href: '../../heb/' },
+        Home: { name: 'Main', href: '../../' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#', 
             dropList: [pgDropItem(101), pgDropItem(102), pgDropItem(103), pgDropItem(104), pgDropItem(105),
@@ -91,7 +91,7 @@ let pgSets = {
         }
     },
     ptPages: {
-        Home: { name: 'Home', href: '/hablemos-oso/' },
+        Home: { name: 'Home', href: '../../' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#',
             dropList: [pgDropItem(201), pgDropItem(202), pgDropItem(203), pgDropItem(204), pgDropItem(205),
@@ -104,7 +104,7 @@ let pgSets = {
         }
     },
     spanPages: {
-        Home: { name: 'Home', href: '/hablemos-oso/' },
+        Home: { name: 'Home', href: '../../' },
         FIB1: {
             name: 'Fill in the Blank 1-10', href: '#',
             dropList: [pgDropItem(301), pgDropItem(302), pgDropItem(303), pgDropItem(304), pgDropItem(305),
@@ -117,8 +117,10 @@ let pgSets = {
         }
     },
 };
-pgSets.engGame = { ...pgSets.engPages, Home: { name: 'English', href: '../../languages/eng/' } };
-pgSets.hebGame = { ...pgSets.hebPages, Home: { name: 'Hebrew', href: '../../languages/heb/' } };
+pgSets.engGame = { ...pgSets.engPages, Home: { name: 'English', href: '/hablemos-oso/languages/eng/' } };
+pgSets.hebGame = { ...pgSets.hebPages, Home: { name: 'Hebrew', href: '/hablemos-oso/languages/heb/' } };
+pgSets.ptGame = { ...pgSets.ptPages, Home: { name: 'Portuguese', href: '/hablemos-oso/languages/pt/' } };
+pgSets.spanGame = { ...pgSets.spanPages, Home: { name: 'Spanish', href: '/hablemos-oso/languages/span/' } };
 //pgSets.ptGame.Home.href = '../../languages/pt/';
 //pgSets.spanGame.Home.href = '../../languages/span/';
 
