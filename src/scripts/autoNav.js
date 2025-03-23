@@ -131,9 +131,6 @@ function markCurrPg(pg, currPg,listItem) {
 }
 
 function createNav(setPages) {
-    // Is there a header already? If not make one and add to it
-    const header = document.querySelector('header') || document.createElement('header');
-    if (header.parentNode === null) document.body.prepend(header);
     let nav = document.createElement('nav');
     let currPg = window.location.pathname.split('/').pop() || 'home.html';
     const sectList = document.createElement('ul');
@@ -306,8 +303,14 @@ function addNav(pgs) {
         } else {
             pgs = pgSets[pgs];
         }
+
         const nav = createNav(pgs);
+
+        // Is there a header already? If not make one and add to it
+        const header = document.querySelector('header') || document.createElement('header');
+        if (header.parentNode === null) document.body.prepend(header);
         header.prepend(nav);
+
         includeNavStlying();
     }
     catch (err) {
