@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9f9f9" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#f0f0f0" stop-opacity="0.2"/>
+    </linearGradient>
+    
+    <!-- Text gradient -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27ae60"/>
+      <stop offset="50%" stop-color="#3498db"/>
+      <stop offset="100%" stop-color="#9b59b6"/>
+    </linearGradient>
+    
+    <!-- Border gradient -->
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27ae60"/>
+      <stop offset="25%" stop-color="#3498db"/>
+      <stop offset="50%" stop-color="#9b59b6"/>
+      <stop offset="75%" stop-color="#e74c3c"/>
+      <stop offset="100%" stop-color="#f1c40f"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Subtle background with gradient -->
+  <rect x="10" y="10" width="180" height="180" rx="15" 
+        fill="none" stroke="url(#borderGradient)" stroke-width="4" />
+  
+  <!-- Colorful shapes symbolizing language learning -->
+  <circle cx="50" cy="50" r="20" fill="#3498db" opacity="0.8" />
+  <circle cx="150" cy="50" r="15" fill="#e74c3c" opacity="0.8" />
+  <circle cx="40" cy="140" r="18" fill="#f1c40f" opacity="0.8" />
+  <circle cx="150" cy="150" r="22" fill="#27ae60" opacity="0.8" />
+  
+  <!-- Star of David as a cultural symbol -->
+  <path d="M40,70 L50,56 L60,70 L40,70 Z" fill="#3498db" opacity="0.6" />
+  <path d="M40,60 L50,74 L60,60 L40,60 Z" fill="#3498db" opacity="0.6" />
+  
+  <!-- The Hebrew letter "א" (Alef) -->
+  <text x="100" y="110" font-family="Arial, sans-serif" font-size="90" 
+        font-weight="bold" text-anchor="middle" fill="url(#textGradient)">א</text>
+  
+  <!-- Small text saying "Hebrew" -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="20" 
+        font-weight="normal" text-anchor="middle" fill="#2c3e50">Hebrew</text>
+  
+  <!-- Small decorative elements -->
+  <path d="M165,30 L175,30 L175,40 L165,40 Z" fill="#9b59b6" />
+  <path d="M160,35 L170,35 L170,45 L160,45 Z" fill="#f1c40f" />
+  
+  <!-- Optional hover effects -->
+  <style>
+    rect, circle, text, path {
+      transition: all 0.3s ease;
+    }
+    svg:hover rect {
+      stroke-width: 5;
+    }
+    svg:hover circle {
+      transform: scale(1.1);
+    }
+    svg:hover text:first-of-type {
+      filter: drop-shadow(0 0 3px rgba(0,0,0,0.3));
+    }
+    svg:hover path {
+      transform: rotate(15deg);
+    }
+  </style>
+</svg>

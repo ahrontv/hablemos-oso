@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9f9f9" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#f0f0f0" stop-opacity="0.2"/>
+    </linearGradient>
+    
+    <!-- Text gradient using colors from the Portuguese flag -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006600"/>
+      <stop offset="50%" stop-color="#ff0000"/>
+      <stop offset="100%" stop-color="#ffcc00"/>
+    </linearGradient>
+    
+    <!-- Border gradient -->
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006600"/>
+      <stop offset="25%" stop-color="#ff0000"/>
+      <stop offset="50%" stop-color="#ffcc00"/>
+      <stop offset="75%" stop-color="#ff0000"/>
+      <stop offset="100%" stop-color="#006600"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Subtle background with gradient -->
+  <rect x="10" y="10" width="180" height="180" rx="15" 
+        fill="url(#bgGradient)" stroke="url(#borderGradient)" stroke-width="4" />
+  
+  <!-- Colorful shapes symbolizing language learning -->
+  <circle cx="50" cy="50" r="20" fill="#006600" opacity="0.8" />
+  <circle cx="150" cy="50" r="15" fill="#ff0000" opacity="0.8" />
+  <circle cx="40" cy="140" r="18" fill="#ffcc00" opacity="0.8" />
+  <circle cx="150" cy="150" r="22" fill="#006600" opacity="0.8" />
+  
+  <!-- Small representation of Portuguese symbol -->
+  <circle cx="40" cy="80" r="15" fill="#ff0000" opacity="0.6" />
+  <path d="M32,80 L48,80 M40,72 L40,88" stroke="#ffcc00" stroke-width="2" />
+  
+  <!-- The letter "P" for Portuguese -->
+  <text x="100" y="110" font-family="Arial, sans-serif" font-size="90" 
+        font-weight="bold" text-anchor="middle" fill="url(#textGradient)">P</text>
+  
+  <!-- Small text saying "Portuguese" -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="16" 
+        font-weight="normal" text-anchor="middle" fill="#2c3e50">Portuguese</text>
+  
+  <!-- Small decorative elements - "~" to represent accent marks used in Portuguese -->
+  <text x="160" y="40" font-family="Arial, sans-serif" font-size="24" 
+        font-weight="bold" text-anchor="middle" fill="#ff0000">~</text>
+  <text x="175" y="40" font-family="Arial, sans-serif" font-size="24" 
+        font-weight="bold" text-anchor="middle" fill="#ffcc00">ç</text>
+  
+  <!-- Optional hover effects -->
+  <style>
+    rect, circle, text, path {
+      transition: all 0.3s ease;
+    }
+    svg:hover rect {
+      stroke-width: 5;
+    }
+    svg:hover circle {
+      transform: scale(1.1);
+    }
+    svg:hover text:first-of-type {
+      filter: drop-shadow(0 0 3px rgba(0,0,0,0.3));
+    }
+    svg:hover path {
+      transform: rotate(15deg);
+    }
+  </style>
+</svg>
