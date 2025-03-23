@@ -26,104 +26,103 @@
 </nav>
 */
 
-function checkIfLocal() {
-    var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    if (isLocal) {
-        console.log("The page is being hosted locally."); // Adjust your loading strategy for local development
-        //var script = document.createElement("script");
-        //script.type = "text/javascript";
-        //script.src = url;
-        // If a callback function is provided, set it to run once the script loads
-        //if (callback) { script.onload = callback; } document.head.appendChild(script);
-    } else {
-        console.log("The page is not being hosted locally."); // Adjust your loading strategy for production
+
+function adaptPGSets() {
+    function checkIfLocal() {
+        var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        if (isLocal) {
+            console.log("The page is being hosted locally."); // Adjust your loading strategy for local development
+        } else {
+            console.log("The page is not being hosted locally."); // Adjust your loading strategy for production
+        }
+        return isLocal;
     }
-    return isLocal;
-}
-if (!local) { var local = checkIfLocal();}
 
-
-let fibEx = 1;
-function buildFIBLink(n, l) {
-    if (n < 100) l = "eng";
-    if (n > 100 && n < 200) l = "heb";
-    if (n > 200 && n < 300) l = "pt";
-    if (n > 200 && n < 300) l = "span";
+    var local = checkIfLocal();
+    function buildFIBLink(n, l) {
+        if (n < 100) l = "eng";
+        if (n > 100 && n < 200) l = "heb";
+        if (n > 200 && n < 300) l = "pt";
+        if (n > 200 && n < 300) l = "span";
         n = n % 100;
-    if (local) return `/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
-    return `/hablemos-oso/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
-}
-function pgDropItem(n) {
-    return { name: `Exercise ${n%100}`, href: buildFIBLink (n)}
-}
-let pgSets = {
-    mainPages: {
-        Home: { name: 'Home', href: 'index.html' },
-        English: { name: 'English', href: 'languages/eng/' },
-        Hebrew: { name: 'Hebrew', href: 'languages/heb/' },
-        Portuguese: { name: 'Portuguese', href: 'languages/pt/' },
-        Spanish: { name: 'Spanish', href: 'languages/span/' },
-    },
-    engPages: {
-        Home: { name: 'Main', href: '../../' }, // rel to root on github /hablemos-oso/languages/eng/
-        FIB1: {
-            name: 'Fill in the Blank 1-10', href: '#', 
-            dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
-            pgDropItem(6), pgDropItem(7), pgDropItem(8), pgDropItem(9), pgDropItem(10)]
-        },
-        FIB2: {
-            name: 'Fill in the Blank 11-20', href: '#',
-            dropList: [pgDropItem(11), pgDropItem(12), pgDropItem(13), pgDropItem(14), pgDropItem(15),
-            pgDropItem(16), pgDropItem(17), pgDropItem(18), pgDropItem(19), pgDropItem(20)]
-        }
-    },
-    hebPages: {
-        Home: { name: 'Main', href: '../../' },
-        FIB1: {
-            name: 'Fill in the Blank 1-10', href: '#', 
-            dropList: [pgDropItem(101), pgDropItem(102), pgDropItem(103), pgDropItem(104), pgDropItem(105),
-                pgDropItem(106), pgDropItem(107), pgDropItem(108), pgDropItem(109), pgDropItem(110)]
-        },
-        FIB2: {
-            name: 'Fill in the Blank 11-20', href: '#',
-            dropList: [pgDropItem(111), pgDropItem(112), pgDropItem(113), pgDropItem(114), pgDropItem(115),
-            pgDropItem(116), pgDropItem(117), pgDropItem(118), pgDropItem(119), pgDropItem(120)]
-        }
-    },
-    ptPages: {
-        Home: { name: 'Home', href: '../../' },
-        FIB1: {
-            name: 'Fill in the Blank 1-10', href: '#',
-            dropList: [pgDropItem(201), pgDropItem(202), pgDropItem(203), pgDropItem(204), pgDropItem(205),
-            pgDropItem(206), pgDropItem(207), pgDropItem(208), pgDropItem(209), pgDropItem(210)]
-        },
-        FIB2: {
-            name: 'Fill in the Blank 11-20', href: '#',
-            dropList: [pgDropItem(211), pgDropItem(212), pgDropItem(213), pgDropItem(214), pgDropItem(215),
-            pgDropItem(216), pgDropItem(217), pgDropItem(218), pgDropItem(219), pgDropItem(220)]
-        }
-    },
-    spanPages: {
-        Home: { name: 'Home', href: '../../' },
-        FIB1: {
-            name: 'Fill in the Blank 1-10', href: '#',
-            dropList: [pgDropItem(301), pgDropItem(302), pgDropItem(303), pgDropItem(304), pgDropItem(305),
-            pgDropItem(306), pgDropItem(307), pgDropItem(308), pgDropItem(309), pgDropItem(310)]
-        },
-        FIB2: {
-            name: 'Fill in the Blank 11-20', href: '#',
-            dropList: [pgDropItem(311), pgDropItem(312), pgDropItem(313), pgDropItem(314), pgDropItem(315),
-            pgDropItem(316), pgDropItem(317), pgDropItem(318), pgDropItem(319), pgDropItem(320)]
-        }
-    },
-};
-pgSets.engGame = { ...pgSets.engPages, Home: { name: 'English', href: '/hablemos-oso/languages/eng/' } };
-pgSets.hebGame = { ...pgSets.hebPages, Home: { name: 'Hebrew', href: '/hablemos-oso/languages/heb/' } };
-pgSets.ptGame = { ...pgSets.ptPages, Home: { name: 'Portuguese', href: '/hablemos-oso/languages/pt/' } };
-pgSets.spanGame = { ...pgSets.spanPages, Home: { name: 'Spanish', href: '/hablemos-oso/languages/span/' } };
-//pgSets.ptGame.Home.href = '../../languages/pt/';
-//pgSets.spanGame.Home.href = '../../languages/span/';
+        if (local) return `/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
+        return `/hablemos-oso/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
+    }
+    function pgDropItem(n) {
+        return { name: `Exercise ${n % 100}`, href: buildFIBLink(n) }
+    }
 
+
+    let pgSets = {
+        mainPages: {
+            Home: { name: 'Home', href: 'index.html' },
+            English: { name: 'English', href: 'languages/eng/' },
+            Hebrew: { name: 'Hebrew', href: 'languages/heb/' },
+            Portuguese: { name: 'Portuguese', href: 'languages/pt/' },
+            Spanish: { name: 'Spanish', href: 'languages/span/' },
+        },
+        engPages: {
+            Home: { name: 'Main', href: '../../' }, // rel to root on github /hablemos-oso/languages/eng/
+            FIB1: {
+                name: 'Fill in the Blank 1-10', href: '#',
+                dropList: [pgDropItem(1), pgDropItem(2), pgDropItem(3), pgDropItem(4), pgDropItem(5),
+                pgDropItem(6), pgDropItem(7), pgDropItem(8), pgDropItem(9), pgDropItem(10)]
+            },
+            FIB2: {
+                name: 'Fill in the Blank 11-20', href: '#',
+                dropList: [pgDropItem(11), pgDropItem(12), pgDropItem(13), pgDropItem(14), pgDropItem(15),
+                pgDropItem(16), pgDropItem(17), pgDropItem(18), pgDropItem(19), pgDropItem(20)]
+            }
+        },
+        hebPages: {
+            Home: { name: 'Main', href: '../../' },
+            FIB1: {
+                name: 'Fill in the Blank 1-10', href: '#',
+                dropList: [pgDropItem(101), pgDropItem(102), pgDropItem(103), pgDropItem(104), pgDropItem(105),
+                pgDropItem(106), pgDropItem(107), pgDropItem(108), pgDropItem(109), pgDropItem(110)]
+            },
+            FIB2: {
+                name: 'Fill in the Blank 11-20', href: '#',
+                dropList: [pgDropItem(111), pgDropItem(112), pgDropItem(113), pgDropItem(114), pgDropItem(115),
+                pgDropItem(116), pgDropItem(117), pgDropItem(118), pgDropItem(119), pgDropItem(120)]
+            }
+        },
+        ptPages: {
+            Home: { name: 'Home', href: '../../' },
+            FIB1: {
+                name: 'Fill in the Blank 1-10', href: '#',
+                dropList: [pgDropItem(201), pgDropItem(202), pgDropItem(203), pgDropItem(204), pgDropItem(205),
+                pgDropItem(206), pgDropItem(207), pgDropItem(208), pgDropItem(209), pgDropItem(210)]
+            },
+            FIB2: {
+                name: 'Fill in the Blank 11-20', href: '#',
+                dropList: [pgDropItem(211), pgDropItem(212), pgDropItem(213), pgDropItem(214), pgDropItem(215),
+                pgDropItem(216), pgDropItem(217), pgDropItem(218), pgDropItem(219), pgDropItem(220)]
+            }
+        },
+        spanPages: {
+            Home: { name: 'Home', href: '../../' },
+            FIB1: {
+                name: 'Fill in the Blank 1-10', href: '#',
+                dropList: [pgDropItem(301), pgDropItem(302), pgDropItem(303), pgDropItem(304), pgDropItem(305),
+                pgDropItem(306), pgDropItem(307), pgDropItem(308), pgDropItem(309), pgDropItem(310)]
+            },
+            FIB2: {
+                name: 'Fill in the Blank 11-20', href: '#',
+                dropList: [pgDropItem(311), pgDropItem(312), pgDropItem(313), pgDropItem(314), pgDropItem(315),
+                pgDropItem(316), pgDropItem(317), pgDropItem(318), pgDropItem(319), pgDropItem(320)]
+            }
+        },
+    };
+    pgSets.engGame = { ...pgSets.engPages, Home: { name: 'English', href: '/hablemos-oso/languages/eng/' } };
+    pgSets.hebGame = { ...pgSets.hebPages, Home: { name: 'Hebrew', href: '/hablemos-oso/languages/heb/' } };
+    pgSets.ptGame = { ...pgSets.ptPages, Home: { name: 'Portuguese', href: '/hablemos-oso/languages/pt/' } };
+    pgSets.spanGame = { ...pgSets.spanPages, Home: { name: 'Spanish', href: '/hablemos-oso/languages/span/' } };
+    //pgSets.ptGame.Home.href = '../../languages/pt/';
+    //pgSets.spanGame.Home.href = '../../languages/span/';
+    
+return pgSets
+}
 
 // if (local) pgSets.hebPages.Home.href = 'index.html';
 function markCurrPg(pg, currPg,listItem) {
@@ -132,6 +131,9 @@ function markCurrPg(pg, currPg,listItem) {
 }
 
 function createNav(setPages) {
+    // Is there a header already? If not make one and add to it
+    const header = document.querySelector('header') || document.createElement('header');
+    if (header.parentNode === null) document.body.prepend(header);
     let nav = document.createElement('nav');
     let currPg = window.location.pathname.split('/').pop() || 'home.html';
     const sectList = document.createElement('ul');
@@ -297,10 +299,8 @@ function includeNavStlying() {
 }
 
 function addNav(pgs) {
+    let pgSets = adaptPGSets();
     try {
-        // Is there a header already? If not make one and add to it
-        const header = document.querySelector('header') || document.createElement('header');
-        if (header.parentNode === null) document.body.prepend(header);
         if (!pgs) {
             pgs = pgSets.mainPages
         } else {
