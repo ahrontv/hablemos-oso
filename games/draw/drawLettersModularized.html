@@ -373,6 +373,9 @@
                     // Load language-specific letter definitions
                     try {
                         var response = await fetch(`./data/letters-${this.languageParam}.json`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`); // won't otherwise stop execution
+                        }
                         console.log('letters loaded');
                     } catch (error) {
                         var response = {
