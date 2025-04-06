@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="64x64" href="oso_anteojo_favicon.png">
+    <link rel="stylesheet" href="src/styles/lang-main.css">
+    <link rel="stylesheet" href="/src/styles/index_styles.css">
+    <title>Digital Sticker Gallery</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .galleryHeader {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 15px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #555;
+            position: relative;
+        }
+
+            .section-title::after {
+                content: '';
+                display: block;
+                width: 100px;
+                height: 3px;
+                background: linear-gradient(to right, #6e8efb, #a777e3);
+                margin: 10px auto;
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Sample Stickers Section */
+        .sample-stickers {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .sticker-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .sticker-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .sticker-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+        }
+
+            .sticker-image img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+
+        .sticker-info {
+            padding: 20px;
+        }
+
+        .sticker-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .sticker-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .sticker-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .sticker-tag {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .sticker-link {
+            display: inline-block;
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+            .sticker-link:hover {
+                opacity: 0.9;
+            }
+
+        /* Sticker Packs Section */
+        .sticker-packs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 40px;
+        }
+
+        .pack-card {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .pack-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .pack-image {
+            flex: 0 0 40%;
+            position: relative;
+            background-color: #f0f0f0;
+        }
+
+            .pack-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            transform: rotate(-30deg);
+            font-weight: bold;
+        }
+
+        .pack-info {
+            flex: 0 0 60%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pack-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .pack-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .pack-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+            .pack-meta span {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+        .pack-link {
+            display: inline-block;
+            background: linear-gradient(to right, #ff8a00, #ff5252);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            margin-top: auto;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+            .pack-link:hover {
+                opacity: 0.9;
+            }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .sample-stickers {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .sticker-packs {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+
+            .pack-card {
+                flex-direction: column;
+            }
+
+            .pack-image {
+                flex: 0 0 200px;
+            }
+
+            .pack-info {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!--Make nav-->
+        <script id="navScr" src="src/scripts/autoNav.js" onload="addNav('mainPages')"></script>
+    </header>
+    <div class="galleryHeader">
+        <h1>Digital Sticker Gallery</h1>
+        <p>Explore our collection of unique digital stickers and sticker packs</p>
+    </div>
+
+
+    <main>
+        <section id="about">
+            <h1>Learn languages through stickers</h1>
+            A collection of stickers that use popular phrases to encourage you to learn with fun!
+        </section>
+
+        <section id="about">
+            <h1>Learn languages through stickers</h1>
+            A collection of stickers that use popular phrases to encourage you to learn with fun!
+        </section>
+    </main>
+
+    <div class="container">
+        <!-- Sample Stickers Section -->
+        <section>
+            <h2 class="section-title">Sample Stickers</h2>
+            <div class="sample-stickers">
+                <!-- Sample Sticker 1 -->
+                <div class="sticker-card">
+                    <div class="sticker-image">
+                        <img src="/api/placeholder/400/320" alt="Cute Cat Sticker">
+                    </div>
+                    <div class="sticker-info">
+                        <h3 class="sticker-title">Cute Cat</h3>
+                        <p class="sticker-description">A cute cartoon cat with big eyes. Perfect for expressing affection or playfulness.</p>
+                        <div class="sticker-tags">
+                            <span class="sticker-tag">Cute</span>
+                            <span class="sticker-tag">Animal</span>
+                            <span class="sticker-tag">Cartoon</span>
+                        </div>
+                        <a href="#" class="sticker-link">Download PNG</a>
+                    </div>
+                </div>
+
+                <!-- Sample Sticker 2 -->
+                <div class="sticker-card">
+                    <div class="sticker-image">
+                        <img src="/api/placeholder/400/320" alt="Coffee Break Sticker">
+                    </div>
+                    <div class="sticker-info">
+                        <h3 class="sticker-title">Coffee Break</h3>
+                        <p class="sticker-description">A steaming coffee cup with a speech bubble saying "need caffeine". Perfect for those Monday mornings.</p>
+                        <div class="sticker-tags">
+                            <span class="sticker-tag">Food</span>
+                            <span class="sticker-tag">Drink</span>
+                            <span class="sticker-tag">Funny</span>
+                        </div>
+                        <a href="#" class="sticker-link">Download PNG</a>
+                    </div>
+                </div>
+
+                <!-- Sample Sticker 3 -->
+                <div class="sticker-card">
+                    <div class="sticker-image">
+                        <img src="/api/placeholder/400/320" alt="Celebration Sticker">
+                    </div>
+                    <div class="sticker-info">
+                        <h3 class="sticker-title">Celebration</h3>
+                        <p class="sticker-description">Colorful confetti and party poppers. Great for congratulating someone or celebrating achievements.</p>
+                        <div class="sticker-tags">
+                            <span class="sticker-tag">Celebration</span>
+                            <span class="sticker-tag">Party</span>
+                            <span class="sticker-tag">Colorful</span>
+                        </div>
+                        <a href="#" class="sticker-link">Download PNG</a>
+                    </div>
+                </div>
+
+                <!-- Sample Sticker 4 -->
+                <div class="sticker-card">
+                    <div class="sticker-image">
+                        <img src="/api/placeholder/400/320" alt="Thank You Sticker">
+                    </div>
+                    <div class="sticker-info">
+                        <h3 class="sticker-title">Thank You</h3>
+                        <p class="sticker-description">Elegant "Thank You" text with floral decorations. Available in multiple languages.</p>
+                        <div class="sticker-tags">
+                            <span class="sticker-tag">Gratitude</span>
+                            <span class="sticker-tag">Formal</span>
+                            <span class="sticker-tag">Multilingual</span>
+                        </div>
+                        <a href="#" class="sticker-link">Download PNG</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sticker Packs Section -->
+        <section>
+            <h2 class="section-title">Sticker Packs</h2>
+            <div class="sticker-packs">
+                <!-- Sticker Pack 1 -->
+                <div class="pack-card">
+                    <div class="pack-image">
+                        <img src="/api/placeholder/400/320" alt="Emoji Pack">
+                        <div class="watermark">PREVIEW</div>
+                    </div>
+                    <div class="pack-info">
+                        <h3 class="pack-title">Emoji Expressions</h3>
+                        <p class="pack-description">A complete set of 20 emoji-style stickers with various expressions, from happy to sad, excited to sleepy.</p>
+                        <div class="pack-meta">
+                            <span><i>🔢</i> 20 Stickers</span>
+                            <span><i>💾</i> 5.2 MB</span>
+                        </div>
+                        <a href="emoji-pack.html" class="pack-link">View Pack</a>
+                    </div>
+                </div>
+
+                <!-- Sticker Pack 2 -->
+                <div class="pack-card">
+                    <div class="pack-image">
+                        <img src="/api/placeholder/400/320" alt="Food Pack">
+                        <div class="watermark">PREVIEW</div>
+                    </div>
+                    <div class="pack-info">
+                        <h3 class="pack-title">Foodie Favorites</h3>
+                        <p class="pack-description">Delicious food stickers featuring everything from pizza to ice cream, perfect for food lovers and conversations about meals.</p>
+                        <div class="pack-meta">
+                            <span><i>🔢</i> 20 Stickers</span>
+                            <span><i>💾</i> 6.8 MB</span>
+                        </div>
+                        <a href="food-pack.html" class="pack-link">View Pack</a>
+                    </div>
+                </div>
+
+                <!-- Sticker Pack 3 -->
+                <div class="pack-card">
+                    <div class="pack-image">
+                        <img src="/api/placeholder/400/320" alt="Animal Pack">
+                        <div class="watermark">PREVIEW</div>
+                    </div>
+                    <div class="pack-info">
+                        <h3 class="pack-title">Adorable Animals</h3>
+                        <p class="pack-description">Cute and charming animal stickers featuring dogs, cats, rabbits, and more with various poses and expressions.</p>
+                        <div class="pack-meta">
+                            <span><i>🔢</i> 20 Stickers</span>
+                            <span><i>💾</i> 7.5 MB</span>
+                        </div>
+                        <a href="animal-pack.html" class="pack-link">View Pack</a>
+                    </div>
+                </div>
+
+                <!-- Sticker Pack 4 -->
+                <div class="pack-card">
+                    <div class="pack-image">
+                        <img src="/api/placeholder/400/320" alt="Holiday Pack">
+                        <div class="watermark">PREVIEW</div>
+                    </div>
+                    <div class="pack-info">
+                        <h3 class="pack-title">Holiday Cheer</h3>
+                        <p class="pack-description">Festive stickers for all major holidays including Christmas, New Year, Valentine's Day, Halloween, and more.</p>
+                        <div class="pack-meta">
+                            <span><i>🔢</i> 20 Stickers</span>
+                            <span><i>💾</i> 8.2 MB</span>
+                        </div>
+                        <a href="holiday-pack.html" class="pack-link">View Pack</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 50px; color: #777;">
+        <p>&copy; 2025 Hablemos Oso. Digital Sticker Gallery. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
