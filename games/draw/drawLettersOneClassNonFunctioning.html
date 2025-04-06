@@ -1,0 +1,1689 @@
+﻿<!DOCTYPE html>
+<!-- saved from url=(0102)file:///D:/Users/atver/Documents%20PC/githubDdrive/languageSite/languages/eng/letter-practice-eng.html -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Letter Drawing Practice</title>
+    <style>
+        /* Container styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        /* Canvas container with relative positioning for layering */
+        #canvas-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Canvas layers stacked using z-index */
+        canvas {
+            position: absolute;
+            border: 1px solid #ccc;
+            touch-action: none; /* Prevents default touch actions on mobile */
+        }
+
+        #ruleCanvas {
+            z-index: 1;
+        }
+        /* Bottom layer: ruled paper */
+        #completedCanvas {
+            z-index: 3;
+        }
+        /* completed strokes */
+        #letterCanvas {
+            z-index: 2;
+        }
+        /* second to bottom layer: font letter */
+        #guideCanvas {
+            z-index: 4;
+        }
+        /* Middle layer: guide strokes */
+        #drawCanvas {
+            z-index: 5;
+        }
+        /* Top layer: current drawing */
+
+        /* Controls container */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        /* UI element styles */
+        button, select {
+            margin: 10px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #f0f0f0;
+            }
+
+        #instruction {
+            margin: 10px;
+            font-size: 18px;
+            color: #444;
+        }
+
+        #accuracy {
+            margin: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        #letterSelect {
+            margin: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        /* Top controls */
+        .top-controls {
+            width: 300px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        /* Previous styles remain the same */
+        /* Add arrow animation */
+        @keyframes moveArrow {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+
+            50% {
+                transform: translateX(10px) translateY(10px);
+            }
+
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        .arrow {
+            position: absolute;
+            pointer-events: none;
+            animation: moveArrow 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letter Drawing Practice</h1>
+    <div class="top-controls">
+        <select id="letterSelect"><option value="AA">Letter AA</option><option value="f">Letter f</option><option value="A">Letter A</option><option value="B">Letter B</option><option value="C">Letter C</option><option value="D">Letter D</option><option value="E">Letter E</option><option value="F">Letter F</option><option value="G">Letter G</option><option value="H">Letter H</option><option value="I">Letter I</option><option value="J">Letter J</option><option value="K">Letter K</option><option value="L">Letter L</option><option value="M">Letter M</option><option value="N">Letter N</option><option value="O">Letter O</option><option value="P">Letter P</option><option value="Q">Letter Q</option><option value="R">Letter R</option><option value="S">Letter S</option><option value="T">Letter T</option><option value="U">Letter U</option><option value="V">Letter V</option><option value="W">Letter W</option><option value="X">Letter X</option><option value="Y">Letter Y</option><option value="Z">Letter Z</option><option value="a">Letter a</option><option value="b">Letter b</option><option value="c">Letter c</option><option value="d">Letter d</option><option value="e">Letter e</option><option value="g">Letter g</option><option value="h">Letter h</option><option value="i">Letter i</option><option value="j">Letter j</option><option value="k">Letter k</option><option value="l">Letter l</option><option value="m">Letter m</option><option value="n">Letter n</option><option value="o">Letter o</option><option value="p">Letter p</option><option value="q">Letter q</option><option value="r">Letter r</option><option value="s">Letter s</option><option value="t">Letter t</option><option value="u">Letter u</option><option value="v">Letter v</option><option value="w">Letter w</option><option value="x">Letter x</option><option value="y">Letter y</option><option value="z">Letter z</option></select>
+    </div>
+    <div id="instruction" style="color: rgb(68, 68, 68);">Follow the highlighted stroke</div>
+    <div id="canvas-container">
+        <canvas id="ruleCanvas" width="300" height="300"></canvas>
+        <canvas id="completedCanvas" width="300" height="300"></canvas>
+        <canvas id="letterCanvas" width="300" height="300"></canvas>
+        <canvas id="guideCanvas" width="300" height="300"></canvas>
+        <canvas id="drawCanvas" width="300" height="300"></canvas>
+    </div>
+    <div class="controls">
+        <button id="resetBtn">Reset</button>
+        <button id="autoDrawBtn">Auto Draw</button>
+        <button id="toggleRule">Ruled Paper?</button>
+    </div>
+    <div id="accuracy"></div>
+
+    <script>
+        /**
+         * Letter Drawing Practice App
+         *
+         * This application helps users practice drawing letters by following stroke guides.
+         * It uses multiple canvas layers for drawing, guides, and completed strokes.
+         * Features include stroke validation, accuracy measurement, and support for both
+         * straight and curved strokes.
+
+         TODO - update to handle error when fully drawn
+         */
+
+        /**
+         * DrawLettersApp
+         * Letter definitions with stroke data. Each letter consists of multiple strokes
+         * Stroke types: line curve compound
+         * Points: Array of coordinates defining the stroke
+         */
+
+        /**
+         * Main application class for letter drawing practice.
+         * Manages the canvas layers, stroke data, user interaction, and drawing validation.
+         * Handles multiple canvas layers for ruled paper, letter display, guides, and user drawing.
+         */
+        class DrawLettersApp{
+            constructor() {
+                this.letters = {
+                    'AA': {
+                        random: 'blads',
+                        strokes: [
+                            { type: 'line', points: [{ x: 150 / 300, y: 60 / 300 }, { x: 80 / 300, y: 210 / 300 }] },
+                        ],
+                        fontStrokes: [
+                            {
+                                type: 'compound', subStrokes: [
+                                    {
+                                        type: 'line', points: [{ x: 150 / 300, y: 60 / 300 }, { x: 94 / 300, y: 180 / 300 }]
+                                    },
+                                    { type: 'line', points: [{ x: 94 / 300, y: 180 / 300 }, { x: 70 / 300, y: 230 / 300 }], lWidth: 80 / 300, lineCap: 'butt' }, // size cap butt square
+                                ]
+                            },
+                        ]
+                    },
+                    'f': {
+                        strokes: [
+                            {
+                                type: 'compound', subStrokes: [
+                                    {
+                                        type: 'curve', cA: '#FFA500', cS: '', points: [{ x: 1 / 2, y: 11 / 30 }, { x: 16 / 30, y: 70 / 300 }, { x: 95 / 300, y: 55 / 300 }, { x: 9 / 30, y: 11 / 30 }]
+                                    },
+                                    { type: 'line', points: [{ x: 9 / 30, y: 11 / 30 }, { x: 9 / 30, y: 22 / 30 }] },
+                                ]
+                            },
+                            {
+                                type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }]
+                            }
+                        ]
+                    },
+                    'A': {
+                        strokes: [
+                            {
+                                type: 'line',
+                                points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 1 / 6 }]
+                            },
+                            {
+                                type: 'line',
+                                points: [{ x: 1 / 2, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }]
+                            },
+                            {
+                                type: 'line',
+                                points: [{ x: 5 / 12, y: 1 / 2 }, { x: 7 / 12, y: 1 / 2 }]
+                            }
+                        ]
+                    },
+                    'B': {
+                        strokes: [
+                            {
+                                type: 'line',
+                                points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }]
+                            },
+                            {
+                                type: 'curve',
+                                points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 12 }, { x: 1 / 3, y: 5 / 12 }]
+                            },
+                            {
+                                type: 'curve',
+                                points: [{ x: 1 / 3, y: 5 / 12 }, { x: 2 / 3, y: 5 / 12 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }]
+                            }
+                        ]
+                    },
+                    'C': {
+                        strokes: [
+                            {
+                                type: 'curve',
+                                points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 6, y: 1 / 3 }, { x: 1 / 6, y: 2 / 3 }, { x: 2 / 3, y: 5 / 6 }]
+                            }
+                        ]
+                    },
+                    'D': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'E': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }] }
+                        ]
+                    },
+                    'F': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 1 / 2 }] }
+                        ]
+                    },
+                    'G': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 5 / 12 }, { x: 1 / 3, y: 5 / 12 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 2 / 3 }] }
+                        ]
+                    },
+                    'H': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    'I': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                        ]
+                    },
+                    'J': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 1 / 2, y: 2 / 3 }, { x: 2 / 3, y: 2 / 3 }] }
+                        ]
+                    },
+                    'K': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'L': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'M': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'N': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                        ]
+                    },
+                    'O': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'P': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    'Q': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 5 / 6, y: 4 / 6 }] }
+                        ]
+                    },
+                    'R': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 1 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'S': { // need to fix
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'T': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                        ]
+                    },
+                    'U': { // need to fix. though looks good for hebrew eyin
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                        ]
+                    },
+                    'V': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                        ]
+                    },
+                    'W': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 4, y: 1 / 6 }, { x: 2 / 4, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 4, y: 5 / 6 }, { x: 3 / 4, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 3 / 4, y: 1 / 6 }, { x: 1, y: 5 / 6 }] }
+                        ]
+                    },
+                    'X': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'Y': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 2, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] }
+                        ]
+                    },
+                    'Z': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 2 / 3, y: 1 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'a': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }] }
+                        ]
+                    },
+                    'b': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'c': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'd': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'e': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                            // { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] } five points
+                        ]
+                    },
+
+                    'g': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 7 / 6 }] }
+                        ]
+                    },
+                    'h': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    'i': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 12 }, { x: 1 / 2, y: 2 / 12 }] }
+                        ]
+                    },
+                    'j': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 7 / 6 }, { x: 1 / 2, y: 7 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 12 }, { x: 1 / 2, y: 2 / 12 }] }
+                        ]
+                    },
+                    'k': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 4 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 3 / 4 }] }
+                        ]
+                    },
+                    'l': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] }
+                        ]
+                    },
+                    'm': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 1 / 4, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 2 / 4, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 2 / 4, y: 1 / 2 }, { x: 2 / 4, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 4, y: 1 / 2 }, { x: 3 / 4, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 3 / 4, y: 1 / 2 }, { x: 3 / 4, y: 5 / 6 }] }
+                        ]
+                    },
+                    'n': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'o': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'p': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 7 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'q': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 7 / 6 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'r': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    's': {
+                        strokes: [
+                            { type: 'curve', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 6 }, { x: 1 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    't': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 2, y: 1 / 6 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 3 }, { x: 2 / 3, y: 1 / 3 }] }
+                        ]
+                    },
+                    'u': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'curve', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    'v': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] }
+                        ]
+                    },
+                    'w': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 4, y: 1 / 2 }, { x: 2 / 4, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 4, y: 5 / 6 }, { x: 3 / 4, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 3 / 4, y: 1 / 2 }, { x: 1, y: 5 / 6 }] }
+                        ]
+                    },
+                    'x': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                    'y': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 1 / 2, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 2, y: 5 / 6 }, { x: 2 / 3, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 2 / 3, y: 7 / 6 }] }
+                        ]
+                    },
+                    'z': {
+                        strokes: [
+                            { type: 'line', points: [{ x: 1 / 3, y: 1 / 2 }, { x: 2 / 3, y: 1 / 2 }] },
+                            { type: 'line', points: [{ x: 2 / 3, y: 1 / 2 }, { x: 1 / 3, y: 5 / 6 }] },
+                            { type: 'line', points: [{ x: 1 / 3, y: 5 / 6 }, { x: 2 / 3, y: 5 / 6 }] }
+                        ]
+                    },
+                }; // data
+                this.settings = {
+                    animDur: 1000,
+                    canvasDim: 300, // square
+                    rulePaper: true
+                };
+                this.canvases = {
+                    ruleCanvas: document.getElementById('ruleCanvas'), // ruleCtx = ruleCanvas.getContext('2d');
+                    completedCanvas: document.getElementById('completedCanvas'),
+                    guideCanvas: document.getElementById('guideCanvas'),
+                    letterCanvas: document.getElementById('letterCanvas'),
+                    drawCanvas: document.getElementById('drawCanvas')
+                };
+                this.ctxs = {
+                    rule: this.canvases.ruleCanvas.getContext('2d'), // previous game ruleCtx; this.ctxs.rule
+                    completed: this.canvases.completedCanvas.getContext('2d'),
+                    guide: this.canvases.guideCanvas.getContext('2d'),
+                    letter: this.canvases.letterCanvas.getContext('2d'),
+                    draw: this.canvases.drawCanvas.getContext('2d')
+                };
+                this.controls = {
+                    letterSelect: document.getElementById('letterSelect'),
+                    resetBtn: document.getElementById('resetBtn'),
+                    autoDrawBtn: document.getElementById('autoDrawBtn'),
+                    toggleRule: document.getElementById('toggleRule')
+                };
+                this.display = {
+                    acc: document.getElementById('accuracy') // prev accuracy display this.display.acc
+                };
+                this.state = {
+                    currentLetter: this.controls.letterSelect.value, //'A';
+                    currStrokeInd: 0,
+                    isDrawing: false,
+                    lastPoint: null,
+                    drawingPath: [],
+                    isAutoDrawing: false,
+                    snapshots: [],
+                    snaps: {},
+                    drawOver: false
+                }
+                this.DrawStyle =
+                /**
+                * Style container for stroke rendering with normalized dimensions.
+                * Automatically scales dimension properties based on canvas size using Proxy (TODO simplify to getter and setter functions).
+                * Properties marked as normalized in the 'normed' array will be scaled by canvas dimensions.
+                */
+                    class {
+                        constructor(app, style) {
+                            this.normed = [];
+                            Object.assign(this, style);
+                            this.normed.push('lWidth', 'headLength', 'headWidth');
+                            return new Proxy(this, {
+                                get(target, prop) {
+                                    if (prop in target) {
+                                        // Custom behavior for accessing properties console.log(`Accessing property '${prop}' with value '${target[prop]}'`);
+                                        if (target.normed.includes(prop)) {
+                                            return target[prop] * app.settings.canvasDim;
+                                        } else {
+                                            // throw new Error(`Property '${prop}' is not normalized`);
+                                            return target[prop];
+                                        }
+                                    } else {
+                                        throw new Error(`Property '${prop}' does not exist`);
+                                    }
+                                }
+                            })
+                        }
+                    };
+                this.styles = {
+                    rule: new this.DrawStyle(this,{ color: '#FFA500', lWidth: .01, headLength: 1 / 15, headWidth: 15 / 300, normed: [] }), // guide arrow color - orange. normalized
+                    arw: new this.DrawStyle(this,{ color: '#FFA500', lWidth: .01, headLength: 1 / 15, headWidth: 15 / 300 }), // guide arrow color - orange. normalized
+                    guide: new this.DrawStyle(this,{ color: '#dddddd', lWidth: 20 / 300, lineCap: 'round' }),// guide stroke color gray. normalized
+                    hl: new this.DrawStyle(this,{ color: '#ffeb3b', lWidth: 20 / 300, lineCap: 'round' }), // highlight guide stroke color - yellow. normalized
+                    complete: new this.DrawStyle(this,{ color: '#ff1111', lWidth: 20 / 300, lineCap: 'round' })
+                };
+
+                this.Stroke =
+                    /**
+                     * Represents a drawing stroke with various types (line, curve, compound).
+                     * Handles rendering, animation, accuracy calculation, and direction indicators.
+                     * Uses normalized coordinates that scale based on canvas dimensions.
+                     */
+                    class {
+                        constructor(app, stroke) {
+                            this.app = app;
+                            this.canvasDim = app.settings.canvasDim;
+                            let canvasDim = this.canvasDim;
+                            this.normed = [];
+                            Object.assign(this, stroke); // type:''  points {x:,y:} substroke:[Stroke,] others
+                            this.normed.push('lWidth', 'x', 'y', 'points');
+                            // handle compounds
+                            if (this.type == 'compound') {
+                                this.subStrokes = this.subStrokes.map((s) => new app.Stroke(app, s))
+                            }
+                            this.pLen = this.pLenFind();
+                            this.check();
+                            return new Proxy(this, {
+                                get(target, prop) {
+                                    if (prop in target) {
+                                        // Denorm any normed properties
+                                        if (target.normed.includes(prop)) {
+                                            if (prop === 'points') {
+                                                return target[prop].map((p) => {
+                                                    let res = {};
+                                                    Object.assign(res, p);
+                                                    res.x *= canvasDim;
+                                                    res.y *= canvasDim;
+                                                    return res
+                                                })
+                                            }
+                                            return target[prop] * canvasDim;
+                                        } else {
+                                            return target[prop];
+                                        }
+                                    } else {
+                                        if (typeof prop === 'symbol') { console.log(prop); }
+                                        // throw new Error(`Property: ${prop.toSring()} - does not exist`);
+                                    }
+                                },
+                                has(target, prop) {
+                                    return prop in target; // This allows the "in" operator to work without throwing an error }
+                                }
+                            })
+                        }
+
+                        /**
+                         * Calculates avg error between user's drawn path and ideal stroke
+                         * Returns a % score (0-100)
+                         */
+                        calculateAccuracy(userPath) {
+                            if (userPath.length < 2) return 0;
+
+                            const numSamples = 50;
+                            let totalError = 0;
+
+                            const maxAllowedError = 100; // pixels
+                            // Sample points along both paths
+                            for (let i = 0; i <= numSamples; i++) {
+                                const t = i / numSamples;
+
+                                const idealPoint = this.getPt(t); //
+                                const userPoint = this.app.interpolatePathPoint(userPath, t);
+                                //console.log(idealPoint);
+                                //console.log(userPoint);
+                                let error = Math.hypot(userPoint.x - idealPoint.x, userPoint.y - idealPoint.y);
+
+                                // not sure why but error is sometimes Nan
+                                if (isNaN(error)) {
+                                    error = maxAllowedError * 2;
+                                    //console.log(`Nan error. upx ${userPoint.x} ipx ${idealPoint.x} upy  ${userPoint.y} ipy ${idealPoint.y}`);
+                                }
+                                totalError += error;
+                            }
+                            //console.log(`val totalError ${totalError}`);
+                            let avgError = totalError / (numSamples + 1);
+                            //console.log(`val avgError ${avgError}`);
+
+                            if (avgError == 0) avgError = maxAllowedError; // prevent all NaN from appearing to be perfect
+                            return Math.max(0, Math.min(100, 100 * (1 - avgError / maxAllowedError)));
+                        }
+
+                        /**
+                         * Animates a single stroke
+                         */
+                        async animateStroke(duration = 1000, drawOver = false) {
+                            let canvasDim = this.canvasDim;
+                            return new Promise(resolve => {
+                                let startTime = null;
+                                let stroke = this;
+                                let ctx = completedCtx;
+                                if (isAutoDrawing) saveState(ctx, 'b4 stroke/sub');
+                                let temp = letterCtx.getImageData(0, 0, canvasDim, canvasDim);
+                                // Clear completed and guide canvases WHEN/IF to clear
+                                guideCtx.clearRect(0, 0, canvasDim, canvasDim);
+                                console.log(drawOver);
+
+                                function animate(timestamp) {
+                                    //if (isAutoDrawing) restoreState(ctx, 'b4 stroke/sub');
+                                    if (!startTime) startTime = timestamp;
+                                    const progress = Math.min((timestamp - startTime) / duration, 1);
+
+                                    //// Draw the stroke in progress
+                                    ctx.strokeStyle = '#2196f3';
+                                    ctx.strokeStyle = '#00aa00';
+                                    ctx.lineWidth = 20;
+                                    ctx.lineCap = 'round';
+                                    //console.log(ctx);
+                                    //// console.log(stroke.points[0].x);
+                                    ctx.globalCompositeOperation = 'source-over';
+                                    completedCtx.beginPath();
+                                    completedCtx.moveTo(0, 100);
+                                    completedCtx.lineTo(50, 100);
+                                    completedCtx.stroke();
+                                    //// Use style
+                                    // ({color:ctx.strokeStyle,}= guideStyle)
+                                    stroke.drawStroke(completedCtx, completeStyle, progress); // check if stroke carries changes for line width
+
+                                    //// source-atop letter source completed destination
+                                    completedCtx.globalCompositeOperation = 'destination-in'; // 'destination-in'; CHange back onve fix issue
+                                    console.log(drawOver);
+                                    if (drawOver) {
+                                        completedCtx.globalCompositeOperation = 'destination-over';
+                                    }; // 'destination-in'; CHange back onve fix issue
+
+
+                                    //completedCtx.putImageData(temp, 0, 0);
+                                    completedCtx.drawImage(letterCanvas, 0, 0);
+
+                                    //// combine the stroke with the font letter
+
+                                    if (progress < 1) {
+                                        requestAnimationFrame(animate);
+                                    } else {
+                                        if (isAutoDrawing) clearState('b4 stroke/sub');
+                                        ctx.globalCompositeOperation = 'source-over'; // back to default
+                                        resolve();
+                                    }
+                                }
+
+                                requestAnimationFrame(animate);
+                            });
+                        }
+
+                        async animateCompoundStroke(animDur, drawOver = false) {
+                            let { relLens: relLens } = this.pLen;
+                            for (let subi = 0; subi < this.subStrokes.length; subi++) {
+                                await this.subStrokes[subi].animateStroke(animDur * relLens[subi], drawOver);
+                            }
+                        }
+
+                        pLenFind(numSegments = 100) {
+                            let len = 0;
+                            if (this.type === 'line') {
+                                let [p0, p1] = this.points;
+                                len = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+                                return len
+                            }
+                            else if (this.type === 'curve') {
+                                let [p0, ...rest] = this.points;
+                                let pp = p0; // prevPoint
+                                for (let i = 1; i <= numSegments; i++) {
+                                    const t = i / numSegments;
+                                    const p = this.getPt(t);
+                                    len += Math.hypot(p.x - pp.x, p.y - pp.y);
+                                    pp = p;
+                                }
+                                return len
+                            }
+                            else if (this.type === 'compound') {
+                                this.subStrokes.forEach((s) => {
+                                    len += s.pLenFind();
+                                });
+                                let rl = this.subStrokes.map((s) => s.pLenFind() / len); // []
+                                return { totLen: len, relLens: rl }
+                            }
+                        }
+
+                        /**
+                         * Calculates a point on a stroke at given progress (0-1)
+                         * Handles both line and curve strokes
+                         */
+                        getPt(progress) {
+                            // console.log(`getPt stroke.type: ${stroke.type}`);
+                            //let { totLen, relLens } = pLenFind(stroke);
+                            const t = progress;
+                            try {
+                                this.type === 'line';
+
+                            } catch (err) {
+                                console.log(err);
+                                console.log(this);
+                            }
+                            if (this.type === 'line') {
+                                const start = this.points[0];
+                                const end = this.points[1];
+                                return {
+                                    x: start.x + (end.x - start.x) * t,
+                                    y: start.y + (end.y - start.y) * t
+                                };
+                            } else if (this.type === 'curve') {
+                                const mt = 1 - t;
+                                const [p0, p1, p2, p3] = this.points;
+                                return {
+                                    x: mt ** 3 * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t ** 3 * p3.x,
+                                    y: mt ** 3 * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t ** 3 * p3.y
+                                };
+                            } else if (this.type === 'compound') {
+                                let { relLens } = this.pLenFind();
+                                let si = relLens.findIndex(element => element > t); // subStroke index
+                                if (si == -1) si = relLens.length - 1;
+                                let subS = si == 0 ? 0 : relLens[si - 1];
+                                let subE = si == relLens.length - 1 ? 1 - relLens[si] : relLens[si + 1] - relLens[si];
+                                let partprog = (t - subS) / (subE - subS);
+                                if (partprog > 1) partprog = 1;
+                                return this.subStrokes[si].getPt(partprog);
+                            }
+                        }
+
+                        /**
+                         * Draws a stroke on the specified context
+                         * checks for change of stroke parameters
+                         */
+                        drawStroke(ctx, style, progress = 1) {
+                            // set style for the stroke
+                            ctx.strokeStyle = style.color || '#2196f3';
+                            ctx.lineWidth = style.lWidth || 20;
+                            ctx.lineCap = style.lineCap || 'round';
+
+                            // check if style change to thickness in stroke
+                            if (this.lineCap) ctx.lineCap = this.lineCap;
+                            if (this.lWidth) ctx.lineWidth = this.lWidth;
+
+                            if (this.type === 'compound') { // shouldn't happen with animate
+                                this.subStrokes.forEach(sub => {
+                                    sub.drawStroke(ctx, style, progress);
+                                });
+                                return;
+                            }
+
+                            ctx.beginPath();
+                            let start = this.points[0]; // could be a compound then this is an issue
+                            ctx.moveTo(start.x, start.y);
+                            if (this.type === 'line') {
+                                const point = this.getPt(progress);
+                                ctx.lineTo(point.x, point.y);
+                            }
+                            else if (this.type === 'curve') {
+                                let [start, cp1, cp2, end] = this.points;
+                                if (progress === 1) {
+                                    ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                                } else {
+                                    const cps = Stroke.partialBezier(progress, start.x, start.y, cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                                    ctx.bezierCurveTo(cps.newCx1, cps.newCy1, cps.newCx2, cps.newCy2, cps.newX2, cps.newY2);
+                                }
+                            }
+
+                            // Ensure we're using source-over composition
+                            ctx.globalCompositeOperation = 'source-over';
+                            ctx.stroke();
+                        }
+
+                        /**
+                         * Draws direction indicators for the current stroke
+                         */
+                        drawDirections() {
+                            const ctx = this.app.ctxs.guide;
+                            if (this.type === 'line') {
+                                this.drawArrow(ctx, this.points[0], this.points[1]);
+                            } else if (this.type === 'curve' || this.type === 'compound') {
+                                this.drawArrow(ctx);
+                            }
+                        }
+
+                        /**
+                         * Draws a guide arrow
+                         * For curves, draw one arrow line with multiple heads along the path. For lines, draw a single arrow
+                         * @param {CanvasRenderingContext2D} ctx - The canvas context
+                         * @param {Object} start - Start point {x, y}
+                         * @param {Object} end - End poi        nt {x, y}
+                         * @param {String} type - the type of the stroke could also be just_heads following a curve
+                         */
+                        drawArrow(ctx, start = 0, end = 0, just_head = false) { // may or may not still need to pass type for curve/compune /just_heads start and en are only needed for curve simply call Stroke.drawArrow(ctx)
+                            // Set styling
+                            let hl, hw;
+                            ({ color: ctx.strokeStyle, color: ctx.fillStyle, lWidth: ctx.lineWidth, headLength: hl, headWidth: hw } = this.app.styles.arw);
+                            const type = this.type;
+                            if (type === 'curve' && !just_head) {
+                                // Draw arrow line
+                                ctx.beginPath();
+                                let [start, cp1, cp2, end] = this.points;
+                                ctx.moveTo(start.x, start.y);
+                                ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+                                ctx.stroke();
+                                // Draw arrow heads (schedule)
+                                // set locations for arrow heads. midpoints of loci
+                                let loci = [.19, .20, .49, .50, .79, .80];
+                                const points = loci.map((l) => this.getPt(l));
+                                for (let i = 0; i < points.length; i += 2) {
+                                    this.drawArrow(ctx, true, points[i], points[i + 1]);
+                                }
+                                return
+                            }
+                            else if (type === 'line' || just_head) {
+
+                                if (type === 'line') { // Draw arrow line
+                                    start = this.points[0];
+                                    end = this.points[1];
+                                    ctx.beginPath();
+                                    ctx.moveTo(start.x, start.y);
+                                    ctx.lineTo(end.x, end.y);
+                                    ctx.stroke();
+                                }
+                                // Draw arrow heads (here) around midpoint
+                                const halfHead = hl / 2;
+                                const arrAng = Math.atan(hw / (2 * hl));
+                                const hyp = (hw / 2) / Math.sin(arrAng);
+                                // Calculate the angle of the line
+                                const angle = Math.atan2(end.y - start.y, end.x - start.x);
+                                // Calculate the midpoint of the line
+                                const midX = (start.x + end.x) / 2;
+                                const midY = (start.y + end.y) / 2;
+
+                                // find arrow points
+                                const headPt0 = {
+                                    x: midX + halfHead * Math.cos(angle),
+                                    y: midY + halfHead * Math.sin(angle)
+                                }
+                                const headPt1 = {
+                                    x: headPt0.x - hyp * Math.cos(angle - arrAng),
+                                    y: headPt0.y - hyp * Math.sin(angle - arrAng)
+                                }
+                                const headPt2 = {
+                                    x: headPt0.x - hyp * Math.cos(angle + arrAng),
+                                    y: headPt0.y - hyp * Math.sin(angle + arrAng)
+                                }
+                                ctx.beginPath();
+                                ctx.moveTo(headPt0.x, headPt0.y);
+                                ctx.lineTo(headPt1.x, headPt1.y);
+                                ctx.lineTo(headPt2.x, headPt2.y);
+                                ctx.closePath();
+                                ctx.fill();
+                            }
+                            else if (type === 'compound') {
+                                this.subStrokes.forEach((sub) => sub.drawArrow(ctx));
+                            }
+
+                        }
+
+                        check() {
+                            let canvasDim = this.canvasDim;
+                            function checkPt(p) {
+                                // only two points and both are between 0-1
+                                if (!('x' in p) || !('y' in p)) {
+                                    throw new Error("Point must have 'x' and 'y' fields.");
+                                } if (p.x <= 0 || p.x >= canvasDim || p.y <= 0 || p.y >= canvasDim) {
+                                    throw new Error("'x' and 'y' values must be between 0 and 1 inclusive.");
+                                }
+                            }
+                            if (this.type === "line") {
+                                if (this.points.length != 2) {
+                                    throw new Error("A line should have two points");
+                                }
+                                this.points.forEach((p) => checkPt(p));
+                            }
+                            else if (this.type === "curve") {
+                                if (this.points.length != 4) {
+                                    throw new Error("A curve should have four points");
+                                }
+                                this.points.forEach((p) => checkPt(p));
+                            }
+                            else if (this.type === "compound") {
+                                this.subStrokes.forEach((s) => s.check());
+                            }
+                            else {
+                                throw new Error("A curve should have four points");
+                            }
+                        }
+
+                        /**
+                         * Calculate the extension line for a stroke. Prints use for making strokes
+                         * @param {number} extensionLength - Length to extend the curve
+                         * @param {'start'|'end'} position - Whether to extend from start or end of curve
+                         * @returns {{start: {x: number, y: number}, end: {x: number, y: number}}} Extension line points
+                         */
+                        calcExtenLine(extensionLength, position = 'end') {
+
+                            if (this.type === 'compound') {
+                                const subInd = positon === 'end' ? this.subStrokes.length : 0;
+                                const subStroke = this.subStrokes[subInd];
+                                console.log(`extending subStroke ${subInd}`);
+                                return subStroke.calcExtenLine(extensionLength, position);
+                            } else if (this.type === 'curve') {
+                                const crvPts = this.points;
+                                // Get the tangent at the extension point
+                                const t = position === 'end' ? 1 : 0;
+                                const tangent = this.getBezierTangent(t);
+
+                                // Get the point to extend from
+                                const extensionStart = position === 'end'
+                                    ? crvPts[crvPts.length - 1]
+                                    : crvPts[0];
+
+                                // Calculate the extension end point
+                                const extensionEnd = {
+                                    x: extensionStart.x + (tangent.x * extensionLength),
+                                    y: extensionStart.y + (tangent.y * extensionLength)
+                                };
+                                console.log(`extension line: {type='line' points=[{x:${extensionStart.x},
+                        y:${extensionStart.y}},{x:${extensionEnd.x},y:${extensionEnd.y}}]`);
+                                return {
+                                    start: extensionStart,
+                                    end: extensionEnd
+                                };
+                            } else if (this.type === 'line') {
+                                const [p1, p0] = this.points;
+                                if (position === 'end') [p0, p1] = [p1, p0];
+                                const len = this.pLen;
+                                let x = p1.x - p0.x;
+                                let y = p1.y - p0.y;
+                                const tangent = { x: x / len, y: y / len } //TODO finish
+                                const extensionStart = p1;
+                                const extensionEnd = {
+                                    x: extensionStart.x + (tangent.x * extensionLength),
+                                    y: extensionStart.y + (tangent.y * extensionLength)
+                                };
+                                console.log(`extension line: {type='line' points=[{x:${extensionStart.x},
+                        y:${extensionStart.y}},{x:${extensionEnd.x},y:${extensionEnd.y}}]`);
+                                return {
+                                    start: extensionStart,
+                                    end: extensionEnd
+                                };
+                            }
+
+                        }
+
+                        /**
+                         * Calculates the control points and end point for a Bézier curve which is in progress.
+                         *
+                         * @param {number} t - Progress of curve from 0 to 1.
+                         * @param {number} x1 - x-coord of start pt.
+                         * @param {number} y1 - y-coord of start pt.
+                         * @param {number} cx1 - x-coord of first control pt.
+                         * @param {number} cy1 - y-coord of first control pt.
+                         * @param {number} cx2 - x-coord of second control pt.
+                         * @param {number} cy2 - y-coord of second control pt.
+                         * @param {number} x2 - x-coord of end pt.
+                         * @param {number} y2 - y-coord of end pt.
+                         * @returns {Object} The updated control pts and end pt.
+                         * @returns {number} returns.newCx1 - x-coord of updated control pt 1.
+                         * @returns {number} returns.newCy1 - y-coord of updated control pt 1.
+                         * @returns {number} returns.newCx2 - x-coord of updated second control pt.
+                         * @returns {number} returns.newCy2 - y-coord of updated second control pt.
+                         * @returns {number} returns.newX2 - x-coord of updated end pt.
+                         * @returns {number} returns.newY2 - y-coord of updated end pt.
+                         */
+                        static partialBezier(t, x1, y1, cx1, cy1, cx2, cy2, x2, y2) {
+
+                            // Function to interpolate between two points
+                            function lerp(a, b, t) {
+                                return a + (b - a) * t;
+                            }
+
+                            // Calculate intermediate points
+                            const x12 = lerp(x1, cx1, t), y12 = lerp(y1, cy1, t);
+                            const x23 = lerp(cx1, cx2, t), y23 = lerp(cy1, cy2, t);
+                            const x34 = lerp(cx2, x2, t), y34 = lerp(cy2, y2, t);
+
+                            const x123 = lerp(x12, x23, t), y123 = lerp(y12, y23, t);
+                            const x234 = lerp(x23, x34, t), y234 = lerp(y23, y34, t);
+
+                            const x1234 = lerp(x123, x234, t), y1234 = lerp(y123, y234, t);
+                            // Return the updated control points
+                            return {
+                                newCx1: x12, newCy1: y12, newCx2: x123, newCy2: y123, newX2: x1234, newY2: y1234
+                            };
+                        }
+
+                        /**
+                         * Calculate the normalized tangent vector at a point on the Bézier curve
+                         * @param {number} t - Parameter value (0 to 1)
+                         * @returns {{x: number, y: number}} Normalized tangent vector
+                         */
+                        getBezierTangent(t) {
+                            // Get derivative at point
+                            const derivative = this.getBezierDerivative(t);
+
+                            // Normalize the tangent vector
+                            const length = Math.sqrt(derivative.x * derivative.x + derivative.y * derivative.y);
+                            return {
+                                x: derivative.x / length,
+                                y: derivative.y / length
+                            };
+                        }
+
+                        /**
+                         * Calculate the derivative of a Bézier curve at parameter t
+
+                         * @param {number} t - Parameter value (0 to 1)
+                         * @returns {{x: number, y: number}} Derivative vector
+                         */
+                        getBezierDerivative(t) {
+                            const points = this.points;
+                            const n = points.length - 1;
+                            let dx = 0;
+                            let dy = 0;
+
+                            for (let i = 0; i < n; i++) {
+                                const coefficient = n * this.binomialCoefficient(n - 1, i) * Math.pow(1 - t, n - 1 - i) * Math.pow(t, i);
+                                dx += coefficient * (points[i + 1].x - points[i].x);
+                                dy += coefficient * (points[i + 1].y - points[i].y);
+                            }
+
+                            return { x: dx, y: dy };
+                        }
+
+                        /**
+                         * Calculate binomial coefficient (n choose k)
+                         * @param {number} n
+                         * @param {number} k
+                         * @returns {number}
+                         */
+                        binomialCoefficient(n, k) {
+                            if (k === 0 || k === n) return 1;
+                            if (k > n) return 0;
+
+                            let coefficient = 1;
+                            for (let i = 0; i < k; i++) {
+                                coefficient *= (n - i) / (i + 1);
+                            }
+                            return coefficient;
+                        }
+
+                        drawExtenLine(lineWidth, extensionLength, position = 'end') {
+
+                        }
+                    };
+                this.Letter =
+                    /**
+                     * Represents a complete letter with multiple strokes.
+                     * Contains both guide strokes for practice and optional font strokes for display.
+                     * Uses normalized coordinates that automatically scale with canvas dimensions.
+                     */
+                    class {
+                        constructor(app, letter) {
+                            this.normed = [];
+                            Object.assign(this, letter);
+                            this.normed.push('', '', '');
+                            this.canvasDim = app.settings.canvasDim;
+                            let canvasDim = this.canvasDim;
+                            // if stroke in letter else warning
+                            if ('strokes' in letter) {
+                                this.strokes = this.strokes.map((stroke) => {
+                                    const ns = new app.Stroke(app, stroke);
+                                    return ns
+                                });
+                            } else {
+                                console.error(`letter has no stroke data`);
+                            }
+                            // if fontStrokes in letter (may not be since it is only included if diff than strokes)
+                            if ('fontStrokes' in letter) {
+                                this.fontStrokes = this.fontStrokes.map((stroke) => {
+                                    const ns = new app.Stroke(app, stroke);
+                                    ns.check()
+                                    return ns
+                                });
+                            }
+                            return new Proxy(this, {
+                                get(target, prop) { // a letter
+                                    if (prop in target) {
+                                        // Custom behavior for accessing properties
+                                        if (target.normed.includes(prop)) {
+                                            return target[prop] * canvasDim;
+                                        } else {
+                                            // throw new Error(`Property '${prop}' is not normalized`);
+                                            return target[prop];
+                                        }
+                                    } else {
+                                        if (prop != 'fontStrokes') throw new Error(`Letter '${letter.name}' has no prop ${prop}`);
+                                    }
+                                }
+                            })
+                        }
+                    };
+                this.LetterDatabase =
+                    /**
+                     * Collection of all available letters with their stroke definitions.
+                     * Can either create all Letter instances at initialization or on-demand.
+                     * Uses a Proxy to provide transparent access to letter data.
+                     */
+                    class {
+                        constructor(app, letters) {
+                            const makeAllAtStart = true;
+
+                            Object.assign(this, letters);
+
+                            if (makeAllAtStart) {
+                                for (let [key, value] of Object.entries(this)) {
+                                    try {
+                                        this[key].name = key;
+                                        this[key] = new app.Letter(app, value);
+                                        // console.log('stroke[0], stroke[0].points, fontStrokes)'); console.log(this[key].strokes[0]); console.log(this[key].strokes[0].points);                            console.log(this[key].fontStrokes);                            console.log(this[key].fontStrokes[0].subStrokes[0].points);
+                                    } catch (e) {
+                                        console.log(`error on letter: ${key}`);
+                                        console.log(key);
+                                        console.log(value);
+                                        throw e;
+                                    }
+                                }
+                            }
+
+                            return new Proxy(this, {
+                                get(target, prop) { // a letter
+                                    if (prop in target) {
+                                        if (makeAllAtStart) {
+                                            return target[prop]
+                                        } else {// make on demand.
+                                            return new app.Letter(target[prop]);
+                                        }
+                                    } else {
+                                        throw new Error(`Letter '${prop}' not in db`);
+                                    }
+                                }
+                            })
+                        }
+                    };
+
+                this.handleStart = this.handleStart.bind(this);
+                this.handleMove = this.handleMove.bind(this);
+                this.handleEnd = this.handleEnd.bind(this);
+                this.reset = this.reset.bind(this);
+                this.autoDraw = this.autoDraw.bind(this);
+                this.autoDrawOver = this.autoDrawOver.bind(this);
+                this.init();
+            }
+
+            init() {
+                console.log('init');
+                console.log(this.letters);
+
+                this.lettDB = new this.LetterDatabase(this, this.letters);
+
+                console.log(this.lettDB);
+                this.showOptions(this.lettDB);
+                let drawCanvas = this.canvases.drawCanvas;
+                this.drawFontLetter(this.state.currentLetter);
+                this.markPoints(drawCanvas); // top level canvas
+                this.updateGuide();
+
+                // Event Listeners
+                drawCanvas.addEventListener('mousedown', this.handleStart);
+                drawCanvas.addEventListener('mousemove', this.handleMove);
+                drawCanvas.addEventListener('mouseup', this.handleEnd);
+                drawCanvas.addEventListener('mouseout', this.handleEnd);
+                drawCanvas.addEventListener('touchstart', e => {
+                    e.preventDefault();
+                    this.handleStart(e);
+                });
+                drawCanvas.addEventListener('touchmove', e => {
+                    e.preventDefault();
+                    this.handleMove(e);
+                });
+                drawCanvas.addEventListener('touchend', this.handleEnd);
+                
+                this.controls.letterSelect.addEventListener('change', e => {
+                    this.state.currentLetter = e.target.value;
+                    this.reset();
+                    this.drawFontLetter(this.state.currentLetter);
+                });
+                this.controls.resetBtn.addEventListener('click', this.reset);
+                this.controls.autoDrawBtn.addEventListener('click', this.autoDraw);
+                //document.getElementById('autoDrawOver').addEventListener('click', autoDrawOver);
+                this.controls.toggleRule.addEventListener('click', () => {
+                    this.settings.rulePaper = !this.settings.rulePaper;
+                    this.updateGuide();
+                });
+                console.log(this.state);
+            }
+            newLetter(nlett) {
+                this.reset();
+                this.drawFontLetter(nlett);
+                //document.getElementById('letterSelect').addEventListener('change', e => newLetter(e.target.value));
+            }
+            /** Draw a letter on the x canvas in light gray. Removes previous*/
+            drawFontLetter(currentLetter) {
+                console.log('drawFontLetter');
+                let canvasDim = this.settings.canvasDim;
+                let letterCtx = this.canvases.guideCanvas.getContext("2d");
+
+                // Clear letter canvas
+                letterCtx.clearRect(0, 0, canvasDim, canvasDim);
+                // drawCtx.globalCompositeOperation = 'source-over';
+                letterCtx.fillStyle = '#DDDDDD';
+                letterCtx.font = 'bold 250px Times New Roman';
+                letterCtx.font = 'bold 250px Arial';
+                letterCtx.textAlign = 'center';
+                letterCtx.textBaseline = 'middle';
+
+                letterCtx.fillText(currentLetter, canvasDim / 2, canvasDim / 2);
+
+                // Get the letter pixels
+                const imageData = letterCtx.getImageData(0, 0, canvasDim, canvasDim);
+                let letterPixels = imageData.data; // what is this for?
+            }
+
+            /** Apply/Remove line ruling to simulate ruled paper based on the settings */
+            drawLineRule(ctx) {
+                // ctx = ctx || this.ctxs.rule;
+                let canvasDim = this.settings.canvasDim;
+                ctx.clearRect(0, 0, canvasDim, canvasDim);
+                if (!this.settings.rulePaper) return 
+                
+
+                function drawHorizontalLine(y) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvasDim, y);
+                    ctx.stroke();
+                }
+                // Clear canvas and set white background
+                ctx.fillStyle = 'white';
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillRect(0, 0, canvasDim, canvasDim);
+                ctx.globalCompositeOperation = 'source-over';
+
+                // Bottom solid black line
+                ctx.setLineDash([]); // Solid line
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 1 / 100 * canvasDim;
+                drawHorizontalLine(215 / 300 * canvasDim);
+
+                // Middle dashed red line
+                ctx.setLineDash([5, 5]); // Dashed line
+                ctx.strokeStyle = 'rgba(255, 0, 0, 0.3)'; // Pale red
+                drawHorizontalLine(160 / 300 * canvasDim);
+
+                // Top dashed blue line
+                ctx.strokeStyle = 'rgba(0, 0, 255, 0.3)'; // Pale blue
+                drawHorizontalLine(45 / 300 * canvasDim);
+
+                // Reset line dash for drawing
+                ctx.setLineDash([]);
+            }
+
+            denormConsts() {
+                // TODO set the pixel value based on the canvasDim
+                return
+            }
+
+            showStroke() {
+                // k
+                return
+            }
+
+            markPoints(canvas) {
+                // top canvas is draw
+                const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+                const circleRadius = 10;
+                let circleCount = 0;
+                let colorIndex = 0;
+
+                canvas.addEventListener('dblclick', (event) => {
+                    const ctx = guideCanvas.getContext('2d');
+                    const x = event.offsetX;
+                    const y = event.offsetY;
+                    const color = colors[colorIndex % colors.length];
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, circleRadius, 0, 2 * Math.PI);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+
+                    console.log(`Canvas ${canvas.id} - Circle ${circleCount + 1}: Color: ${color}, X: ${x}, Y: ${y}`);
+
+                    circleCount++;
+                    colorIndex++;
+                });
+            }
+
+            /**
+             * Provide all Letter options
+             */
+            showOptions(lettDB) {
+                // get and clear options
+                const letSelect = document.getElementById('letterSelect');
+                letSelect.innerHTML = '';
+                // add options in
+                const obj = lettDB;
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        letSelect.innerHTML += `<option value = ${key}>Letter ${key}</option>`;
+                    }
+                }
+            }
+
+            saveState(ctx, frameName) {
+                let canvasDim = app.settings.canvasDim;
+                const im = ctx.getImageData(0, 0, canvasDim, canvasDim);
+                /* snapshots.push(ctx.getImageData(0, 0, canvasDim, canvasDim));*/
+                snaps[frameName] = im;
+                return im
+            }
+
+            restoreState(destCtx, frameName, del = false) {
+                imga = snaps[frameName];
+                if (del) delete snaps[frameName];
+                //if (snapshots.length > 0) {
+                //    const snapshot = snapshots.pop();
+                //    destCtx.putImageData(snapshot, 0, 0);
+                //}
+                return imga
+            }
+
+            clearState(frameName) {
+                delete snaps[frameName];
+            }
+
+            /**
+             * Interpolates a point along a user-drawn path at given progress (0-1)
+             */
+            interpolatePathPoint(path, progress) {
+                if (path.length < 2) return path[0];
+
+                // Calculate total path length
+                let totalLength = 0;
+                const segments = [];
+                for (let i = 1; i < path.length; i++) {
+                    const length = Math.hypot(
+                        path[i].x - path[i - 1].x,
+                        path[i].y - path[i - 1].y
+                    );
+
+                    segments.push(length);
+                    totalLength += length;
+                }
+
+                const targetLength = totalLength * progress;
+                let currentLength = 0;
+
+                // Find segment containing target point
+                for (let i = 0; i < segments.length; i++) {
+                    if (currentLength + segments[i] >= targetLength) {
+                        const segmentProgress = (targetLength - currentLength) / segments[i];
+                        return {
+                            x: path[i].x + (path[i + 1].x - path[i].x) * segmentProgress,
+                            y: path[i].y + (path[i + 1].y - path[i].y) * segmentProgress
+                        };
+                    }
+                    currentLength += segments[i];
+                }
+
+                return path[path.length - 1];
+            }
+
+            /**
+             * Updates the guide canvas display (including stroke directions)
+             * stroke directions one arrow w/ three heads
+             */
+            updateGuide() {
+                this.drawLineRule(this.ctxs.rule); // maybe unnecessary to have here
+
+                let gCtx = this.ctxs.guide; 
+                gCtx.clearRect(0, 0, gCtx.canvas.width, gCtx.canvas.height);
+                let { guide: guideStyle, hl: hlStyle } = this.styles;
+                let currSInd = this.state.currStrokeInd;
+                // Style remaining strokes (gray). guide context is given the values from the declared style 
+                console.log(guideStyle);
+
+ 
+                
+                const letterStrokes = this.lettDB[this.state.currentLetter].strokes;
+                for (let i = currSInd; i < letterStrokes.length; i++) {
+                    let stroke = letterStrokes[i];
+                    if ((i == currSInd) && (currSInd < letterStrokes.length)) {
+                        ({ color: gCtx.strokeStyle, lWidth: gCtx.lineWidth, lineCap: gCtx.lineCap } = hlStyle)
+                    } else {
+                        ({ color: gCtx.strokeStyle, lWidth: gCtx.lineWidth, lineCap: gCtx.lineCap } = guideStyle);
+                    }
+                    if (stroke.type === 'compound') {
+                        stroke.subStrokes.forEach((sub) => sub.drawStroke(gCtx, guideStyle));
+                    } else {
+                        stroke.drawStroke(gCtx, guideStyle);
+                    }
+                    // Draw direction arrows for current stroke
+                    if ((i == currSInd) && (currSInd < letterStrokes.length)) stroke.drawDirections();
+                }
+            }
+
+            /**
+             * Automatically draws all strokes in sequence.
+             */
+            async autoDraw() {
+                if (this.state.isAutoDrawing) return;
+                this.state.isAutoDrawing = true;
+                console.log('autoDraw');
+
+                // Disable controls during animation
+                document.getElementById('autoDrawBtn').disabled = true;
+                document.getElementById('resetBtn').disabled = true;
+                document.getElementById('letterSelect').disabled = true;
+
+                // Animate each stroke
+                const currLett = lettDB[currentLetter];
+                const letterStrokes = currLett.fontStrokes || currLett.strokes;
+                console.log(currLett.fontStrokes);
+                console.log(letterStrokes);
+
+                // Capture state before autoDraw
+                this.saveState(completedCtx, 'preAuto');
+
+                // Reset canvas
+                this.reset();
+
+                for (let i = 0; i < letterStrokes.length; i++) {
+
+                    let stroke = letterStrokes[i];
+                    if (stroke.type === "compound") {
+                        await stroke.animateCompoundStroke(animDur, drawOver);
+                    }
+                    else {
+                        await stroke.animateStroke(animDur, drawOver);
+                    }
+                }
+                // Wait 2 seconds before resetting
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                reset();
+
+                // Re-enable controls
+                document.getElementById('autoDrawBtn').disabled = false;
+                document.getElementById('resetBtn').disabled = false;
+                document.getElementById('letterSelect').disabled = false;
+
+                // Restore state after autoDraw to what it was before
+                restoreState(completedCtx, 'preAuto', true);
+                isAutoDrawing = false;
+            }
+
+            autoDrawOver() {
+                drawOver = true;
+                this.autoDraw();
+                drawOver = false;
+            }
+            /**
+             * Resets the practice session - undoes all drawing action. HERE NOW TODO move style to CSS and messageify the button texts to handle various languages
+             */
+            reset() {
+                console.log(`reset`); // letter
+                console.log(this);
+
+                this.state.currStrokeInd = 0;
+                let cc = this.canvases.completedCanvas; let ccCtx = this.ctxs.completed;
+                ccCtx.clearRect(0, 0, cc.width, cc.height);
+                let gc = this.canvases.guideCanvas; let gcCtx = this.ctxs.guide;
+                gcCtx.clearRect(0, 0, gc.width, gc.height);
+                let dc = this.canvases.drawCanvas; let dcCtx = this.ctxs.draw;
+                dcCtx.clearRect(0, 0, dc.width, dc.height);
+                document.querySelector('#instruction').textContent = 'Follow the highlighted stroke';
+                document.querySelector('#instruction').style.color = '#444';
+                document.querySelector('#instruction').classList.add('incomplete'); // remove others?
+                this.display.acc.textContent = '';
+                this.updateGuide();
+            }
+
+            // Event handlers
+            /**
+             * handle the begining of a drawing attempt either with mouse or finger
+             */
+            handleStart(e) {
+                // bound to app this
+                if (this.state.isAutoDrawing) return;
+                this.state.isDrawing = true;
+                const point = this.getEventPoint(e);
+                this.state.drawingPath = [point];
+                this.display.acc.textContent = '';
+            }
+
+            handleMove(e) {
+                // bound to app this
+                if (!(this.state.isDrawing) || this.state.isAutoDrawing) return;
+
+                const point = this.getEventPoint(e);
+                let drawingPath = this.state.drawingPath;
+                drawingPath.push(point);
+
+                // Draw the new line segment
+                let drawCanvas = this.canvases.drawCanvas; let drawCtx = this.ctxs.draw;
+                drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                drawCtx.beginPath();
+                drawCtx.strokeStyle = '#2196f3';
+                drawCtx.lineWidth = 20;
+                drawCtx.lineCap = 'round';
+
+                drawCtx.moveTo(drawingPath[0].x, drawingPath[0].y);
+                for (let i = 1; i < drawingPath.length; i++) {
+                    drawCtx.lineTo(drawingPath[i].x, drawingPath[i].y);
+                }
+                drawCtx.stroke();
+            }
+
+            handleEnd() {
+                if (!this.state.isDrawing || this.state.isAutoDrawing) return;
+                this.state.isDrawing = false;
+
+                let currentLetter = this.state.currentLetter;
+                let currStrokeInd = this.state.currStrokeInd;
+                let lettDB = this.lettDB;
+                const currentStrokeData = this.lettDB[currentLetter].strokes[currStrokeInd];
+                if (!currentStrokeData) return 
+                const accuracy = currentStrokeData.calculateAccuracy(this.state.drawingPath);
+
+                this.display.acc.textContent = `Accuracy: ${Math.round(accuracy)}%`;
+
+                if (accuracy >= 50) {
+                    // Add to completed strokes console.log('passed acc');
+
+                    // completed style
+                    let completedCtx = this.ctxs.completed;
+                    let completeStyle = this.styles.complete;
+                    completedCtx.strokeStyle = '#2196f3';
+                    completedCtx.lineWidth = 20;
+                    completedCtx.lineCap = 'round';
+
+                    if (currentStrokeData.type === 'compound') {
+                        currentStrokeData.subStrokes.forEach((sub) => sub.drawStroke(completedCtx, completeStyle));
+                    } else {
+                        currentStrokeData.drawStroke(completedCtx, completeStyle);
+                    }
+
+                    currStrokeInd++;
+                    this.updateGuide();
+                    if (currStrokeInd >= lettDB[currentLetter].strokes.length) {
+                        document.querySelector('#instruction').textContent = 'Great job! Letter completed!';
+                        document.querySelector('#instruction').style.color = '#4CAF50';
+                    } else {
+
+                    }
+                }
+
+                // Clear drawing
+                this.ctxs.draw.clearRect(0, 0, this.canvases.drawCanvas.width, this.canvases.drawCanvas.height);
+            }
+
+            /**
+             * Helper function to get coordinates from mouse or touch event
+             */
+            getEventPoint(e) {
+                const rect = drawCanvas.getBoundingClientRect();
+                const point = e.touches ? e.touches[0] : e;
+                return {
+                    x: point.clientX - rect.left,
+                    y: point.clientY - rect.top
+                };
+            }
+
+
+
+
+        }
+
+        let drawApp = new DrawLettersApp();      
+
+
+
+    </script>
+
+
+</body>
+</html>
