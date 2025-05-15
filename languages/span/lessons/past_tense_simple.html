@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Past Tense | Language Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand colors from the mascot */
+            --brand-primary: rgb(105, 131, 109);
+            --brand-secondary: rgb(93, 65, 56);
+            --brand-secondary-darker: rgb(73, 51, 44);
+            --brand-accent: #f8dec0;
+            /* Semantic colors */
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --text-light: #ffffff;
+            /* Feedback colors */
+            --info-color: #69837D;
+            --success-color: #5D4138;
+            --warning-color: #F8DEC0;
+            /* Layout */
+            --container-max-width: 800px;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            /* Typography */
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #f8f9fa;
+            padding: 2rem; /*new*/
+        }
+
+        .lesson-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        .lesson-header {
+            background: var(--brand-primary);
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-header__title {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        .lesson-section {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .lesson-section__header {
+            color: var(--brand-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 3px solid var(--brand-secondary);
+            font-size: var(--font-size-xl);
+        }
+
+        .conjugation-table__container {
+            position: relative;
+            margin: var(--space-lg) 0;
+            /*overflow: hidden; new */
+            /*box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1); new */
+            /*border-radius: var(--radius-sm); new */
+            border: 1px solid rgba(0, 0, 0, 0.1); /*new*/
+            border-radius: var(--radius-md); /*new*/
+        }
+
+        .conjugation-table__wrapper {
+            overflow-x: auto;
+            /*             -webkit-overflow-scrolling: touch;
+            margin-bottom: -17px;
+            padding-bottom: 17px;new*/
+            margin-bottom: 0; /*new*/ /* Remove extra space */
+            border-radius: var(--radius-md); /*new*/
+        }
+
+            .conjugation-table__wrapper::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .conjugation-table__wrapper::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            .conjugation-table__wrapper::-webkit-scrollbar-thumb {
+                background: var(--brand-primary);
+                border-radius: 4px;
+            }
+
+        .conjugation-table {
+            width: 100%;
+            min-width: 600px; /*new prev 500*/
+            border-collapse: collapse;
+            background: white;
+        }
+
+            .conjugation-table th { /*headers r&c*/
+                background: var(--brand-secondary-darker);
+                color: var(--text-light);
+                padding: var(--space-md);
+                text-align: left;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+                .conjugation-table thead th { /*column headers*/
+                    background: var(--brand-secondary);
+                }
+
+                .conjugation-table thead th.sticky-header {
+                    left: 0;
+                    z-index: 12;
+                }
+
+            .conjugation-table td {
+                padding: var(--space-md);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                min-width: 120px;
+                position: relative;
+            }
+
+                .conjugation-table td:first-of-type {
+                    background: rgba(250,250,250,0.9);
+                    position: sticky;
+                    left: 0;
+                    z-index: 11;
+                    font-weight: 500;
+                    /*border-right: 1px solid rgba(0, 0, 0, 0.1);*/
+                    /*border-right: 2px solid var(--brand-primary);  This is the only change needed */
+                    /*box-sizing: border-box;  Add this line */
+                }
+
+
+                .conjugation-table td .conj-pattern {
+                    background: rgba(105, 131, 109, 0.15);
+                    color: rgb(105, 131, 109);
+                    font-weight: 700;
+                }
+
+                .conjugation-table tr:last-child td {
+                    border-bottom: none; /* Remove last border */
+                }
+
+        .conjugation-table__highlight {
+            color: var(--brand-primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .conjugation-table__container[data-scrollable="true"]::after {
+                opacity: 1;
+            }
+
+            .conjugation-table td,
+            .conjugation-table th {
+                padding: var(--space-sm);
+                font-size: var(--font-size-sm);
+            }
+        }
+
+        .content-box {
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-md);
+            position: relative;
+            padding-left: calc(var(--space-lg) * 2);
+        }
+
+            .content-box::before {
+                font-family: "Font Awesome 6 Free";
+                font-weight: 900;
+                position: absolute;
+                left: var(--space-md);
+                top: var(--space-lg);
+                font-size: var(--font-size-xl);
+            }
+
+        .content-box--tip {
+            background-color: rgba(105, 131, 109, 0.1);
+            border-left: 4px solid var(--brand-primary);
+        }
+
+            .content-box--tip::before {
+                content: "\f0eb";
+                color: var(--brand-primary);
+            }
+
+        .content-box--note {
+            background-color: rgba(93, 65, 56, 0.1);
+            border-left: 4px solid var(--brand-secondary);
+        }
+
+            .content-box--note::before {
+                content: "\f040";
+                color: var(--brand-secondary);
+            }
+
+        .content-box--example-block {
+            background: var(--brand-accent);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+        }
+
+        .practice-item {
+            background: white;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .practice-answer {
+            color: var(--brand-secondary);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            background: rgba(93, 65, 56, 0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+            .practice-answer.visible {
+                opacity: 1;
+            }
+
+        @media (max-width: 640px) {
+            .lesson-header__title {
+                font-size: var(--font-size-xl);
+            }
+
+            .lesson-section {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+
+    <style>
+        .practice-cultural {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+            .practice-cultural .cultural-context {
+                background: var(--brand-accent);
+                padding: var(--space-md);
+                border-radius: var(--radius-md);
+                margin-bottom: var(--space-lg);
+            }
+
+            .practice-cultural .exercise-written {
+                background: white;
+                padding: var(--space-lg);
+                border-radius: var(--radius-md);
+                margin-bottom: var(--space-md);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .practice-cultural .exercise-input {
+                display: inline-block;
+                min-width: 120px;
+                padding: var(--space-xs) var(--space-sm);
+                border: 2px solid var(--brand-primary);
+                border-radius: var(--radius-md);
+                margin: 0 var(--space-xs);
+                font-family: inherit;
+                font-size: inherit;
+            }
+
+            .practice-cultural .check-answer {
+                background: var(--brand-primary);
+                color: white;
+                border: none;
+                padding: var(--space-sm) var(--space-lg);
+                border-radius: var(--radius-md);
+                cursor: pointer;
+                font-family: inherit;
+                margin-top: var(--space-md);
+            }
+
+            .practice-cultural .feedback {
+                margin-top: var(--space-sm);
+                padding: var(--space-sm);
+                border-radius: var(--radius-md);
+                display: none;
+            }
+
+                .practice-cultural .feedback.correct {
+                    background: rgba(76, 175, 80, 0.1);
+                    color: var(--success-color);
+                    display: block;
+                }
+
+                .practice-cultural .feedback.incorrect {
+                    background: rgba(244, 67, 54, 0.1);
+                    color: var(--error-color);
+                    display: block;
+                }
+
+            .practice-cultural .hint-button {
+                background: var(--brand-secondary);
+                color: white;
+                border: none;
+                padding: var(--space-xs) var(--space-sm);
+                border-radius: var(--radius-md);
+                cursor: pointer;
+                font-size: 0.9em;
+                margin-left: var(--space-sm);
+            }
+
+            .practice-cultural .hint {
+                display: none;
+                margin-top: var(--space-sm);
+                padding: var(--space-sm);
+                background: rgba(93, 65, 56, 0.1);
+                border-radius: var(--radius-md);
+            }
+
+            .practice-cultural .cultural-note {
+                font-style: italic;
+                color: var(--text-secondary);
+                margin-top: var(--space-sm);
+            }
+    </style>
+    <script>
+        function toggleReveal(element) {
+            const answer = element.querySelector('.practice-answer');
+            answer.classList.add('visible');
+            setTimeout(() => {
+                answer.classList.remove('visible');
+            }, 5000);
+        }
+
+        function checkCulturalWritten(exerciseId, correctAnswers) {
+            const inputs = document.querySelectorAll(`#${exerciseId} input`);
+            const feedback = document.querySelector(`#${exerciseId} .feedback`);
+            const userAnswers = Array.from(inputs).map((input) => input.value.trim().toLowerCase());
+
+            feedback.style.display = "block";
+            const allCorrect = userAnswers.every((answer, index) => answer === correctAnswers[index].toLowerCase());
+
+            if (allCorrect) {
+                feedback.textContent = "¡Correcto! (Correct!)";
+                feedback.classList.add("correct");
+                feedback.classList.remove("incorrect");
+            } else {
+                feedback.textContent = `Intenta otra vez. (Try again.)`;
+                feedback.classList.add("incorrect");
+                feedback.classList.remove("correct");
+                setTimeout(() => {
+                    feedback.style.display = "none";
+                }, 3000);
+            }
+        }
+
+        function showHint(hintId) {
+            const hint = document.querySelector(`#${hintId}`);
+            hint.style.display = hint.style.display === "block" ? "none" : "block";
+        }
+    </script>
+</head>
+<body>
+    <div class="lesson-container">
+        <header class="lesson-header">
+            <h1 class="lesson-header__title">Pretérito Indefinido (Simple Past)</h1>
+            <p class="lesson-header__subtitle">Master the Spanish simple past tense</p>
+        </header>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Understanding the Simple Past</h2>
+            <p>The pretérito indefinido is used to describe completed actions in the past. It's equivalent to the English simple past tense (e.g., "I walked", "She sang").</p>
+
+            <div class="content-box content-box--tip">
+                <h3>Quick Tip</h3>
+                <p>Think of the pretérito indefinido as the "snapshot" tense - it captures specific, completed moments in the past.</p>
+            </div>
+
+            <div class="content-box content-box--example-block">
+                <p><strong>Ayer caminé al parque.</strong></p>
+                <p>Yesterday I walked to the park.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Regular Verbs</h2>
+
+            <div class="conjugation-table__container" data-scrollable="true">
+                <div class="conjugation-table__wrapper">
+                    <table class="conjugation-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>-ar (hablar)</th>
+                                <th>-er (comer)</th>
+                                <th>-ir (vivir)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>yo</td>
+                                <td>habl<span class="conj-pattern">é</span></td>
+                                <td>com<span class="conj-pattern">í</span></td>
+                                <td>viv<span class="conj-pattern">í</span></td>
+                            </tr>
+                            <tr>
+                                <td>tú</td>
+                                <td>habl<span class="conj-pattern">aste</span></td>
+                                <td>com<span class="conj-pattern">iste</span></td>
+                                <td>viv<span class="conj-pattern">iste</span></td>
+                            </tr>
+                            <tr>
+                                <td>él/ella/usted</td>
+                                <td>habl<span class="conj-pattern">ó</span></td>
+                                <td>com<span class="conj-pattern">ió</span></td>
+                                <td>viv<span class="conj-pattern">ió</span></td>
+                            </tr>
+                            <tr>
+                                <td>nosotros</td>
+                                <td>habl<span class="conj-pattern">amos</span></td>
+                                <td>com<span class="conj-pattern">imos</span></td>
+                                <td>viv<span class="conj-pattern">imos</span></td>
+                            </tr>
+                            <tr>
+                                <td>vosotros</td>
+                                <td>habl<span class="conj-pattern">asteis</span></td>
+                                <td>com<span class="conj-pattern">isteis</span></td>
+                                <td>viv<span class="conj-pattern">isteis</span></td>
+                            </tr>
+                            <tr>
+                                <td>ellos/ellas/ustedes</td>
+                                <td>habl<span class="conj-pattern">aron</span></td>
+                                <td>com<span class="conj-pattern">ieron</span></td>
+                                <td>viv<span class="conj-pattern">ieron</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-box content-box--note">
+                <h3>Important Note</h3>
+                <p>Notice that -er and -ir verbs share the same endings in the pretérito indefinido!</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Common Irregular Verbs</h2>
+            <p>Some of the most frequently used Spanish verbs are irregular in the pretérito indefinido. These need to be memorized as they are among the most common words in the language.</p>
+
+            <div class="conjugation-table__container" data-scrollable="true">
+                <div class="conjugation-table__wrapper">
+                    <table class="conjugation-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>ser/ir</th>
+                                <th>estar</th>
+                                <th>hacer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>yo</td>
+                                <td>fui</td>
+                                <td>estuve</td>
+                                <td>hice</td>
+                            </tr>
+                            <tr>
+                                <td>tú</td>
+                                <td>fuiste</td>
+                                <td>estuviste</td>
+                                <td>hiciste</td>
+                            </tr>
+                            <tr>
+                                <td>él/ella/usted</td>
+                                <td>fue</td>
+                                <td>estuvo</td>
+                                <td>hizo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Compound Irregular Verb Patterns</h2>
+            <p>Compund verbs are verbs which contain another verb. When the contained verb is irregular in the simple past tense (pretérito indefinido) the compund follows the same pattern of irregulartiy. Learning these patterns can help you master multiple verbs at once!</p>
+
+            <div class="content-box content-box--tip">
+                <h3>Pattern Recognition</h3>
+                <p>Verbs that are related (like 'tener' and 'contener') usually share the same irregularity in the past tense.</p>
+            </div>
+
+            <div class="conjugation-table__container" data-scrollable="true">
+                <div class="conjugation-table__wrapper">
+                    <table class="conjugation-table">
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Example Verbs</th>
+                                <th>Yo Form</th>
+                                <th>Él/Ella Form</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-tener verbs</td>
+                                <td>tener, contener, mantener, obtener</td>
+                                <td>tuve, contuve</td>
+                                <td>tuvo, contuvo</td>
+                            </tr>
+                            <tr>
+                                <td>-ducir verbs</td>
+                                <td>producir, conducir, traducir</td>
+                                <td>produje, conduje</td>
+                                <td>produjo, condujo</td>
+                            </tr>
+                            <tr>
+                                <td>-traer verbs</td>
+                                <td>traer, atraer, contraer</td>
+                                <td>traje, atraje</td>
+                                <td>trajo, atrajo</td>
+                            </tr>
+                            <tr>
+                                <td>-poner verbs</td>
+                                <td>poner, componer, disponer</td>
+                                <td>puse, compuse</td>
+                                <td>puso, compuso</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Stem Changing Irregular Forms</h2>
+            <p>Some common verbs have a change in theri stem when conjugated in the past tense: </p>
+            <div class="content-box content-box--note">
+                <h3>Stem Changes</h3>
+                <!--e->i stem changes pedir (to ask for), servir (to serve), and preferir (to prefer)
+        o->u dormir (to sleep) and morir (to die)
+        -->
+                <p>Many irregular verbs change their stems in all forms. For example:</p>
+                <ul>
+                    <li>dormir → durm- (durmió, durmieron)</li>
+                    <li>pedir → pid- (pidió, pidieron)</li>
+                    <li>servir → sirv- (sirvió, sirvieron)</li>
+                </ul>
+            </div>
+
+            <div class="conjugation-table__container" data-scrollable="true">
+                <div class="conjugation-table__wrapper">
+                    <table class="conjugation-table">
+                        <thead>
+                            <tr>
+                                <th>Stem Change</th>
+                                <th class="sticky-header">Infinitive</th>
+                                <th>Yo</th>
+                                <th>Tú</th>
+                                <th>Él/Ella</th>
+                                <th>Ellos/Ellas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th rowspan="3">o->u</th>
+                                <td>p<span class="conj-pattern">o</span>der (can)</td>
+                                <td>p<span class="conj-pattern">u</span>de</td>
+                                <td>p<span class="conj-pattern">u</span>diste</td>
+                                <td>p<span class="conj-pattern">u</span>do</td>
+                                <td>p<span class="conj-pattern">u</span>dieron</td>
+                            </tr>
+                            <tr>
+                                <!--morir--><!--Only the 3rd person, not all. make into note or have all verbs be of this type-->
+                                <td>m<span class="conj-pattern">o</span>rir (die)</td>
+                                <td>morí</td>
+                                <td>moriste</td>
+                                <td>m<span class="conj-pattern">u</span>rió</td>
+                                <td>murieron</td>
+                            </tr>
+                            <tr>
+                                <!--dormir-->
+                                <td>d<span class="conj-pattern">o</span>rmir (sleep)</td>
+                                <td>dormí</td>
+                                <td>dormiste</td>
+                                <td>d<span class="conj-pattern">u</span>rmió</td>
+                                <td>dormieron</td>
+                            </tr>
+                            <tr>
+                                <th rowspan="3">e->i</th>
+                                <td>v<span class="conj-pattern">e</span>r (to see)</td>
+                                <td>vi</td>
+                                <td>viste</td>
+                                <td>vio</td>
+                                <td>vieron</td>
+                            </tr>
+
+                            <tr>
+                                <!--maybe sub bc more complex than just that vowel-->
+                                <td>d<span class="conj-pattern">e</span>cir (to say)</td>
+                                <td>dije</td>
+                                <td>dijiste</td>
+                                <td>dijo</td>
+                                <td>dijeron</td>
+                            </tr>
+                            <tr>
+                                <td>v<span class="conj-pattern">e</span>nir (to come)</td>
+                                <td>vine</td>
+                                <td>viniste</td>
+                                <td>vino</td>
+                                <td>vinieron</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+            <div class="content-box content-box--example-block">
+                <p><strong>Examples:</strong></p>
+                <p>El profesor no me <strong>mantuvo</strong> después de clase. (The teacher didn't keep me after class.)</p>
+                <p>Los estudiantes <strong>tradujeron</strong> el texto. (The students translated the text.)</p>
+                <p>¿Quién <strong>puso</strong> las llaves aquí? (Who put the keys here?)</p>
+            </div>
+        </section>
+
+        <style>
+            .example {
+                background: var(--brand-accent);
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+            }
+
+            .heading {
+                color: var(--brand-primary);
+                border-bottom: 2px solid var(--brand-secondary);
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+            }
+        </style>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Two Ways to Talk About the Past in Spanish</h2>
+            <p>Spanish has two different past tenses for different types of past actions:</p>
+
+            <div class="example">
+                <h2>Simple Past (Pretérito Indefinido)</h2>
+                <p>For completed actions with clear start/end points.</p>
+                <p>Think: "I ate", "She went", "They arrived"</p>
+            </div>
+
+            <div class="example">
+                <h2>Past Imperfect (Pretérito Imperfecto)</h2>
+                <p>For ongoing or repeated actions in the past.</p>
+                <p>Think: "I used to eat", "She was going", "It was raining"</p>
+            </div>
+
+            <h3>English Analogy</h3>
+            <style>
+                span.past-simple {
+                    color: #2c3e50;
+                    color: rgb(36, 84, 150);
+                    color: #6A9FB5; /*soft muted blue*/
+                    color: #465B76; /*classic slate*/
+                    font-weight: 700;
+                }
+
+                span.past-imperfect {
+                    color: rgb(58, 156, 77);
+                    color: #6BAF92; /*soft muted green*/
+                    color: #94B49A; /*soft pistachio*/
+                    font-weight: 700;
+                    font-style: italic;
+                }
+
+                .analogy-section {
+                    position: relative;
+                    padding-left: 2em;
+                }
+
+                    .analogy-section ul {
+                        list-style-position: outside;
+                        padding-left: 2em;
+                        margin: 0;
+                    }
+
+                    .analogy-section li {
+                        margin-bottom: 1em;
+                        padding-left: 1em;
+                        text-indent: -1em;
+                    }
+
+
+                    .analogy-section p {
+
+                        margin-bottom: 1em;
+                    }
+            </style>
+            <div class="analogy-section">
+                <p>Imagine describing your childhood home:</p>
+                <ul>
+                    <li><strong><span class="past-simple">Simple Past</span>:</strong> "We moved into that house in 1995." (One-time, completed action)
+                    <br />Nos <span class="past-simple">mudamos</span> a esa casa en el año mil novecientos noventa y cinco.</li>
+                    <li><strong><span class="past-imperfect">Past Imperfect</span>:</strong> "Our house was blue and had a big garden." (Ongoing state/description)
+                    <br />Nuestra casa <span class="past-imperfect">era</span> azul y <span class="past-imperfect">tenía</span> un jardín grande.</li>
+                </ul>
+
+                <p>Or think about a party:</p>
+                <ul>
+                    <li><strong><span class="past-simple">Simple Past</span>:</strong> "I arrived at 8pm." (Specific moment) 
+                        <br /><span class="past-simple">Llegué</span> a las ocho de la noche.</li>
+                    <li><strong><span class="past-imperfect">Past Imperfect</span>:</strong> "People were dancing when I arrived." (Ongoing action punctuated by specific moment) 
+                        <br />La gente <span class="past-imperfect">bailaba</span> cuando <span class="past-simple">llegué</span>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Time Expressions</h2>
+            <p>These time expressions are commonly used with the pretérito indefinido:</p>
+
+            <div class="content-box content-box--example-block">
+                <ul>
+                    <li>ayer (yesterday)</li>
+                    <li>la semana pasada (last week)</li>
+                    <li>el mes pasado (last month)</li>
+                    <li>el año pasado (last year)</li>
+                    <li>hace dos días (two days ago)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Practice</h2>
+            <p>Click each question to see the answer for 5 seconds:</p>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: Ayer yo ________ (hablar) con mi madre.</p>
+                <div class="practice-answer">hablé</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: El año pasado nosotros ________ (vivir) en Madrid.</p>
+                <div class="practice-answer">vivimos</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: ¿________ (estar, tú) en la fiesta anoche?</p>
+                <div class="practice-answer">estuviste</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: Ellos ________ (hacer) la tarea ayer.</p>
+                <div class="practice-answer">hicieron</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: Nosotros ________ (ir) al cine el sábado pasado.</p>
+                <div class="practice-answer">fuimos</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Transform: "Como una manzana" (yesterday) → </p>
+                <div class="practice-answer">Comí una manzana</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: Vosotros ________ (escribir) una carta la semana pasada.</p>
+                <div class="practice-answer">escribisteis</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Transform: "Ella está en casa" (last night) → </p>
+                <div class="practice-answer">Ella estuvo en casa</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Complete: ¿________ (ser) una buena película?</p>
+                <div class="practice-answer">fue</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleReveal(this)">
+                <p>Form a sentence: yo / salir / con amigos / ayer</p>
+                <div class="practice-answer">Yo salí con amigos ayer</div>
+            </div>
+        </section>
+
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Cultural Practice Exercises</h2>
+            <p>Practice past tense while learning about Spanish and Latin American culture</p>
+
+            <div class="practice-cultural">
+                <h2>Historical Figures and Events</h2>
+
+                <div class="cultural-context">
+                    <p>Diego Rivera was one of Mexico's most famous artists, known for his murals depicting Mexican society and history.</p>
+                </div>
+
+                <div class="exercise-written" id="exercise1">
+                    <p>Diego Rivera ________ (pintar) muchos murales en la Ciudad de México.</p>
+                    <input type="text" class="exercise-input" placeholder="Type answer...">
+                    <button class="hint-button" onclick="showHint('hint1')">Hint</button>
+                    <div class="hint" id="hint1">This is a completed action in the past. Use the él/ella form of pintar in pretérito indefinido.</div>
+                    <button class="check-answer" onclick="checkCulturalWritten('exercise1', ['pintó'])">Check Answer</button>
+                    <div class="feedback"></div>
+                    <p class="cultural-note">Rivera's murals can still be seen today in the National Palace and other buildings.</p>
+                </div>
+            </div>
+
+            <div class="practice-cultural">
+                <h2>Traditions and Celebrations</h2>
+
+                <div class="cultural-context">
+                    <p>Las Fallas is a traditional celebration in Valencia, Spain, known for its elaborate artistic monuments that are burned at the end of the festival.</p>
+                </div>
+
+                <div class="exercise-written" id="exercise2">
+                    <p>El año pasado, miles de personas ________ (asistir) a las Fallas de Valencia.</p>
+                    <input type="text" class="exercise-input" placeholder="Type answer...">
+                    <button class="hint-button" onclick="showHint('hint2')">Hint</button>
+                    <div class="hint" id="hint2">Use the ellos/ellas form of asistir in pretérito indefinido.</div>
+                    <button class="check-answer" onclick="checkCulturalWritten('exercise2', ['asistieron'])">Check Answer</button>
+                    <div class="feedback"></div>
+                    <p class="cultural-note">Las Fallas was declared Intangible Cultural Heritage by UNESCO in 2016.</p>
+                </div>
+            </div>
+
+            <div class="practice-cultural">
+                <h2>Food and Cuisine</h2>
+
+                <div class="cultural-context">
+                    <p>Paella is a traditional Spanish dish that originated in Valencia. It's made with rice, saffron, and various combinations of meat, seafood, and vegetables.</p>
+                </div>
+
+                <div class="exercise-written" id="exercise3">
+                    <p>Mi abuela ________ (aprender) a cocinar paella cuando ________ (vivir) en Valencia.</p>
+                    <input type="text" class="exercise-input" placeholder="First answer...">
+                    <input type="text" class="exercise-input" placeholder="Second answer...">
+                    <button class="hint-button" onclick="showHint('hint3')">Hint</button>
+                    <div class="hint" id="hint3">First blank: specific moment of learning (indefinido). Second blank: lived there for a period (imperfecto).</div>
+                    <button class="check-answer" onclick="checkCulturalWritten('exercise3', ['aprendió vivía'])">Check Answer</button>
+                    <div class="feedback"></div>
+                    <p class="cultural-note">Traditional Valencian paella is made with rabbit, chicken, and local vegetables.</p>
+                </div>
+            </div>
+
+            <div class="practice-cultural">
+                <h2>Literature and Arts</h2>
+
+                <div class="cultural-context">
+                    <p>Gabriel García Márquez was a Colombian writer who won the Nobel Prize in Literature. He is famous for his magical realism style.</p>
+                </div>
+
+                <div class="exercise-written" id="exercise4">
+                    <p>García Márquez ________ (escribir) "Cien años de soledad" mientras ________ (vivir) en México.</p>
+                    <input type="text" class="exercise-input" placeholder="First answer...">
+                    <input type="text" class="exercise-input" placeholder="Second answer...">
+                    <button class="hint-button" onclick="showHint('hint4')">Hint</button>
+                    <div class="hint" id="hint4">Writing the book was completed (indefinido), living in Mexico was ongoing (imperfecto).</div>
+                    <button class="check-answer" onclick="checkCulturalWritten('exercise4', ['escribió','vivía'])">Check Answer</button>
+                    <div class="feedback"></div>
+                    <p class="cultural-note">"Cien años de soledad" (One Hundred Years of Solitude) was published in 1967 and is considered one of the most significant works in Spanish literature.</p>
+                </div>
+            </div>
+
+            <div class="practice-cultural">
+                <h2>Sports</h2>
+
+                <div class="cultural-context">
+                    <p>The Spanish national football team, "La Roja," has been one of the most successful teams in football history. ⚽</p>
+                </div>
+
+                <div class="exercise-written" id="exercise5">
+                    <p>España ________ (ganar) el Mundial mientras yo ________ (estudiar) en Madrid.</p>
+                    <input type="text" class="exercise-input" placeholder="First answer...">
+                    <input type="text" class="exercise-input" placeholder="Second answer...">
+                    <button class="hint-button" onclick="showHint('hint5')">Hint</button>
+                    <div class="hint" id="hint5">Winning is a specific event (indefinido), studying was ongoing (imperfecto).</div>
+                    <button class="check-answer" onclick="checkCulturalWritten('exercise5', ['ganó','estudiaba'])">Check Answer</button>
+                    <div class="feedback"></div>
+                    <p class="cultural-note">Spain won their first FIFA World Cup in 2010, defeating the Netherlands in the final.</p>
+                </div>
+            </div>
+        </section>
+
+
+
+        <div class="support-section" style="background: linear-gradient(135deg, var(--brand-secondary), var(--brand-primary)); color: var(--text-light); padding: var(--space-xl); border-radius: var(--radius-md); text-align: center; margin-top: var(--space-xl);">
+            <img src="_oso_anteojo_round_profile_360.svg" alt="Organization Logo" style="width: 8rem; height: 8rem; border-radius: 50%; margin-bottom: var(--space-md);">
+            <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-sm);">¡Aprende con nosotros!</h3>
+            <p>Help us create more free Spanish learning resources</p>
+            <a href="https://www.buymeacoffee.com/atversch" target="_blank" style="display: inline-block; background: var(--brand-accent); color: var(--brand-secondary); padding: var(--space-sm) var(--space-lg); border-radius: var(--radius-sm); text-decoration: none; margin-top: var(--space-md); font-weight: 600; transition: transform 0.2s ease;">Support Us</a>
+        </div>
+    </div>
+</body>
+</html>
