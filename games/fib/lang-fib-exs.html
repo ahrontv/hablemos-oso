@@ -233,9 +233,9 @@
                     // Create a new link element for the favicon
                     const newFavicon = document.createElement('link');
                     newFavicon.rel = 'icon';
-                    newFavicon.href = filename;
+                    newFavicon.href = href;
                     newFavicon.type = type;
-                    newFavicon.sizes = '16x16'; // Common size, adjust as needed
+                    newFavicon.sizes = sizes; // Common size, adjust as needed
                     // Append the new favicon to the document head
                     document.head.appendChild(newFavicon);
                     // For browsers that don't immediately update the favicon
