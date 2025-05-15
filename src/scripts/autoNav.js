@@ -43,7 +43,7 @@ function adaptPGSets() {
         if (n < 100) l = "eng";
         if (n > 100 && n < 200) l = "heb";
         if (n > 200 && n < 300) l = "pt";
-        if (n > 200 && n < 300) l = "span";
+        if (n > 300 && n < 400) l = "span";
         n = n % 100;
         if (local) return `/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`
         return `/hablemos-oso/games/fib/lang-fib-exs.html?lang=${l}&fibEx=${n}`

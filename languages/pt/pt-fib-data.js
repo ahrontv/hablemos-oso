@@ -1,6 +1,8 @@
 ﻿// data.js
 // double newline charcters are used to make a new paragraph tag
 // console.log('data Scr running');
+// this works on wesite now https://ahrontv.github.io/hablemos-oso/games/fib/lang-fib-exs.html?lang=pt&fibEx=1
+// but the links point to   https://ahrontv.github.io/hablemos-oso/games/fib/lang-fib-exs.html?lang=span&fibEx=1
 const pageData = {
     directions: {
         pgTitle:"Exercício de Completar Palavras em Português",
@@ -16,15 +18,15 @@ const pageData = {
         title: "A Castanha de Caju: O Tesouro do Nordeste Brasileiro",
 
         content: `
-        O caju é uma das frutas mais peculiares do Brasil, mas o que muitos não sabem é que a verdadeira { castanha: fruto seco } é apenas uma pequena parte desta fruta.O que parece ser a fruta carnosa é na verdade um { pseudofruto: parte que parece fruta }, enquanto a castanha de caju é o verdadeiro fruto.O Brasil é um dos maiores { produtores: fabricantes } mundiais desta iguaria, com destaque para a região Nordeste.
+        O caju é uma das frutas mais peculiares do Brasil, mas o que muitos não sabem é que a verdadeira { castanha: fruto seco } é apenas uma pequena parte desta fruta. O que parece ser a fruta carnosa é na verdade um { pseudofruto: parte que parece fruta }, enquanto a castanha de caju é o verdadeiro fruto. O Brasil é um dos maiores { produtores: fabricantes } mundiais desta iguaria, com destaque para a região Nordeste.
 
-        A história do caju no Brasil remonta aos povos { indígenas: nativos } que já consumiam a fruta antes da colonização.O nome "caju" vem do tupi "acá-iu", que significa "noz que se produz".Durante o período { colonial:época portuguesa }, o cultivo do cajueiro se expandiu significativamente, e a castanha começou a ganhar importância { comercial:relacionada ao comércio } internacional.
+        A história do caju no Brasil remonta aos povos { indígenas: nativos } que já consumiam a fruta antes da colonização. O nome "caju" vem do tupi "acá-iu", que significa "noz que se produz".Durante o período { colonial:época portuguesa }, o cultivo do cajueiro se expandiu significativamente, e a castanha começou a ganhar importância { comercial:relacionada ao comércio } internacional.
 
-        O processamento da castanha de caju é um trabalho { meticuloso:muito cuidadoso } que requer habilidade e experiência.A casca da castanha contém um óleo { cáustico:que pode queimar } que precisa ser removido com cuidado.As castanhas são primeiro torradas, depois resfriadas, e finalmente quebradas para extrair a { amêndoa:parte comestível } inteira.Este processo tradicionalmente manual hoje conta com auxílio de tecnologia em grandes { fábricas:instalações industriais }.
+        O processamento da castanha de caju é um trabalho { meticuloso:muito cuidadoso } que requer habilidade e experiência. A casca da castanha contém um óleo { cáustico:que pode queimar } que precisa ser removido com cuidado. As castanhas são primeiro torradas, depois resfriadas, e finalmente quebradas para extrair a { amêndoa:parte comestível } inteira. Este processo tradicionalmente manual hoje conta com auxílio de tecnologia em grandes { fábricas:instalações industriais }.
 
-        Além do valor gastronômico, o caju oferece diversos benefícios à saúde.A castanha é rica em { proteínas:nutrientes essenciais } e gorduras boas, sendo considerada um alimento funcional.O pseudofruto, por sua vez, é rico em vitamina C e pode ser consumido in natura ou transformado em sucos, doces e outros produtos.A { agroindústria:indústria agrícola } do caju gera milhares de empregos e representa uma importante fonte de renda para muitas famílias nordestinas.
+        Além do valor gastronômico, o caju oferece diversos benefícios à saúde. A castanha é rica em { proteínas:nutrientes essenciais } e gorduras boas, sendo considerada um alimento funcional. O pseudofruto, por sua vez, é rico em vitamina C e pode ser consumido in natura ou transformado em sucos, doces e outros produtos. A { agroindústria:indústria agrícola } do caju gera milhares de empregos e representa uma importante fonte de renda para muitas famílias nordestinas.
 
-        Do ponto de vista ambiental, o cajueiro é uma árvore { resistente: forte } que se adapta bem ao clima semiárido do Nordeste.Com raízes profundas, ajuda a prevenir a erosão do solo e pode produzir por décadas.Os produtores brasileiros têm investido em técnicas de cultivo { sustentável:que preserva o ambiente } para garantir a continuidade desta importante cultura para as gerações futuras.
+        Do ponto de vista ambiental, o cajueiro é uma árvore { resistente: forte } que se adapta bem ao clima semiárido do Nordeste. Com raízes profundas, ajuda a prevenir a erosão do solo e pode produzir por décadas. Os produtores brasileiros têm investido em técnicas de cultivo { sustentável:que preserva o ambiente } para garantir a continuidade desta importante cultura para as gerações futuras.
         `            
     },
     pt_ex_2: {
