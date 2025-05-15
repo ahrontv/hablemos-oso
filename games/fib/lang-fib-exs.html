@@ -1,12 +1,15 @@
 ﻿<!-- index.html -->
 <!-- in command line D:\Users\atver\Downloads\handlebars_learn>python -m http.server 8000-->
 <!-- to auto answer for testing checkAnswers(1)
+    TODO add a button to hide the hints
+    TODO display hint even if hints are hidden if the space is empty and the mouse hovers for 5 seconds
     TODO with niqqud
     TODO enable voice reading with error message if voice unavailable
     TODO allow hints to be switched off. save this to local storage
     TODO have a way to answer out of order.
     TODO Make words fill the space better. center or space around
     TODO languages site should have a home page that is quite different from home page of personal
+    TODO save preference for hint display
     -->
 <!DOCTYPE html>
 <html lang="en">
@@ -204,7 +207,49 @@
                 document.querySelector('header').appendChild(navScr);
             }
 
+            /**
+             * Changes the website's favicon to the specified image file
+             * @param {string} filename - Path to the image file to use as favicon
+             * @param {string} [type='image/png'] - The MIME type of the image
+             * @returns {void}
+             */
+            function swapPageIcon(lang) {
+                
+                if (lang == "heb" || lang == "pt") {
+                    let type, sizes, href;
+                    if (lang == "heb") {
+                        type = 'image/png';
+                        sizes = "64x64";
+                        href = "/src/assets/imgs/yoni_favicon.png";
+                    }
+                    if (lang == "pt") {
+                        type = 'image/svg';
+                        sizes = "64x64";
+                        href = "/src/assets/imgs/frog_pad_color_3_nopad.svg";
+                    }
+                    // Remove any existing favicon links
+                    const existingFavicons = document.querySelectorAll('link[rel*="icon"]');
+                    existingFavicons.forEach(favicon => favicon.remove());
+                    // Create a new link element for the favicon
+                    const newFavicon = document.createElement('link');
+                    newFavicon.rel = 'icon';
+                    newFavicon.href = filename;
+                    newFavicon.type = type;
+                    newFavicon.sizes = '16x16'; // Common size, adjust as needed
+                    // Append the new favicon to the document head
+                    document.head.appendChild(newFavicon);
+                    // For browsers that don't immediately update the favicon
+                    // Force a favicon refresh by updating the document title slightly
+                    const originalTitle = document.title;
+                    document.title = originalTitle + ' ';
+                    setTimeout(() => {
+                        document.title = originalTitle;
+                    }, 100);
+                }
+            }
+
             retrieveURLparams().then(({ lang }) => {
+                swapPageIcon(lang);
                 makeNavBar(lang);
                 if (lang !== 'heb') {
                     // Create a new style element 

@@ -12,7 +12,7 @@ const pageData = {
         answersChecking: "Verificando respuestas..."
     },
 
-    pt_ex_1: {
+    span_ex_1: {
         title: "Las Iguanas Marinas de Galápagos",
 
         content: `
@@ -24,7 +24,7 @@ Lamentablemente, estas iguanas enfrentan varias {amenazas:peligros} en la actual
 Los esfuerzos de {conservación:protección} son fundamentales para garantizar la supervivencia de esta especie emblemática. Las autoridades del Parque Nacional Galápagos trabajan arduamente para controlar las especies invasoras y monitorear las {poblaciones:grupos de animales} de iguanas. Los científicos continúan {estudiando:investigando} a estos increíbles reptiles para comprender mejor sus adaptaciones únicas. Cada visitante a las islas debe seguir reglas estrictas para minimizar su impacto en el {hábitat:ambiente natural} de estos animales extraordinarios que han fascinado a naturalistas y turistas durante generaciones.
             `
     },
-    pt_ex_2: {
+    span_ex_2: {
         title: "La Arquitectura Monumental de Mesoamérica",
 
         content: `
@@ -37,7 +37,7 @@ Estas maravillas arquitectónicas fueron {construidas:edificadas} sin herramient
             `
     },
 
-    pt_ex_3: {
+    span_ex_3: {
         title: "Orígenes de los Pueblos Indígenas de América",
 
         content: `
@@ -50,7 +50,7 @@ En el ámbito religioso europeo, tras la llegada de Colón, surgieron teorías q
         `
     },
 
-    pt_ex_4: {
+    span_ex_4: {
         title: "La Denominación de las Américas y la Identidad Continental",
 
         content: `
@@ -63,7 +63,7 @@ Desde una perspectiva {decolonial:que cuestiona legados coloniales}, varios movi
         `
     },
 
-    pt_ex_5: {
+    span_ex_5: {
         title: "El Impacto de los Volcanes en la Cultura Latinoamericana",
 
         content: `
@@ -76,7 +76,7 @@ El legado volcánico en la cultura latinoamericana se {manifiesta:expresa claram
         `
     },
 
-    pt_ex_6: {
+    span_ex_6: {
         title: "Los Llaneros: Jinetes de las Planicies Sudamericanas",
 
         content: `
@@ -89,85 +89,85 @@ Sin embargo, el modo de vida llanero enfrenta numerosos {desafíos:retos} en la 
         `
     },
 
-    pt_ex_7: {
+    span_ex_7: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_8: {
+    span_ex_8: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_9: {
+    span_ex_9: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_10: {
+    span_ex_10: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_11: {
+    span_ex_11: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_12: {
+    span_ex_12: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_13: {
+    span_ex_13: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_14: {
+    span_ex_14: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_15: {
+    span_ex_15: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_16: {
+    span_ex_16: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_17: {
+    span_ex_17: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_18: {
+    span_ex_18: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_19: {
+    span_ex_19: {
         title: "",
 
         content: ``
     },
 
-    pt_ex_20: {
+    span_ex_20: {
         title: "",
 
         content: ``
