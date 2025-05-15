@@ -230,20 +230,20 @@
 
    
     <script>           
-        
-        var local = true;
 
         async function loadExData(lang) {
-            const dataScr = Object.assign(document.createElement('script'), {
-                id: "dataScr",
-                src: `../../languages/${lang}/${lang}-fib-data.js`,
-                onerror: "console.error('Script failed to load.')",
-                onload: () => console.log(pageData), // Display pageData when available after async load
+            return new Promise((resolve, reject) => {
+                const dataScr = Object.assign(document.createElement('script'), {
+                    id: "dataScr",
+                    src: `../../languages/${lang}/${lang}-fib-data.js`,
+                    onload: () => resolve({ lang, fib_ex, pageData }),
+                    onerror: () => reject(new Error('Script failed to load.'))
+                });
+                document.querySelector('header').appendChild(dataScr);
             });
-            document.querySelector('header').appendChild(dataScr);
         }
 
-        async function loadTemplate(lang, fibEx) {
+        async function loadTemplate(lang, fibEx, pageData) {
             try {
                 //let pgLoc = local ? `/languages/${lang}/${lang}_fib_template.html` : `/hablemos_oso/languages/${lang}/fib_template.html`;
                 let pgLoc = 'fib-template.html';
@@ -308,8 +308,8 @@
 
 
               
-        retrieveURLparams().then(loadExData(lang))
-            .then(({ lang, fib_ex }) => loadTemplate(lang, fib_ex))
+        retrieveURLparams().then(({ lang, fib_ex }) => loadExData(lang, fib_ex))
+            .then(({ lang, fib_ex, pageData }) => loadTemplate(lang, fib_ex, pageData))
             .then(() => {
                 console.log('Template and game script loaded successfully');
                 document.getElementById('app').classList = ['loaded'];
