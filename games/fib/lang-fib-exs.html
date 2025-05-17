@@ -17,7 +17,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lang Oso: Fill in the Blank</title>
-    <link rel="icon" type="image/png" sizes="64x64" href="/src/assets/imgs/oso_anteojo_favicon.png"> <!--make yoni at some point-->
+    <link rel="icon" type="image/png" sizes="64x64" href="/hablemos-oso/src/assets/imgs/oso_anteojo_favicon.png"> <!--make yoni at some point-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
     <style>
         /* Template will overide this*/
@@ -112,6 +112,9 @@
                     /*display: none;transform: scale(0);*/
                 }
 
+        .fibBlank.withheld:not(.filled) {
+            visibility:hidden;
+        }
         .blank, .fibBlank {
             border-bottom: 1px solid #333;
             padding: 0 0px;

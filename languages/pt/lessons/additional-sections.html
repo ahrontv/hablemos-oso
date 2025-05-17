@@ -1,0 +1,172 @@
+<!-- Add this to the style section -->
+<style>
+    /* Regional variations section specific styles */
+    .dialect-comparison {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+
+    @media (min-width: 640px) {
+        .dialect-comparison {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .dialect-card {
+        background: white;
+        padding: var(--space-md);
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .dialect-card__header {
+        color: var(--brand-accent);
+        font-weight: 600;
+        margin-bottom: var(--space-sm);
+        padding-bottom: var(--space-xs);
+        border-bottom: 2px solid var(--brand-secondary);
+    }
+
+    /* Common mistakes section specific styles */
+    .mistake-card {
+        background: #fff5f5;
+        padding: var(--space-md);
+        margin: var(--space-md) 0;
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--error-color);
+    }
+
+    .mistake-card__incorrect {
+        color: var(--error-color);
+        text-decoration: line-through;
+        margin-right: var(--space-sm);
+    }
+
+    .mistake-card__correct {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    /* Practice section specific styles */
+    .practice-item {
+        background: white;
+        padding: var(--space-md);
+        margin: var(--space-md) 0;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .practice-answer {
+        color: var(--brand-accent);
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        background: rgba(0, 39, 118, 0.1);
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: var(--radius-sm);
+        margin-top: var(--space-sm);
+    }
+
+    .practice-answer.visible {
+        opacity: 1;
+    }
+
+    /* Add this script in the head section */
+    <script>
+        function toggleAnswer(element) {
+            const answer = element.querySelector('.practice-answer');
+            answer.classList.add('visible');
+            setTimeout(() => {
+                answer.classList.remove('visible');
+            }, 5000);
+        }
+    </script>
+</style>
+
+<!-- Add these sections just before the support section -->
+<section class="lesson-section">
+    <h2 class="lesson-section__header">Regional Variations</h2>
+    <p>The past tense usage can vary between Brazilian Portuguese and European Portuguese. Here are the key differences:</p>
+    
+    <div class="dialect-comparison">
+        <div class="dialect-card">
+            <h3 class="dialect-card__header">Brazilian Portuguese</h3>
+            <ul>
+                <li>Prefers simple past tense (pretérito perfeito) for recent actions</li>
+                <li>Uses "ter" as auxiliary verb</li>
+                <li>Example: "Eu já almocei" (I already had lunch)</li>
+            </ul>
+        </div>
+        <div class="dialect-card">
+            <h3 class="dialect-card__header">European Portuguese</h3>
+            <ul>
+                <li>More frequent use of compound past with "ter"</li>
+                <li>Sometimes uses "haver" as auxiliary</li>
+                <li>Example: "Eu já tenho almoçado" (I already had lunch)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-box content-box--note">
+        <h3>Cultural Note</h3>
+        <p>These differences reflect broader cultural patterns in how time and completion are viewed in different Portuguese-speaking regions.</p>
+    </div>
+</section>
+
+<section class="lesson-section">
+    <h2 class="lesson-section__header">Common Mistakes</h2>
+    <p>Watch out for these frequent errors when using the past tense:</p>
+
+    <div class="mistake-card">
+        <h3>1. Confusing Ser and Estar in the Past</h3>
+        <p><span class="mistake-card__incorrect">Eu fui doente ontem</span> → 
+        <span class="mistake-card__correct">Eu estava doente ontem</span></p>
+        <p>Use 'estava' for temporary states in the past</p>
+    </div>
+
+    <div class="mistake-card">
+        <h3>2. Irregular Verb Confusion</h3>
+        <p><span class="mistake-card__incorrect">Eu fazei</span> → 
+        <span class="mistake-card__correct">Eu fiz</span></p>
+        <p>Remember that 'fazer' is irregular in the past tense</p>
+    </div>
+
+    <div class="mistake-card">
+        <h3>3. Time Expression Errors</h3>
+        <p><span class="mistake-card__incorrect">Eu fui lá desde dois dias</span> → 
+        <span class="mistake-card__correct">Eu fui lá há dois dias</span></p>
+        <p>Use 'há' to indicate time ago, not 'desde'</p>
+    </div>
+</section>
+
+<section class="lesson-section">
+    <h2 class="lesson-section__header">Practice</h2>
+    <p>Click/tap each question to reveal the answer for 5 seconds. Try to answer before checking!</p>
+
+    <div class="practice-item" onclick="toggleAnswer(this)">
+        <p>Complete: Ontem eu ________ (ir) ao cinema.</p>
+        <div class="practice-answer">fui</div>
+    </div>
+
+    <div class="practice-item" onclick="toggleAnswer(this)">
+        <p>Complete: Vocês ________ (comer) no restaurante?</p>
+        <div class="practice-answer">comeram</div>
+    </div>
+
+    <div class="practice-item" onclick="toggleAnswer(this)">
+        <p>Complete: Nós ________ (fazer) a tarefa juntos.</p>
+        <div class="practice-answer">fizemos</div>
+    </div>
+
+    <div class="practice-item" onclick="toggleAnswer(this)">
+        <p>Complete: Ela ________ (estar) em casa ontem.</p>
+        <div class="practice-answer">estava</div>
+    </div>
+
+    <div class="practice-item" onclick="toggleAnswer(this)">
+        <p>Complete: Tu ________ (ter) tempo para estudar?</p>
+        <div class="practice-answer">tiveste</div>
+    </div>
+</section>

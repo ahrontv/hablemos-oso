@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portuguese Past Tense | Language Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Design tokens */
+        :root {
+            /* Brand colors */
+            --brand-primary: #009c3b;
+            --brand-secondary: #ffdf00;
+            --brand-accent: #002776;
+            /* Semantic colors */
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --text-light: #ffffff;
+            /* Feedback colors */
+            --info-color: #2196F3;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #FF5722;
+            /* Layout */
+            --container-max-width: 800px;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            /* Typography */
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #f8f9fa;
+        }
+
+        /* Layout */
+        .lesson-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        /* Header styles */
+        .lesson-header {
+            background: var(--brand-primary); /*linear-gradient(135deg, var(--brand-primary), var(--brand-accent));*/
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-header__title {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-sm);
+            font-weight: 700;
+        }
+
+        .lesson-header__subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+        }
+
+        /* Content section styles */
+        .lesson-section {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: var(--space-lg);
+        }
+
+        .lesson-section__header {
+            color: var(--brand-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 3px solid var(--brand-secondary);
+            font-size: var(--font-size-xl);
+        }
+
+        /* Table styles */
+        .conjugation-table {
+            width: 100%;
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table__wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .conjugation-table th {
+            background: var(--brand-accent);
+            color: var(--text-light);
+            padding: var(--space-md);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .conjugation-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .conjugation-table__highlight {
+            color: var(--brand-accent);
+            font-weight: 600;
+        }
+
+        /* Content boxes */
+        .content-box {
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-md);
+            position: relative;
+            padding-left: calc(var(--space-lg) * 2);
+        }
+
+            .content-box::before {
+                font-family: "Font Awesome 6 Free";
+                font-weight: 900;
+                position: absolute;
+                left: var(--space-md);
+                top: var(--space-lg);
+                font-size: var(--font-size-xl);
+            }
+
+        .content-box--tip {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+        }
+
+            .content-box--tip::before {
+                content: "\f0eb";
+                color: var(--success-color);
+            }
+
+        .content-box--note {
+            background-color: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid var(--info-color);
+        }
+
+            .content-box--note::before {
+                content: "\f040";
+                color: var(--info-color);
+            }
+
+        .content-box--warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+        }
+
+            .content-box--warning::before {
+                content: "\f071";
+                color: var(--warning-color);
+            }
+
+        /* Example styles */
+        .example-block {
+            background: #f8f9fa;
+            padding: var(--space-lg);
+            border-left: 4px solid var(--brand-secondary);
+            margin: var(--space-lg) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        /* Time expressions section */
+        .time-expressions {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-lg);
+            padding: var(--space-md);
+        }
+
+        .time-expressions__icon {
+            font-size: var(--font-size-2xl);
+            color: var(--brand-primary);
+            flex-shrink: 0;
+        }
+
+        .time-expressions__list {
+            list-style-position: inside;
+            margin-top: var(--space-sm);
+        }
+
+        /* Support section */
+        .support-section {
+            background: linear-gradient(135deg, var(--brand-accent), var(--brand-primary));
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-top: var(--space-xl);
+        }
+
+        .support-section__logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: var(--space-md);
+            border: 3px solid var(--brand-secondary);
+        }
+
+        .support-section__title {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        .support-section__button {
+            display: inline-block;
+            background: var(--brand-secondary);
+            color: var(--text-primary);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            margin-top: var(--space-md);
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+            .support-section__button:hover {
+                transform: translateY(-2px);
+            }
+
+
+        /* Regional variations section specific styles */
+        .dialect-comparison {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 640px) {
+            .dialect-comparison {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .dialect-card {
+            background: white;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dialect-card__header {
+            color: var(--brand-accent);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            padding-bottom: var(--space-xs);
+            border-bottom: 2px solid var(--brand-secondary);
+        }
+
+        /* Common mistakes section specific styles */
+        .mistake-card {
+            background: #fff5f5;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .mistake-card__incorrect {
+            color: var(--error-color);
+            text-decoration: line-through;
+            margin-right: var(--space-sm);
+        }
+
+        .mistake-card__correct {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        /* Practice section specific styles */
+        .practice-item {
+            background: white;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .practice-answer {
+            color: var(--brand-accent);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            background: rgba(0, 39, 118, 0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+            .practice-answer.visible {
+                opacity: 1;
+            }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            :root {
+                --space-lg: 1rem;
+                --space-xl: 1.5rem;
+            }
+
+            .lesson-header__title {
+                font-size: var(--font-size-xl);
+            }
+
+            .lesson-section {
+                padding: var(--space-md);
+            }
+
+            .time-expressions {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleAnswer(element) {
+            const answer = element.querySelector('.practice-answer');
+            answer .classList.add('visible');
+            setTimeout(() => {
+                answer.classList.remove('visible');
+            }, 5000);
+        }
+
+    </script>
+</head>
+<body>
+    <div class="lesson-container">
+        <header class="lesson-header">
+            <h1 class="lesson-header__title">Past Tense in Portuguese</h1>
+            <p class="lesson-header__subtitle">Learn how to talk about past events in Portuguese</p>
+        </header>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Pretérito Perfeito (Simple Past)</h2>
+            <p>The pretérito perfeito is used to describe completed actions in the past. It's similar to the English simple past tense.</p>
+
+            <div class="content-box content-box--tip">
+                <h3>Quick Tip</h3>
+                <p>Regular verbs in Portuguese follow predictable patterns based on their endings (-ar, -er, -ir). Learning these patterns will help you conjugate most verbs!</p>
+            </div>
+
+            <div class="conjugation-table__wrapper">
+                <table class="conjugation-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Falar (to speak)</th>
+                            <th>Comer (to eat)</th>
+                            <th>Dormir (to sleep)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eu</td>
+                            <td>fal<span class="conjugation-table__highlight">ei</span></td>
+                            <td>com<span class="conjugation-table__highlight">i</span></td>
+                            <td>dorm<span class="conjugation-table__highlight">i</span></td>
+                        </tr>
+                        <tr>
+                            <td>Você/Ele/Ela</td>
+                            <td>fal<span class="conjugation-table__highlight">ou</span></td>
+                            <td>com<span class="conjugation-table__highlight">eu</span></td>
+                            <td>dorm<span class="conjugation-table__highlight">iu</span></td>
+                        </tr>
+                        <tr>
+                            <td>Nós</td>
+                            <td>fal<span class="conjugation-table__highlight">amos</span></td>
+                            <td>com<span class="conjugation-table__highlight">emos</span></td>
+                            <td>dorm<span class="conjugation-table__highlight">imos</span></td>
+                        </tr>
+                        <tr>
+                            <td>Vocês/Eles/Elas</td>
+                            <td>fal<span class="conjugation-table__highlight">aram</span></td>
+                            <td>com<span class="conjugation-table__highlight">eram</span></td>
+                            <td>dorm<span class="conjugation-table__highlight">iram</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-box content-box--note">
+                <h3>Important Note</h3>
+                <p>The ending patterns are consistent within each verb group (-ar, -er, -ir). Once you learn one verb from each group, you can apply the same pattern to other regular verbs.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Irregular Verbs</h2>
+
+            <div class="content-box content-box--warning">
+                <h3>Common Irregulars</h3>
+                <p>Some of the most common verbs in Portuguese are irregular in the past tense. These need to be memorized separately:</p>
+                <ul>
+                    <li>ser/ir → fui, foi, fomos, foram</li>
+                    <li>ter → tive, teve, tivemos, tiveram</li>
+                    <li>fazer → fiz, fez, fizemos, fizeram</li>
+                </ul>
+            </div>
+
+            <div class="example-block">
+                <p><strong>Eu fui ao mercado.</strong></p>
+                <p>I went to the market.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Time Expressions</h2>
+            <div class="time-expressions">
+                <i class="fas fa-calendar time-expressions__icon"></i>
+                <div>
+                    <p>Common time expressions used with the past tense:</p>
+                    <ul class="time-expressions__list">
+                        <li>ontem (yesterday)</li>
+                        <li>na semana passada (last week)</li>
+                        <li>no mês passado (last month)</li>
+                        <li>há dois dias (two days ago)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box content-box--tip">
+                <h3>Usage Tip</h3>
+                <p>When using time expressions with "há", remember that it indicates how long ago something happened: "há três dias" = "three days ago"</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Regional Variations</h2>
+            <p>The past tense usage can vary between Brazilian Portuguese and European Portuguese. Here are the key differences:</p>
+
+            <div class="dialect-comparison">
+                <div class="dialect-card">
+                    <h3 class="dialect-card__header">Brazilian Portuguese</h3>
+                    <ul>
+                        <li>Prefers simple past tense (pretérito perfeito) for recent actions</li>
+                        <li>Uses "ter" as auxiliary verb</li>
+                        <li>Example: "Eu já almocei" (I already had lunch)</li>
+                    </ul>
+                </div>
+                <div class="dialect-card">
+                    <h3 class="dialect-card__header">European Portuguese</h3>
+                    <ul>
+                        <li>More frequent use of compound past with "ter"</li>
+                        <li>Sometimes uses "haver" as auxiliary</li>
+                        <li>Example: "Eu já tenho almoçado" (I already had lunch)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-box content-box--note">
+                <h3>Cultural Note</h3>
+                <p>These differences reflect broader cultural patterns in how time and completion are viewed in different Portuguese-speaking regions.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Common Mistakes</h2>
+            <p>Watch out for these frequent errors when using the past tense:</p>
+
+            <div class="mistake-card">
+                <h3>1. Confusing Ser and Estar in the Past</h3>
+                <p>
+                    <span class="mistake-card__incorrect">Eu fui doente ontem</span> →
+                    <span class="mistake-card__correct">Eu estava doente ontem</span>
+                </p>
+                <p>Use 'estava' for temporary states in the past</p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>2. Irregular Verb Confusion</h3>
+                <p>
+                    <span class="mistake-card__incorrect">Eu fazei</span> →
+                    <span class="mistake-card__correct">Eu fiz</span>
+                </p>
+                <p>Remember that 'fazer' is irregular in the past tense</p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>3. Time Expression Errors</h3>
+                <p>
+                    <span class="mistake-card__incorrect">Eu fui lá desde dois dias</span> →
+                    <span class="mistake-card__correct">Eu fui lá há dois dias</span>
+                </p>
+                <p>Use 'há' to indicate time ago, not 'desde'</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Practice</h2>
+            <p>Click/tap each question to reveal the answer for 5 seconds. Try to answer before checking!</p>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Complete: Ontem eu ________ (ir) ao cinema.</p>
+                <div class="practice-answer">fui</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Complete: Vocês ________ (comer) no restaurante?</p>
+                <div class="practice-answer">comeram</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Complete: Nós ________ (fazer) a tarefa juntos.</p>
+                <div class="practice-answer">fizemos</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Complete: Ela ________ (estar) em casa ontem.</p>
+                <div class="practice-answer">estava</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Complete: Tu ________ (ter) tempo para estudar?</p>
+                <div class="practice-answer">tiveste</div>
+            </div>
+        </section>
+
+        <div class="support-section">
+            <img src="_pt_frog_br_mascot.svg" alt="Organization Logo" class="support-section__logo">
+            <h3 class="support-section__title">Support Our Project</h3>
+            <p>Help us create more free Portuguese learning resources</p>
+            <a href="#" class="support-section__button">Support Us</a>
+        </div>
+    </div>
+
+</body>
+</html>

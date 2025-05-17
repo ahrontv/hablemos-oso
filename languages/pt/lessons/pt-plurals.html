@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portuguese Plurals | Language Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Using the same styles as provided in the template */
+        /* Design tokens */
+        :root {
+            --brand-primary: #009c3b;
+            --brand-secondary: #ffdf00;
+            --brand-accent: #002776;
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --text-light: #ffffff;
+            --info-color: #2196F3;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #FF5722;
+            --container-max-width: 800px;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        /* Copy all CSS from template */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #f8f9fa;
+        }
+
+        .lesson-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        .lesson-header {
+            background: var(--brand-primary);
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-header__title {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-sm);
+            font-weight: 700;
+        }
+
+        .lesson-header__subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+        }
+
+        .lesson-section {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: var(--space-lg);
+        }
+
+        .lesson-section__header {
+            color: var(--brand-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 3px solid var(--brand-secondary);
+            font-size: var(--font-size-xl);
+        }
+
+        .conjugation-table {
+            width: 100%;
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table__wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .conjugation-table th {
+            background: var(--brand-accent);
+            color: var(--text-light);
+            padding: var(--space-md);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .conjugation-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table__highlight {
+            color: var(--brand-accent);
+            font-weight: 600;
+        }
+
+        .content-box {
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-md);
+            position: relative;
+            padding-left: calc(var(--space-lg) * 2);
+        }
+
+        .content-box::before {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: var(--space-md);
+            top: var(--space-lg);
+            font-size: var(--font-size-xl);
+        }
+
+        .content-box--tip {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .content-box--tip::before {
+            content: "\f0eb";
+            color: var(--success-color);
+        }
+
+        .content-box--note {
+            background-color: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid var(--info-color);
+        }
+
+        .content-box--note::before {
+            content: "\f040";
+            color: var(--info-color);
+        }
+
+        .content-box--warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .content-box--warning::before {
+            content: "\f071";
+            color: var(--warning-color);
+        }
+
+        .example-block {
+            background: #f8f9fa;
+            padding: var(--space-lg);
+            border-left: 4px solid var(--brand-secondary);
+            margin: var(--space-lg) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .mistake-card {
+            background: #fff5f5;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .mistake-card__incorrect {
+            color: var(--error-color);
+            text-decoration: line-through;
+            margin-right: var(--space-sm);
+        }
+
+        .mistake-card__correct {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .practice-item {
+            background: white;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .practice-answer {
+            color: var(--brand-accent);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            background: rgba(0, 39, 118, 0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .practice-answer.visible {
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .lesson-header__title {
+                font-size: var(--font-size-xl);
+            }
+
+            .lesson-section {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleAnswer(element) {
+            const answer = element.querySelector('.practice-answer');
+            answer.classList.add('visible');
+            setTimeout(() => {
+                answer.classList.remove('visible');
+            }, 5000);
+        }
+    </script>
+</head>
+<body>
+    <div class="lesson-container">
+        <header class="lesson-header">
+            <h1 class="lesson-header__title">Plural Formation in Portuguese</h1>
+            <p class="lesson-header__subtitle">Learn how to make nouns and adjectives plural</p>
+        </header>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Basic Rules</h2>
+            <p>In Portuguese, most plurals are formed by adding -s to words ending in a vowel. However, there are several important patterns to learn.</p>
+
+            <div class="conjugation-table__wrapper">
+                <table class="conjugation-table">
+                    <thead>
+                        <tr>
+                            <th>Ending</th>
+                            <th>Rule</th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vowel</td>
+                            <td>Add -s</td>
+                            <td>casa</td>
+                            <td>casa<span class="conjugation-table__highlight">s</span></td>
+                        </tr>
+                        <tr>
+                            <td>-r, -s, -z</td>
+                            <td>Add -es</td>
+                            <td>flor</td>
+                            <td>flor<span class="conjugation-table__highlight">es</span></td>
+                        </tr>
+                        <tr>
+                            <td>-al, -el, -ol</td>
+                            <td>Change -l to -is</td>
+                            <td>animal</td>
+                            <td>anima<span class="conjugation-table__highlight">is</span></td>
+                        </tr>
+                        <tr>
+                            <td>-il</td>
+                            <td>Change -il to -eis</td>
+                            <td>fácil</td>
+                            <td>fác<span class="conjugation-table__highlight">eis</span></td>
+                        </tr>
+                        <tr>
+                            <td>-m</td>
+                            <td>Change -m to -ns</td>
+                            <td>jovem</td>
+                            <td>jove<span class="conjugation-table__highlight">ns</span></td>
+                        </tr>
+                        <tr>
+                            <td>-ão</td>
+                            <td>Change to -ões</td>
+                            <td>limão</td>
+                            <td>lim<span class="conjugation-table__highlight">ões</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-box content-box--tip">
+                <h3>Quick Tip</h3>
+                <p>Words ending in -s in the singular form don't change in the plural: o lápis → os lápis (the pencil → the pencils)</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Special Cases: -ão Endings</h2>
+            
+            <div class="content-box content-box--note">
+                <h3>Three Patterns for -ão</h3>
+                <p>Words ending in -ão can have three different plural forms, with -ões being by far the most common:</p>
+                <ul>
+                    <li>-ão → -ões (approximately 80% of cases): botão → botões, limão → limões, televisão → televisões</li>
+                    <li>-ão → -ães (less common): pão → pães, cão → cães, alemão → alemães</li>
+                    <li>-ão → -ãos (least common): irmão → irmãos, mão → mãos, órgão → órgãos</li>
+                </ul>
+                <p>When in doubt, -ões is usually the safest choice!</p>
+            </div>
+
+            <div class="content-box content-box--warning">
+                <h3>Article and Adjective Agreement</h3>
+                <p>Remember that when making nouns plural, articles and adjectives must also agree! For example:</p>
+                <p>Singular: O gato preto (The black cat)</p>
+                <p>Plural: Os gatos pretos (The black cats)</p>
+            </div>
+
+            <div class="conjugation-table__wrapper">
+                <table class="conjugation-table">
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                            <th>Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>-ões</td>
+                            <td>limão</td>
+                            <td>lim<span class="conjugation-table__highlight">ões</span></td>
+                            <td>lemon(s)</td>
+                        </tr>
+                        <tr>
+                            <td>-ões</td>
+                            <td>botão</td>
+                            <td>bot<span class="conjugation-table__highlight">ões</span></td>
+                            <td>button(s)</td>
+                        </tr>
+                        <tr>
+                            <td>-ães</td>
+                            <td>pão</td>
+                            <td>p<span class="conjugation-table__highlight">ães</span></td>
+                            <td>bread(s)</td>
+                        </tr>
+                        <tr>
+                            <td>-ães</td>
+                            <td>alemão</td>
+                            <td>alem<span class="conjugation-table__highlight">ães</span></td>
+                            <td>German(s)</td>
+                        </tr>
+                        <tr>
+                            <td>-ãos</td>
+                            <td>irmão</td>
+                            <td>irm<span class="conjugation-table__highlight">ãos</span></td>
+                            <td>brother(s)</td>
+                        </tr>
+                        <tr>
+                            <td>-ãos</td>
+                            <td>cidadão</td>
+                            <td>cidad<span class="conjugation-table__highlight">ãos</span></td>
+                            <td>citizen(s)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Compound Words</h2>
+            
+            <div class="content-box content-box--warning">
+                <h3>Important Rules</h3>
+                <p>For compound words, usually only the last word changes to plural if it's a noun:</p>
+                <ul>
+                    <li>guarda-chuva → guarda-chuvas</li>
+                    <li>couve-flor → couves-flores</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Special Cases and Exceptions</h2>
+
+            <div class="content-box content-box--note">
+                <h3>Irregular Plurals</h3>
+                <p>Some words have irregular plural forms:</p>
+                <ul>
+                    <li>mal → males (evil/bad)</li>
+                    <li>cônsul → cônsules (consul)</li>
+                    <li>gol → gols (goal in soccer/football)</li>
+                </ul>
+            </div>
+
+            <div class="content-box content-box--tip">
+                <h3>Foreign Words</h3>
+                <p>Loanwords usually follow simplified plural rules:</p>
+                <ul>
+                    <li>show → shows</li>
+                    <li>clube (club) → clubes</li>
+                    <li>hambúrguer → hambúrgueres</li>
+                </ul>
+            </div>
+
+            <h2 class="lesson-section__header">Collective Nouns and Special Words</h2>
+
+            <div class="example-block">
+                <p><strong>Collective nouns are singular but refer to groups:</strong></p>
+                <ul>
+                    <li>o pessoal (the staff/personnel) - always singular despite referring to many people</li>
+                    <li>a gente (we/us) - literally means "the people" but is used as "we" and takes singular verbs</li>
+                    <li>o povo (the people/population) - singular form for a collective group</li>
+                </ul>
+            </div>
+
+            <div class="content-box content-box--warning">
+                <h3>Watch Out!</h3>
+                <p>"A gente" is very common in informal Brazilian Portuguese meaning "we", but always uses singular verb forms:</p>
+                <p><strong>Correct:</strong> A gente vai ao cinema (We're going to the movies)</p>
+                <p><strong>Incorrect:</strong> A gente vamos ao cinema</p>
+            </div>
+
+            <h2 class="lesson-section__header">Common Mistakes</h2>
+
+            <div class="mistake-card">
+                <h3>1. Wrong -ão Plural</h3>
+                <p>
+                    <span class="mistake-card__incorrect">pãos</span> →
+                    <span class="mistake-card__correct">pães</span>
+                </p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>2. Forgetting Article/Adjective Agreement</h3>
+                <p>
+                    <span class="mistake-card__incorrect">os gato preto</span> →
+                    <span class="mistake-card__correct">os gatos pretos</span>
+                </p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>3. Wrong "a gente" Usage</h3>
+                <p>
+                    <span class="mistake-card__incorrect">a gente vamos</span> →
+                    <span class="mistake-card__correct">a gente vai</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Practice</h2>
+            <p>Click/tap each sentence to reveal the answer. Fill in the blanks with the correct plural forms and any necessary article/adjective agreements!</p>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>O cachorro preguiçoso dorme no sofá. (The lazy dog sleeps on the sofa)</p>
+                <p>→ _____ _______ _________ dormem no sofá.</p>
+                <div class="practice-answer">Os cachorros preguiçosos dormem no sofá.</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Meu irmão comprou um pão alemão. (My brother bought a German bread)</p>
+                <p>→ Meus ______ compraram _____ _____ _______.</p>
+                <div class="practice-answer">Meus irmãos compraram dois pães alemães.</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>O ladrão roubou o botão azul. (The thief stole the blue button)</p>
+                <p>→ _____ _______ roubaram _____ _______ _______.</p>
+                <div class="practice-answer">Os ladrões roubaram os botões azuis.</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Você viu aquele show internacional? (Did you see that international show?)</p>
+                <p>→ Você viu _______ _______ _____________?</p>
+                <div class="practice-answer">Você viu aqueles shows internacionais?</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>O pessoal está feliz com o resultado. (The staff is happy with the result)</p>
+                <p>→ _____ _________ estão _______ com _____ __________.</p>
+                <div class="practice-answer">As pessoas estão felizes com os resultados.</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>A gente vai encontrar o capitão no avião. (We're going to meet the captain on the plane)</p>
+                <p>→ Nós vamos encontrar _____ _________ _____ _________.</p>
+                <div class="practice-answer">Nós vamos encontrar os capitães nos aviões.</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>O animal feroz escapou do jardim zoológico. (The fierce animal escaped from the zoo)</p>
+                <p>→ _____ ________ _______ escaparam _____ _______ __________.</p>
+                <div class="practice-answer">Os animais ferozes escaparam dos jardins zoológicos.</div>
+            </div>
+        </section>
+
+        <div class="support-section">
+            <img src="_oso_anteojo_round_profile_360.svg" alt="Organization Logo" class="support-section__logo">
+            <h3 class="support-section__title">Support Our Project</h3>
+            <p>Help us create more free Portuguese learning resources</p>
+            <a href="https://www.buymeacoffee.com/atversch" target="_blank" class="support-section__button">Support Us</a>
+        </div>
+    </div>
+</body>
+</html>

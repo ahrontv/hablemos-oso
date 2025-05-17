@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portuguese Ordinals | Language Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Design tokens */
+        :root {
+            --brand-primary: #009c3b;
+            --brand-secondary: #ffdf00;
+            --brand-accent: #002776;
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --text-light: #ffffff;
+            --info-color: #2196F3;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #FF5722;
+            --container-max-width: 800px;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #f8f9fa;
+        }
+
+        .lesson-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        .lesson-header {
+            background: var(--brand-primary);
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-header__title {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-sm);
+            font-weight: 700;
+        }
+
+        .lesson-header__subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+        }
+
+        .lesson-section {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: var(--space-lg);
+        }
+
+        .lesson-section__header {
+            color: var(--brand-primary);
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 3px solid var(--brand-secondary);
+            font-size: var(--font-size-xl);
+        }
+
+        .conjugation-table {
+            width: 100%;
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table__wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .conjugation-table th {
+            background: var(--brand-accent);
+            color: var(--text-light);
+            padding: var(--space-md);
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .conjugation-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .conjugation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .conjugation-table__highlight {
+            color: var(--brand-accent);
+            font-weight: 600;
+        }
+
+        .content-box {
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-md);
+            position: relative;
+            padding-left: calc(var(--space-lg) * 2);
+        }
+
+            .content-box::before {
+                font-family: "Font Awesome 6 Free";
+                font-weight: 900;
+                position: absolute;
+                left: var(--space-md);
+                top: var(--space-lg);
+                font-size: var(--font-size-xl);
+            }
+
+        .content-box--tip {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+        }
+
+            .content-box--tip::before {
+                content: "\f0eb";
+                color: var(--success-color);
+            }
+
+        .content-box--note {
+            background-color: rgba(33, 150, 243, 0.1);
+            border-left: 4px solid var(--info-color);
+        }
+
+            .content-box--note::before {
+                content: "\f040";
+                color: var(--info-color);
+            }
+
+        .content-box--warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+        }
+
+            .content-box--warning::before {
+                content: "\f071";
+                color: var(--warning-color);
+            }
+
+        .example-block {
+            background: #f8f9fa;
+            padding: var(--space-lg);
+            border-left: 4px solid var(--brand-secondary);
+            margin: var(--space-lg) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .mistake-card {
+            background: #fff5f5;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .mistake-card__incorrect {
+            color: var(--error-color);
+            text-decoration: line-through;
+            margin-right: var(--space-sm);
+        }
+
+        .mistake-card__correct {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .practice-item {
+            background: white;
+            padding: var(--space-md);
+            margin: var(--space-md) 0;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .practice-answer {
+            color: var(--brand-accent);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            background: rgba(0, 39, 118, 0.1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+            .practice-answer.visible {
+                opacity: 1;
+            }
+
+        @media (max-width: 640px) {
+            .lesson-header__title {
+                font-size: var(--font-size-xl);
+            }
+
+            .lesson-section {
+                padding: var(--space-md);
+            }
+        }
+    </style>
+
+    <script>
+        function toggleAnswer(element) {
+            const answer = element.querySelector('.practice-answer');
+            answer.classList.add('visible');
+            setTimeout(() => {
+                answer.classList.remove('visible');
+            }, 5000);
+        }
+    </script>
+</head>
+<body>
+    <div class="lesson-container">
+        <header class="lesson-header">
+            <h1 class="lesson-header__title">Ordinal Numbers in Portuguese</h1>
+            <p class="lesson-header__subtitle">Learn how to express order and ranking in Portuguese</p>
+        </header>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Basic Ordinal Numbers</h2>
+            <p>Ordinal numbers in Portuguese are used to indicate order or position. They must agree in gender with the noun they modify.</p>
+
+            <div class="conjugation-table__wrapper">
+                <table class="conjugation-table">
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Masculine</th>
+                            <th>Feminine</th>
+                            <th>English</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1º</td>
+                            <td>primeiro</td>
+                            <td>primeira</td>
+                            <td>first</td>
+                        </tr>
+                        <tr>
+                            <td>2º</td>
+                            <td>segundo</td>
+                            <td>segunda</td>
+                            <td>second</td>
+                        </tr>
+                        <tr>
+                            <td>3º</td>
+                            <td>terceiro</td>
+                            <td>terceira</td>
+                            <td>third</td>
+                        </tr>
+                        <tr>
+                            <td>4º</td>
+                            <td>quarto</td>
+                            <td>quarta</td>
+                            <td>fourth</td>
+                        </tr>
+                        <tr>
+                            <td>5º</td>
+                            <td>quinto</td>
+                            <td>quinta</td>
+                            <td>fifth</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-box content-box--tip">
+                <h3>Quick Tip</h3>
+                <p>Unlike English, Portuguese ordinal numbers must agree in gender with the noun they modify. For example:</p>
+                <ul>
+                    <li>o primeiro dia (the first day) - masculine</li>
+                    <li>a primeira noite (the first night) - feminine</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Formation Pattern</h2>
+
+            <div class="conjugation-table__wrapper">
+                <table class="conjugation-table">
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>Pattern</th>
+                            <th>Masculine</th>
+                            <th>Feminine</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>6º-9º</td>
+                            <td>Add -o/-a</td>
+                            <td>sexto, sétimo</td>
+                            <td>sexta, sétima</td>
+                        </tr>
+                        <tr>
+                            <td>10º+</td>
+                            <td>Add -ésimo/-ésima</td>
+                            <td>décimo, vigésimo</td>
+                            <td>décima, vigésima</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-box content-box--note">
+                <h3>Common Higher Numbers</h3>
+                <ul>
+                    <li>10th - décimo(a)</li>
+                    <li>20th - vigésimo(a)</li>
+                    <li>30th - trigésimo(a)</li>
+                    <li>40th - quadragésimo(a)</li>
+                    <li>50th - quinquagésimo(a)</li>
+                    <li>100th - centésimo(a)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Compound Ordinals</h2>
+
+            <div class="example-block">
+                <h3>Examples of Compound Ordinals</h3>
+                <ul>
+                    <li>21st - vigésimo(a) primeiro(a)</li>
+                    <li>32nd - trigésimo(a) segundo(a)</li>
+                    <li>45th - quadragésimo(a) quinto(a)</li>
+                </ul>
+                <p>Note: All parts of the compound ordinal must agree in gender with the noun.</p>
+            </div>
+
+            <div class="content-box content-box--warning">
+                <h3>Important Note</h3>
+                <p>Unlike English, Portuguese ordinal numbers are generally only used up to 100th (centésimo). After that, it's more common to use cardinal numbers.</p>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Common Uses</h2>
+
+            <div class="example-block">
+                <h3>Frequent Applications</h3>
+                <ul>
+                    <li>Floor numbers: o terceiro andar (the third floor)</li>
+                    <li>Centuries: o século décimo nono (the nineteenth century)</li>
+                    <li>Academic years: o primeiro ano (the first year)</li>
+                    <li>Rankings: em segundo lugar (in second place)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Common Mistakes</h2>
+
+            <div class="mistake-card">
+                <h3>1. Wrong Gender Agreement</h3>
+                <p>
+                    <span class="mistake-card__incorrect">a primeiro vez</span> →
+                    <span class="mistake-card__correct">a primeira vez</span>
+                </p>
+                <p>Remember to match the gender of the noun!</p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>2. Compound Number Order</h3>
+                <p>
+                    <span class="mistake-card__incorrect">primeiro vigésimo andar</span> →
+                    <span class="mistake-card__correct">vigésimo primeiro andar</span>
+                </p>
+                <p>Larger number always comes first in compounds.</p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>3. Abbreviation Format</h3>
+                <p>
+                    <span class="mistake-card__incorrect">1er, 2do</span> →
+                    <span class="mistake-card__correct">1º, 2º</span>
+                </p>
+                <p>Portuguese uses º and ª for masculine and feminine abbreviations.</p>
+            </div>
+
+            <div class="mistake-card">
+                <h3>4. Using Cardinals Instead of Ordinals</h3>
+                <p>
+                    <span class="mistake-card__incorrect">o cinco andar</span> →
+                    <span class="mistake-card__correct">o quinto andar</span>
+                </p>
+                <p>Use ordinal numbers for order and ranking!</p>
+            </div>
+        </section>
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Abbreviations</h2>
+
+            <div class="content-box content-box--note">
+                <h3>Writing Ordinal Numbers</h3>
+                <p>Portuguese uses special symbols for abbreviated ordinal numbers:</p>
+                <ul>
+                    <li>Masculine: º (1º, 2º, 3º)</li>
+                    <li>Feminine: ª (1ª, 2ª, 3ª)</li>
+                    <li>Plural adds s: 1ºs, 1ªs</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lesson-section">
+            <h2 class="lesson-section__header">Practice</h2>
+            <p>Click/tap each question to reveal the answer for 5 seconds. Try to answer before checking!</p>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>How do you say "the third floor" in Portuguese?</p>
+                <div class="practice-answer">o terceiro andar</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Write "21st century" in Portuguese:</p>
+                <div class="practice-answer">o vigésimo primeiro século</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>What's the feminine form of "32nd"?</p>
+                <div class="practice-answer">trigésima segunda</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>How would you write "1st place" (feminine) in abbreviated form?</p>
+                <div class="practice-answer">1ª lugar</div>
+            </div>
+
+            <div class="practice-item" onclick="toggleAnswer(this)">
+                <p>Translate: "She finished in fifth place."</p>
+                <div class="practice-answer">Ela terminou em quinto lugar.</div>
+            </div>
+        </section>
+
+        <div class="support-section">
+            <img src="_oso_anteojo_round_profile_360.svg" alt="Organization Logo" class="support-section__logo">
+            <h3 class="support-section__title">Support Our Project</h3>
+            <p>Help us create more free Portuguese learning resources</p>
+            <a href="https://www.buymeacoffee.com/atversch" target="_blank" class="support-section__button">Support Us</a>
+        </div>
+    </div>
+
+</body>
+</html>

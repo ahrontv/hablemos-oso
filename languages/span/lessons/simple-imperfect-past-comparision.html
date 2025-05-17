@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Tense Comparison | Language Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: rgb(105, 131, 109);
+            --brand-secondary: rgb(93, 65, 56);
+            --brand-accent: #f8dec0;
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --text-light: #ffffff;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --radius-md: 8px;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .comparison-header {
+            background: var(--brand-primary);
+            color: var(--text-light);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .comparison-title {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-sm);
+        }
+
+        .tense-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .tense-card {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tense-card h2 {
+            color: var(--brand-primary);
+            border-bottom: 2px solid var(--brand-secondary);
+            padding-bottom: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .example-block {
+            background: var(--brand-accent);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-md) 0;
+        }
+
+        .example-pair {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--brand-primary);
+        }
+
+        .comparison-section {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin: var(--space-xl) 0;
+        }
+
+        .comparison-section h2 {
+            color: var(--brand-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+            background: rgba(105, 131, 109, 0.1);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+        }
+
+        .narrative-example {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin: var(--space-lg) 0;
+            border-left: 4px solid var(--brand-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .tense-grid, .side-by-side {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="comparison-header">
+            <h1 class="comparison-title">Past Tense Comparison</h1>
+            <p>Understanding when to use Pretérito Indefinido vs. Imperfecto</p>
+        </header>
+
+        <div class="tense-grid">
+            <div class="tense-card">
+                <h2>Pretérito Indefinido</h2>
+                <p>Used for:</p>
+                <ul>
+                    <li>Completed actions</li>
+                    <li>Specific moments</li>
+                    <li>Sequential events</li>
+                    <li>Actions with clear start/end</li>
+                </ul>
+                <div class="example-block">
+                    <p><strong>Ayer comí una pizza.</strong></p>
+                    <p>Yesterday I ate a pizza.</p>
+                </div>
+            </div>
+
+            <div class="tense-card">
+                <h2>Pretérito Imperfecto</h2>
+                <p>Used for:</p>
+                <ul>
+                    <li>Habitual past actions</li>
+                    <li>Ongoing states</li>
+                    <li>Background information</li>
+                    <li>Descriptions in the past</li>
+                </ul>
+                <div class="example-block">
+                    <p><strong>De niño, comía pizza cada viernes.</strong></p>
+                    <p>As a child, I used to eat pizza every Friday.</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="comparison-section">
+            <h2>Side-by-Side Examples</h2>
+            
+            <div class="example-pair">
+                <div>
+                    <p><strong>Indefinido:</strong> <em>Ayer llovió por dos horas.</em></p>
+                    <p>Yesterday it rained for two hours. (Specific, completed event)</p>
+                </div>
+                <div>
+                    <p><strong>Imperfecto:</strong> <em>Cuando era niño, llovía mucho en mi ciudad.</em></p>
+                    <p>When I was a child, it used to rain a lot in my city. (Habitual action)</p>
+                </div>
+            </div>
+
+            <div class="example-pair">
+                <div>
+                    <p><strong>Indefinido:</strong> <em>María se rompió el brazo jugando al fútbol.</em></p>
+                    <p>Maria broke her arm playing soccer. (Specific incident)</p>
+                </div>
+                <div>
+                    <p><strong>Imperfecto:</strong> <em>María jugaba al fútbol todos los días.</em></p>
+                    <p>Maria used to play soccer every day. (Habitual action)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="comparison-section">
+            <h2>Using Both Tenses Together</h2>
+            <p>Often, both tenses work together to tell a complete story:</p>
+            
+            <div class="narrative-example">
+                <p><strong>Mientras estudiaba (imperfecto) en la biblioteca, Juan llegó (indefinido) con una noticia importante.</strong></p>
+                <p>While I was studying in the library, Juan arrived with important news.</p>
+                <ul>
+                    <li><em>estudiaba</em> - ongoing action (background)</li>
+                    <li><em>llegó</em> - specific event that interrupted</li>
+                </ul>
+            </div>
+
+            <div class="narrative-example">
+                <p><strong>Era (imperfecto) un día soleado cuando recibí (indefinido) la carta.</strong></p>
+                <p>It was a sunny day when I received the letter.</p>
+                <ul>
+                    <li><em>era</em> - background description</li>
+                    <li><em>recibí</em> - specific event</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="comparison-section">
+            <h2>Quick Reference Guide</h2>
+            <div class="side-by-side">
+                <div>
+                    <h3>Use Indefinido when:</h3>
+                    <ul>
+                        <li>Stating when something happened</li>
+                        <li>Describing a specific number of times</li>
+                        <li>Indicating start or end of action</li>
+                        <li>Listing sequential events</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Use Imperfecto when:</h3>
+                    <ul>
+                        <li>Describing how things were</li>
+                        <li>Talking about repeated habits</li>
+                        <li>Setting the scene</li>
+                        <li>No specific completion time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -17,7 +17,7 @@
 
         <button id="undoButton" disabled>{{undoButton}}</button>
         <button id="checkButton" onclick="checkAnswers()">{{checkButton}}</button>
-        <button id="hintsButton" onclick="toggleHints()">hints</button>
+        <button id="hintsButton" onclick="game.toggleHints()">hints</button> 
         {{#if (eq lang 'heb')}}
             <button id="niqqudButton" onclick="toggleNiqqud()">niq</button>
         {{/if}}
@@ -394,7 +394,20 @@
                 }
             }
 
-            toggleHints() {}
+            toggleHints() {
+                this.state.hints = !this.state.hints;
+                // TODO save the choice to session/local storage
+                // TODO add the withheld class when hints are created
+                // TODO imp the css class withheld
+                // modify the css of the hints 
+                let allHints = document.querySelectorAll();
+                if (this.state.hints) {
+                    allHints.forEach(h => h.classList.remove('withheld'));
+                } else {
+                    allHints.forEach(h => h.classList.add('withheld'));
+                }
+                
+            }
         }
 
         // Usage
