@@ -401,7 +401,7 @@
                 // TODO add the withheld class when hints are created
                 // TODO imp the css class withheld
                 // modify the css of the hints 
-                let allHints = document.querySelectorAll();
+                let allHints = document.querySelectorAll("span.hint");
                 if (this.state.hints) {
                     allHints.forEach(h => h.classList.remove('withheld'));
                 } else {
