@@ -236,36 +236,144 @@ const pageData = {
     },
 
     eng_ex_15: {
-        title: "",
+        title: "The Harlem Renaissance: Literary Flowering of African American Culture",
 
-        content: ``
+        content: `
+        In the aftermath of World War I, a remarkable artistic movement {flourished:developed rapidly} in the New York City neighborhood of Harlem. This cultural {renaissance:revival} emerged largely as a result of the Great {migration:movement of people} that saw hundreds of thousands of African Americans move from the rural South to Northern urban centers. Between approximately 1918 and the mid-1930s, Harlem became the epicenter of an {unprecedented:never before seen} explosion of Black artistic and {intellectual:relating to deep thinking} creativity.
+
+        Writers like Langston Hughes, Zora Neale Hurston, and Claude McKay {pioneered:developed first} new literary forms that {depicted:represented} the complexity of African American experiences. Their works {transcended:went beyond} the stereotypical portrayals that had dominated American culture, instead offering nuanced explorations of Black {identity:sense of self}. Poetry, novels, plays, and essays became vehicles for the {assertion:confident statement} of humanity, dignity, and cultural richness. These writers skillfully documented both the harsh realities of {discrimination:unjust treatment} and the {vibrant:full of energy} tapestry of Black life in America.
+
+        While literature formed its core, the Harlem Renaissance {encompassed:included completely} multiple art forms that reinforced each other. Jazz and blues musicians created soundtracks that complemented literary themes, while visual artists like Aaron Douglas and Augusta Savage crafted images that {resonated:evoked shared feelings} with the written word. Together, these diverse art forms {fostered:encouraged} a comprehensive cultural movement that celebrated African American creativity across disciplines and attracted audiences of all backgrounds to Harlem's theaters, galleries, and publishing houses.
+
+        The movement's significance extended far beyond aesthetics, serving as a platform for social and political change. By {reclaiming:taking back} control of how African American life was represented, Harlem Renaissance artists challenged prevailing narratives and stereotypes. Their work {empowered:gave authority to} the Black community while educating white Americans about the richness of African American {heritage:cultural features}. Publications like The Crisis, edited by W.E.B. Du Bois, explicitly connected cultural expression with the struggle for civil rights, arguing that artistic achievement could help dismantle racial barriers.
+
+        The influence of the Harlem Renaissance {persisted:continued to exist} long after its official conclusion. Its emphasis on cultural pride and artistic innovation inspired subsequent generations of artists and activists. The movement demonstrated that literature and art could function as powerful tools for social transformation and community building. Today, the Harlem Renaissance is {celebrated:acknowledged with admiration} as a pivotal moment when African American voices fundamentally altered American {cultural:relating to society's customs} consciousness, establishing artistic traditions that continue to shape creative expression and identity politics in the twenty-first century. The neighborhood itself remains a symbol of Black achievement and creative possibility, its legacy preserved in museums, universities, and the ongoing artistic output of African American creators.
+        `
     },
 
     eng_ex_16: {
-        title: "",
+        title: "Labor Movements: How Workers Organized and Changed American Industry",
 
-        content: ``
+        content: `
+        The American labor movement emerged in response to the {exploitation:unfair treatment} of workers during the rapid industrialization of the late 19th century. As factory owners prioritized profits over people, workers faced dangerous conditions, exhausting hours, and meager {compensation:payment for work}. These harsh realities sparked the formation of early unions, whose primary {endeavor:attempt to achieve a goal} was to establish basic protections. By standing in {solidarity:unity of purpose}, workers discovered they could challenge the unchecked power of industrial titans who had previously faced little {scrutiny:critical examination} of their labor practices.
+
+        The path to worker rights was marked by bitter struggles and sometimes violent confrontations. The Homestead Strike of 1892 and the Pullman Strike of 1894 became {pivotal:crucially important} moments that brought national attention to labor issues. Union leaders engaged in collective {bargaining:negotiation of terms}, demanding safer conditions, reasonable hours, and fair wages. When negotiations failed, workers exercised their ultimate leverage—withholding labor through strikes. The industrial elite often {undermined:lessened the effectiveness of} these efforts by hiring strikebreakers and using private security forces, while sympathetic politicians sometimes deployed military troops against striking workers.
+
+        The early 20th century saw significant progress as labor {advocacy:public support for a cause} gained momentum. The formation of the American Federation of Labor (AFL) created a powerful {coalition:temporary alliance} of craft unions, while the more radical Industrial Workers of the World (IWW) pushed for broader social change. The public {discourse:communication or debate} around labor rights evolved, particularly after the tragic Triangle Shirtwaist Factory fire of 1911 demonstrated the {tangible:real and definite} consequences of inadequate workplace protections. This shift in public opinion helped secure critical {legislation:laws} like the 1938 Fair Labor Standards Act, which established minimum wage and overtime standards still relevant today.
+
+        During the mid-20th century, labor unions reached the height of their influence, with membership reaching nearly 35% of American workers by the 1950s. This period saw {unprecedented:never before seen} gains in worker protections and benefits, including health insurance, paid vacation, and retirement plans. The {arbitration:dispute settlement} of labor disputes became standardized, and grievance procedures gave workers recourse against unfair treatment. Union strength translated into broader middle-class prosperity, as the benefits negotiated through organized labor often established industry standards that benefited even non-union workers.
+
+        Today's labor movement faces new challenges amid globalization, automation, and the {deterioration:becoming progressively worse} of traditional employment relationships. Union membership has declined to around 10% of American workers, yet recent years have shown signs of renewed {resilience:ability to recover from difficulties} in organized labor. Tech workers, gig economy contractors, and service industry employees are developing innovative organizing strategies suited to the modern economy. Despite powerful opposition, these workers remain {vigilant:keeping careful watch} in protecting hard-won rights while adapting to changing economic realities. Their ongoing struggle demonstrates how labor organizing continues to evolve, with each generation of workers adding new {stipulations:conditions or requirements} to the continuing contract between American industry and those whose labor powers it.
+        `
     },
 
     eng_ex_17: {
-        title: "",
+        title: "Telecommunications: From Telegraph to Smartphone",
 
-        content: ``
+        content: `
+        The history of telecommunications represents one of humanity's most {revolutionary:causing complete change} journeys. It began with Samuel Morse's telegraph in 1844, which first {transmitted:sent} messages across long distances using electrical signals. This {breakthrough:significant development} fundamentally altered how information traveled, freeing communication from the constraints of physical transportation for the first time. When Alexander Graham Bell invented the telephone in 1876, he further transformed long-distance communication by allowing people to hear each other's voices despite being miles apart, making exchanges more personal and {instantaneous:occurring in an instant}.
+
+        The 20th century witnessed telecommunications technology evolve {exponentially:increasingly rapidly}. Radio waves enabled wireless communication, {facilitating:making easier} broadcast media that could reach millions simultaneously. Television added visual elements, changing how news and entertainment were consumed. These technologies built upon massive {infrastructure:basic physical structures} investments - from telephone lines spanning continents to satellite networks orbiting the planet. Each advancement {converged:came together} with previous technologies to create increasingly sophisticated systems for human connection.
+
+        The development of the internet in the late 20th century represented perhaps the most {transformative:causing major change} shift in telecommunications history. Digital data transmission {democratized:made accessible to everyone} information sharing and created unprecedented opportunities for global {connectivity:state of being connected}. The {dissemination:widespread distribution} of knowledge accelerated as digital libraries, online education, and information repositories became available to anyone with an internet connection. Previous communication methods didn't become entirely {obsolete:out of date}, but were instead incorporated into broader digital frameworks.
+
+        Mobile telecommunications brought another dimension to this evolution. From bulky car phones to today's smartphones, these devices have become {indispensable:absolutely necessary} tools in modern life. The smartphone represents the ultimate convergence - combining telephone, computer, camera, navigation system, and countless other functions in a single handheld device. This technology has become so {pervasive:widespread} that it has restructured social interactions, business operations, and even cognitive processes, creating constant connection possibilities previously unimaginable.
+
+        While telecommunications advances have supported {globalization:worldwide interaction} and unprecedented access to information, they've also introduced new challenges. Concerns about {surveillance:close observation} and data privacy have emerged as digital footprints expand. The {encryption:converting information into code} of communications has become essential for security, even as it creates tensions between privacy rights and public safety interests. Additionally, issues of {bandwidth:data transfer capacity} limitations and the digital divide between technology-rich and technology-poor communities remain significant. Despite these challenges, telecommunications continues its rapid evolution, with artificial intelligence, augmented reality, and quantum communication representing the next frontiers in humanity's quest to connect across time and space.
+        `
     },
 
     eng_ex_18: {
-        title: "",
+        title: "The Detective Genre: From Sherlock Holmes to Modern Crime Fiction",
 
-        content: ``
+        content: `
+        The detective genre, with its focus on solving crimes through {deduction:process of reasoning}, has captivated readers for nearly two centuries. While Edgar Allan Poe is credited with creating the first detective story with "The Murders in the Rue Morgue" in 1841, it was Sir Arthur Conan Doyle's {quintessential:most perfect example} detective, Sherlock Holmes, who truly popularized the genre. Holmes, with his {analytical:logical reasoning} mind and {meticulous:very careful and precise} attention to detail, established many of the {archetypes:typical examples} that would define detective fiction for generations to come.
+
+        The early 20th century saw what is now called the Golden Age of detective fiction, when writers like Agatha Christie created {ingenious:clever and original} murder mysteries that challenged readers to solve the puzzle alongside the detective. Christie's Hercule Poirot and Miss Marple became beloved {sleuths:detectives} known for their unique {methodology:system of methods} in identifying the {perpetrator:person who commits a crime}. These stories typically followed a formula: a crime occurs in a contained setting, suspects are introduced, clues are revealed, and finally, the detective dramatically explains the solution to the {enigma:mysterious problem}.
+
+        In America, a grittier form of detective fiction emerged with the hard-boiled school. Writers like Raymond Chandler and Dashiell Hammett created tougher, more morally ambiguous {protagonists:main characters} who navigated urban landscapes filled with corruption and danger. These stories reflected the social realities of Depression-era America and established a distinctly American voice in the genre. The detectives in these novels often relied on {intuition:instinctive understanding} as much as logical reasoning, setting them apart from their British counterparts.
+
+        The post-war period witnessed a {proliferation:rapid increase} of subgenres, including police procedurals that focused on the collective work of law enforcement rather than the brilliant individual. As forensic science advanced, so did detective fiction, incorporating new technologies and scientific methods into storylines. Psychological thrillers became {pivotal:crucially important} in expanding the boundaries of the genre, often delving into the minds of both detectives and criminals. Writers like Patricia Highsmith created {intricate:very complicated} narratives that blurred the lines between hunter and hunted.
+
+        Today's crime fiction continues to evolve, reflecting changing social attitudes and global {phenomena:observable situations}. Readers remain {immersed:deeply involved} in mysteries from Scandinavian noir to Japanese detective fiction, each bringing cultural nuances to the genre. The appeal of detective fiction has proven {enduring:lasting over time}, perhaps because it satisfies our desire to make sense of chaos, to {unravel:solve something puzzling} complex problems, and to see justice served. Whether following a traditional whodunit formula or experimenting with {nuanced:subtle differences in} approaches to crime and punishment, the detective genre continues to reinvent itself while honoring its rich literary heritage.
+        `
     },
 
     eng_ex_19: {
+        title: "The Golden Gate Bridge: Engineering Marvel of the Depression Era",
+
+        content: `
+        The Golden Gate Bridge is an iconic {landmark:well-known place} that spans the Golden Gate Strait, connecting San Francisco to Marin County in California. When it was completed in 1937, it was the longest {suspension bridge:structure supported by cables} in the world, with a main span of 4,200 feet (1,280 meters). The bridge was designed by engineer Joseph Strauss, though many other engineers and architects {contributed to:helped develop} its final design. Despite the economic challenges of the Great Depression, construction {began in:started during} 1933 and was {completed ahead of:finished before} schedule and under budget.
+
+        The construction of the Golden Gate Bridge faced numerous {obstacles:difficulties} that many believed were insurmountable. The strait experiences strong currents, frequent fog, and powerful winds. Workers had to {deal with:manage} these harsh conditions while building the massive structure. Safety was a major concern, and Strauss {put in place:implemented} innovative safety measures, including a protective net that {saved the lives of:rescued} 19 men who fell during construction. Despite these precautions, 11 workers {lost their lives:died} during the project.
+
+        The bridge's distinctive {hue:color}, known as "International Orange," was not originally planned. The steel arrived with a red primer coat, and consulting architect Irving Morrow was so {impressed by:strongly affected by} how it looked against the landscape that he recommended keeping a similar color for the final design. This choice proved {brilliant:extremely good}, as the color provides visibility in fog while {complementing the:matching well with} natural surroundings.
+
+        From an engineering {point of view:perspective}, the Golden Gate Bridge represented several breakthroughs. Its towers extend 746 feet above the water and were the tallest structures of their kind at the time. The bridge needed to {withstand:resist} powerful winds, so Strauss and his team designed a deck that could {sway from side to side:move gently horizontally} up to 27 feet. The massive main cables, each more than 36 inches in diameter, contain 27,572 strands of wire. If these wires were {placed end to end:connected in a line}, they would circle the earth three times.
+
+        Today, the Golden Gate Bridge remains not just a vital {transportation link:connection for travel} but also a symbol of American innovation and determination. It {attracts:draws} millions of tourists annually and has {appeared in:been shown in} countless films and photographs. The bridge has {gone through:experienced} various retrofits and improvements over the decades to ensure its safety. As it approaches its 100th anniversary, the Golden Gate Bridge continues to {stand out as:be recognized as} a testament to human ingenuity during one of America's most challenging periods.
+        `
+    },
+
+    eng_ex_20: {
+        title: "The National Park System: America's Best Idea",
+
+        content: `
+        The United States National Park System has often been called "America's best idea." This network of protected lands {came into being:was established} in 1872 when Yellowstone became the world's first national park. The system was created to {preserve:protect and maintain} natural wonders and landscapes of exceptional beauty for future generations to enjoy. Today, the National Park Service {looks after:manages} over 400 areas covering more than 85 million acres across all 50 states, from vast wilderness areas to historic sites and monuments.
+
+        The early champions of the national park concept {faced opposition:encountered resistance} from commercial interests who wanted to {cash in on:profit from} these natural resources. Conservationists like John Muir {spoke out:expressed opinions publicly} against the exploitation of America's natural treasures and {teamed up with:joined forces with} President Theodore Roosevelt to expand the system. Roosevelt, an avid outdoorsman, {set aside:designated} more than 230 million acres of public land during his presidency, establishing five new national parks and creating the U.S. Forest Service.
+
+        Visiting national parks {took off:became extremely popular} after World War I when automobiles became more affordable and road networks improved. The National Park Service, established in 1916, {came up with:developed} programs to accommodate this influx of visitors while still protecting the natural environment. The Great Depression paradoxically {led to:resulted in} major improvements to park facilities, as the Civilian Conservation Corps {carried out:performed} extensive development projects, building trails, campgrounds, and visitor centers that are still {in use:being utilized} today.
+
+        National parks have {gone through:experienced} many changes over the decades. In the early days, park managers actually {encouraged visitors:promoted tourism} by eliminating predators and creating attractions like the famous garbage dumps where bears would {feed on:eat} trash for visitors' entertainment. Modern management practices now emphasize {ecosystem protection:safeguarding the natural environment} and scientific research. Rangers work to {keep track of:monitor} wildlife populations and restore native species that had previously disappeared from park lands.
+
+        Today, America's national parks {draw in:attract} over 300 million visitors annually, {bringing about:causing} both opportunities and challenges. Park managers must {strike a balance:find equilibrium} between providing access for visitors and protecting fragile ecosystems. Climate change is {taking its toll:having a negative effect} on many parks, with melting glaciers in Glacier National Park and rising sea levels threatening Everglades National Park. Despite these challenges, the National Park System continues to {live up to:fulfill} its original mission as "America's best idea," preserving the country's natural and cultural heritage for all to experience and enjoy.
+        `
+    },
+
+    eng_ex_21: {
         title: "",
 
         content: ``
     },
 
-    eng_ex_20: {
+    eng_ex_22: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_23: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_24: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_25: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_26: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_27: {
+        title: "",
+
+        content: ``
+    },
+
+    eng_ex_28: {
         title: "",
 
         content: ``
@@ -303,7 +411,6 @@ The Great Lakes: Freshwater Seas That Shaped a Continent
 
 Engineering and Architectural Achievements
 
-The Golden Gate Bridge: Engineering Marvel of the Depression Era
 The Development of Airplanes: From Kitty Hawk to Supersonic Flight
 American Highways: How the Interstate System Transformed a Nation
 The Empire State Building: Symbol of American Ambition and Resilience
@@ -327,21 +434,18 @@ Scientific and Technological Innovations
 
 
 The Automobile Age: How Cars Reshaped American Life
-Telecommunications: From Telegraph to Smartphone
 The Manhattan Project: Science, Ethics, and the Atomic Age
 
 Literary and Intellectual Traditions
 
-The Detective Genre: From Sherlock Holmes to Modern Crime Fiction
 The Great American Novel: Literary Ambition and National Identity
 Transcendentalism: America's Philosophical Awakening
 Gothic Literature: Exploring Darkness in British and American Tradition
-The Harlem Renaissance: Literary Flowering of African American Culture
+
 
 Environmental Challenges and Conservation
 
 Conservation Movements: From John Muir to Modern Environmentalism
-The National Park System: America's Best Idea
 Climate Change in Alaska: Frontline of Global Warming
 Preserving the Redwoods: Century-Long Battle to Save Ancient Forests
 

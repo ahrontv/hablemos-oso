@@ -275,9 +275,10 @@
                 for (let i = 0; i < ni; i++) {
                     const placeholder = `{${i}}`;
                     const noanswerFill = (this.state.hints && phrases[i][1]) ? phrases[i][1] : `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // blank or hint
+                    const hintClasses = this.hints ? "hint" : "hint withheld";
                     const replacement = currentAnswers[i]
                         ? `<span class="fibBlank filled" onclick="()=>{this.clearAnswer(${i})}">${currentAnswers[i]}</span>`
-                        : `<span class="fibBlank" onclick="()=>{this.clearAnswer(${i})}">${noanswerFill}</span>`;
+                        : `<span class="fibBlank" onclick="()=>{this.clearAnswer(${i})}"><span class="${hintClasses}">${noanswerFill}</span></span>`;
                     displayText = displayText.replace(placeholder, replacement);
                 }
                 console.log(displayText);
